@@ -30,7 +30,7 @@ def tryconvert(value, default, type):
 # Função para ler como um objeto pandas DataFrame um arquivo de dados DENGXXaa do SINAN e adequar e formatar suas colunas e valores
 def get_DENGXXaa_treated(state, year):
     # Lê o arquivo "dbc" como um objeto pandas DataFrame e o salva no formato "parquet"
-    dataframe = download_SINANXXaa(state, year)
+    dataframe = download_SINANXXaa('DENG', state, year)
     print('O número de linhas do arquivo DENG{}{} é {}.'.format(state, year, dataframe.shape[0]))
 
     # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela DENGBR da base de dados

@@ -56,12 +56,19 @@ def download_DNXXaaaa(state: str, year: str, cache: bool=True):
         ftp = FTP('ftp.datasus.gov.br')
         ftp.login()
         ftp.cwd('/dissemin/publicos/SINASC/NOV/DNRES/')
-        ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '/' + fname, 'wb').write)
+        try:
+            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '\\' + fname, 'wb').write)
+        except:
+            try:
+                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
+            except:
+                raise Exception(f'Could not access {fname}.')
         df = read_dbc(fname, encoding='iso-8859-1')
         ftp.close()
         if cache:
             df.to_parquet(cachefile)
         return df
+        
 
 # Função de download de tabelas do SINASC em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name):

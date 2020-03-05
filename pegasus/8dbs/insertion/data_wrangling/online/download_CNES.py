@@ -53,7 +53,7 @@ def download_CNESXXaamm(base: str, state: str, year: str, month: str, cache: boo
     """
 
     state = state.upper()
-    fname = base + f'{state}{year}{month}.dbc'
+    fname = f'{base}{state}{year}{month}.dbc'
     cachefile = os.path.join(CACHEPATH, 'CNES_' + fname.split('.')[0] + '_.parquet')
 
     if os.path.exists(cachefile):
@@ -64,10 +64,10 @@ def download_CNESXXaamm(base: str, state: str, year: str, month: str, cache: boo
         ftp.login()
         ftp.cwd('/dissemin/publicos/CNES/200508_/DADOS/' + base)
         try:
-            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '/' + fname, 'wb').write)
+            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '\\' + fname, 'wb').write)
         except:
             try:
-                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '/' + fname, 'wb').write)
+                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
             except:
                 raise Exception(f'Could not access {fname}.')
         df = read_dbc(fname, encoding='iso-8859-1')

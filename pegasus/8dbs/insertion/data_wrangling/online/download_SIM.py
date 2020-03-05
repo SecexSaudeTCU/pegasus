@@ -55,7 +55,13 @@ def download_DOXXaaaa(state: str, year: str, cache: bool=True):
         ftp = FTP('ftp.datasus.gov.br')
         ftp.login()
         ftp.cwd('/dissemin/publicos/SIM/CID10/DORES/')
-        ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '/' + fname, 'wb').write)
+        try:
+            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '\\' + fname, 'wb').write)
+        except:
+            try:
+                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
+            except:
+                raise Exception(f'Could not access {fname}.')
         df = read_dbc(fname, encoding='iso-8859-1')
         ftp.close()
         if cache:

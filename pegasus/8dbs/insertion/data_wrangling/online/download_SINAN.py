@@ -36,7 +36,7 @@ Esse código é baseado no projeto de Flávio Coelho (https://github.com/fccoelh
 
 # Função de download de arquivos principais de dados do SINAN em formato "dbc" (trata-se de dados...
 # das n child tables referidas acima, no docstring desse módulo)
-def download_SINANXXaa(state: str, year: str, cache: bool=True):
+def download_SINANXXaa(base: str, state: str, year: str, cache: bool=True):
 
     """
     Downloads a SINAN data file in "dbc" format from Datasus ftp server
@@ -48,32 +48,32 @@ def download_SINANXXaa(state: str, year: str, cache: bool=True):
     """
 
     state = state.upper()
-    if int('20' + year) < 2013:
-        raise ValueError('There is no data for the years before 2013.')
-    elif 2013 <= int('20' + year) <= 2016:
-        ftp = FTP('ftp.datasus.gov.br')
-        ftp.login()
-        ftp.cwd('/dissemin/publicos/SINAN/DADOS/FINAIS/')
-        fname = 'DENG{}{}.dbc'.format(state, year)
-    elif int('20' + year) == 2017:
-        ftp = FTP('ftp.datasus.gov.br')
-        ftp.login()
-        ftp.cwd('/dissemin/publicos/SINAN/DADOS/PRELIM/')
-        fname = 'DENG{}{}.dbc'.format(state, year)
-
+    fname = f'{base}{state}{year}.dbc'
     cachefile = os.path.join(CACHEPATH, 'SINAN_'+fname.split('.')[0] + '_.parquet')
+
     if os.path.exists(cachefile):
         df = pd.read_parquet(cachefile)
         return df
-
-    ftp.retrbinary('RETR {}'.format(fname), open(CACHEPATH + '/' + fname, 'wb').write)
-    df = read_dbc(fname, encoding='iso-8859-1')
-
-    ftp.close()
-
-    if cache:
-        df.to_parquet(cachefile)
-    return df
+    else:
+        ftp = FTP('ftp.datasus.gov.br')
+        ftp.login()
+        if int('20' + year) <= 2016:
+            ftp.cwd('/dissemin/publicos/SINAN/DADOS/FINAIS/')
+        elif int('20' + year) == 2017:
+            ftp.cwd('/dissemin/publicos/SINAN/DADOS/PRELIM/')
+        try:
+            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '\\' + fname, 'wb').write)
+        except:
+            try:
+                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
+            except:
+                raise Exception(f'Could not access {fname}.')
+        df = read_dbc(fname, encoding='iso-8859-1')
+        ftp.close()
+        if cache:
+            df.to_parquet(cachefile)
+        return df
+        
 
 # Função de download de tabelas do SINAN em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name, cache=True):
