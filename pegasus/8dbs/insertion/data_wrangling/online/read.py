@@ -49,9 +49,19 @@ def dbc2dbf(infile):
     """
 
     infile = infile.decode()
-    subprocess.run(['C:/TabWin/dbf2dbc.exe', CACHEPATH + '/' + infile])
-    os.remove(CACHEPATH + '/' + infile)
+
+    # Nome do arquivo .dbc que será descompactado
+    arquivo_dbc = os.path.join(CACHEPATH, infile)
+
+    # Executa conversor .dbc para .dbf do TabWin
+    subprocess.run(['C:/TabWin/dbf2dbc.exe', arquivo_dbc])
+
+    # Remove arquivo .dbc
+    os.remove(arquivo_dbc)
+
+    # Obtém nome do arquivo .dbf gerado pelo conversor
     outfile = os.getcwd() + '/' + infile[:-4] + '.dbf'
+
     return outfile
 
 
