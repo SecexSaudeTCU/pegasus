@@ -102,7 +102,7 @@ def insert_most_SIM_tables_pandas(path, device, child_db):
 ###########################################################################################################################################################################
 
 # Função que utiliza para a inserção de dados principais da "child_db" o pandas.to_sql + SQLAlchemy
-def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
+def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
     start = time.time()
     counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
     qtd_files_pg = counting_rows.iloc[0]['count']

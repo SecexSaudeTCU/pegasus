@@ -17,7 +17,7 @@ pd.set_option('display.max_rows', None)
 
 """
 Cria um schema do banco de dados (neste computador denominado) "dbsus2" no SGBD PostgreSQL com integridade referencial
-(de "primary and foreign keys") e insere nele dados dos sistemas (do Datasus) CNES, SIH, SIA, SIM, SINASC, SINAN e XXX
+(de "primary and foreign keys") e insere nele dados dos sistemas (do Datasus) CNES, SIH, SIA, SIM, SINASC, SINAN ou XXX
 no SGBD PostgreSQL pelo método pandas.to_sql. Os dados são inseridos por sistema ou sub-sistema (no caso de existência
 de mais de uma tabela principal): CNES_ST, CNES_DC, CNES_PF, CNES_LT, CNES_EQ, CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM,
 CNES_EE, CNES_EF, CNES_IN, SIH_RD, SIH_SP, SIA_PA, SIM, SINASC, SINAN_DENG e XXX. Assim, para cada sistema ou sub-sistema
@@ -43,10 +43,12 @@ em tempo de execução para objetos pandas DataFrame enquanto os arquivos "xlsx"
 de relações descritas no Dicionário de Dados do respectivo sistema do Datasus e não retratadas em arquivos "dbf" ou "cnv" ou
 a partir da incompletude de arquivos "dbf" ou "cnv".
 
+É necessário instalar o SGBD PostgreSQL (https://www.postgresql.org/download/) e uma plataforma para gerenciamento de banco
+de dados é recomendável ter, tal como pgAdmin (https://www.pgadmin.org/download/) ou DBeaver [Community] (https://dbeaver.io/).
 É necessário ter as seguintes bibliotecas Python instaladas: psycopg2, SQLAlchemy, ftplib, zipfile, dbfread, xlrd, pyarrow,
 fast_parquet, numpy e pandas.
 
-Para se executar esse pacote em Python 3.7 a partir do sistema operacional Windows 10 também se instalou em C:/ o programa
+Para se executar esse pacote em Python 3.7.4 a partir do sistema operacional Windows 10 também se instalou em C:/ o programa
 TabWin do Datasus, que no seu diretório raiz contém um executável que permite a conversão de arquivos em formato "dbc" para
 "dbf" denominado "dbf2dbc". O programa TabWin pode ser baixado de http://datasus1.saude.gov.br/transferencia-download...
 -de-arquivos/download-do-tabwin selecionando o link "Tab415.zip" presente na primeira linha da coluna "Nome" da tabela que
@@ -55,11 +57,11 @@ aparece nessa página. As instruções de instalação presentes nessa página e
 "Os arquivos compactados abaixo contêm os componentes básicos que permitem o funcionamento do Tab para Windows.
 Sugerimos que você crie uma pasta, em seu computador, chamada TabWin, e copie o arquivo abaixo para essa pasta."
 
-Por outro lado, para executar esse pacote em Python 3.7 a partir do sistema operacional Linux também se instalou a
+Por outro lado, para executar esse pacote em Python 3.6.9 a partir do sistema operacional Linux também se instalou a
 dependência libffi ("$ sudo apt install libffi-dev") e as bibliotecas Python codecs e cffi, prescindindo, porém, da
 instalação do executável "dbf2dbc". Nesse caso, se deve executar o módulo "_build_readdbc" contido no sub-package
 "insertion.data_wrangling.online" para criar um wrapper de um módulo na linguagem C que descompacta arquivos "dbc" para
-"dbf".
+"dbf". Ainda se está trabalhando na coexistência Windows e Linux.
 
 O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode ser
 alterado editando o módulo "folder" contido no sub-package "insertion.data_wrangling.online".
@@ -75,7 +77,7 @@ if __name__ == '__main__':
     print('\n***************************************************************************************')
     print('First of all, you must read the docstring provided at the beginning of this main module.\n'.upper())
     print('Also, you just do not forget that the PostgreSQL database to be filled must first be created!'.upper())
-    print('Therefore the 3 constants defined at lines 155, 156 and 159 of this main module must...')
+    print('Therefore the 3 constants defined at lines 154, 155 and 158 of this main module must...')
     print('first be adapted to your reality, that is: DB_USER, DB_PASS and DB_NAME; being DB_NAME...')
     print('the name of the database created in PostgreSQL.')
     print('***************************************************************************************\n')
@@ -87,7 +89,7 @@ if __name__ == '__main__':
         pass
 
     # Nome do banco de dados do Datasus almejado
-    datasus_db = input('\nEnter the Datasus database name (CNES/SIH/SIA/SIM/SINASC/SINAN/XXX): ').lower()
+    datasus_db = input('\nEnter the Datasus database name (CNES/SIH/SIA/SINAN/XXX): ').lower()
 
     # Construção do objeto string do nome do sub banco de dados do CNES ou SIH ou SIA ou SINAN ou XXX
     # CNES
@@ -115,9 +117,6 @@ if __name__ == '__main__':
     elif datasus_db == 'sia':
         print('\nPA: Procedimentos Ambulatoriais')
         sub_db = input('Enter the intended SIA "sub" database initials (PA/XX): ').lower()
-    # SIM ou SINASC:
-    elif (datasus_db == 'sim') or (datasus_db == 'sinasc'):
-        print(f'{datasus_db} is a database composed of only one main table.\n')
     # SINAN
     elif datasus_db == 'sinan':
         print('\nDENG: Dengue e Chikungunya\n')
