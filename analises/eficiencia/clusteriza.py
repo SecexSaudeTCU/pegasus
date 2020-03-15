@@ -49,7 +49,7 @@ if __name__ == '__main__':
     plt.title('Gráfico do "cotovelo" para determinação do número de clusters')
     plt.grid()
     plt.xticks(min_max_num_clusters)
-    arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_RESULTADOS, 'kmeans_inercia_vs_k.png')
+    arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'kmeans_inercia_vs_k.png')
     plt.savefig(arquivo_grafico_inercia)
 
     # Número de clusters determinado pela técnica do jolho
