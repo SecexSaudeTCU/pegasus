@@ -1,5 +1,7 @@
 """
-Executa a análise DEA utilizando os parâmetros do TCU
+Wrapper para a biblioteca PyDEA para permitir seu uso no código Python.
+
+Nota: este wrapper foi feito com as funcionalidades mínimas para uso neste trabalho.
 """
 
 import os
@@ -43,7 +45,7 @@ class ModeloDEA:
 
     def executa(self, data_file, diretorio_saida):
         """
-        Executa a análise DEA e salva resultados no diretorio_saida
+        Executa a análise DEA e salva resultados no diretorio_saida.
 
         Nota: a primeira coluna deve conter os nomes das DMUs.
         """
