@@ -1,8 +1,9 @@
-import os
-import time
-import pandas as pd
-from pydea_wrapper import ModeloDEA
+"""
+Script para analisar escores de eficiência obtidos pela análise DEA.
+"""
 
+import os
+import pandas as pd
 
 if __name__ == '__main__':
 
