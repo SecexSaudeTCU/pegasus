@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
 
     #
-    ANO = '2019'
+    ANO = '2018'
 
     # Número mínimo de unidades por cluster (3 x o número de variáveis utilizadas na DEA)
     NUMERO_MINIMO_UNIDADES_POR_CLUSTER = 3 * 5
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     plt.title('Gráfico do "cotovelo" para determinação do número de clusters')
     plt.grid()
     plt.xticks(range(MIN_CLUSTERS, MAX_CLUSTERS))
-    arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'kmeans_inercia_vs_k.png')
+    arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'kmeans_inercia_vs_k_{ano}.png'.format(ano=ANO))
     plt.savefig(arquivo_grafico_inercia)
 
     # Carrega mapeamente entre códigos de subgrupos da SIGTAP e suas descrições
@@ -158,11 +158,11 @@ if __name__ == '__main__':
         ax.set_xlim((0, 1.))
         plt.tight_layout()
         arquivo_grafico_barras_cluster = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
-                                                      'cluster_{ano}_{k}.png'.format(ano=ANO, k=k))
+                                                      'cluster_{k}_{ano}.png'.format(ano=ANO, k=k))
         plt.savefig(arquivo_grafico_barras_cluster)
 
     # Salva planilha com os centroids
     df_centroids = pd.DataFrame(centroids)
     arquivo_centroids = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
-                                     'centroids_kmeans_{k}_clusters.xlsx'.format(k=NUMERO_CLUSTERS))
+                                     'centroids_kmeans_{k}_clusters_{ano}.xlsx'.format(k=NUMERO_CLUSTERS, ano=ANO))
     df_centroids.to_excel(arquivo_centroids)
