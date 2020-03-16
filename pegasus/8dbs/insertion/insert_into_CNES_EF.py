@@ -115,6 +115,6 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
                              )
     # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir informações do arquivo principal de dados na tabela arquivos do banco de dados {child_db}.')
+    print(f'Terminou de inserir os metadados do arquivo EF{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo SQLAlchemy-pandas!')
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')

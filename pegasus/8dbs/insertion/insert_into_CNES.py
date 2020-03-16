@@ -202,32 +202,33 @@ def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, devic
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {parent_db}/PostgreSQL é {qtd_files_pg}.')
 
     # Tratamento de dados principais do CNES
+    base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:6]
     month = file_name[6:8]
     main_table = file_name[0:2].lower() + 'br'
     counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
     n_rows = counting_rows.iloc[0]['count']
-    print(f'\nIniciando a lida com o arquivo {file_name[0:2]}{state}{year}{month}.')
+    print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}.')
 
     # Criação de objeto string do nome de uma função de tratamento de dados de uma tabela principal...
     # do "child_db" contida no respectivo módulo do package "data_wrangling"
     func_string = 'get_' + file_name[0:2] + 'XXaamm_treated'
 
     # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
-    module = __import__('insertion.data_wrangling.prepare_CNES_' + file_name[0:2], fromlist=[func_string], level=0)
+    module = __import__('insertion.data_wrangling.prepare_CNES_' + base, fromlist=[func_string], level=0)
     func_treatment = getattr(module, func_string)
 
     # Chama a função "func_treatment" do módulo "prepare_CNES_XX" do package "data_wrangling"
     df = func_treatment(state, year, month)
     # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
-    df.insert(1, 'UF_' + file_name[0:2], [state]*df.shape[0])
-    df.insert(2, 'ANO_' + file_name[0:2], [int('20' + year)]*df.shape[0])
-    df.insert(3, 'MES_' + file_name[0:2], [month]*df.shape[0])
+    df.insert(1, 'UF_' + base, [state]*df.shape[0])
+    df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
+    df.insert(3, 'MES_' + base, [month]*df.shape[0])
     df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
     # Inserção dos dados da tabela principal no banco de dados "child_db"
     df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os dados do arquivo {file_name[0:2]}{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
+    print(f'Terminou de inserir os dados do arquivo {base}{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
 
     # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
     file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
@@ -236,6 +237,6 @@ def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, devic
                              )
     # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir informações do arquivo principal de dados na tabela arquivos do banco de dados {child_db}.')
+    print(f'Terminou de inserir os metadados do arquivo {base}{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo SQLAlchemy-pandas!')
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')

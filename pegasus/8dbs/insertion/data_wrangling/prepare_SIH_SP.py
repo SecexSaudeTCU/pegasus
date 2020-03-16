@@ -98,10 +98,16 @@ def get_SPXXaamm_treated(state, year, month):
     for col in np.array(['SP_COMPLEX', 'SP_FINANC']):
         df[col].replace('99', '', inplace=True)
 
-    for col in np.array(['SP_CO_FAEC', 'SP_PF_CBO']):
-        df[col].replace('000000', '', inplace=True)
+    df['SP_CO_FAEC'].replace(['000000', '040058', '040066', '040067'], '', inplace=True)
+
+    df['SP_PF_CBO'].replace(['000000'], '', inplace=True)
+
+    df['IN_TP_VAL'].replace('0', '', inplace=True)
+
+    df['SERV_CLA'].replace('000000', '', inplace=True)
 
     for col in np.array(['SP_CIDPRI', 'SP_CIDSEC']):
+        df[col].replace('0000', '', inplace=True)
         df[col].replace('B501', 'B508', inplace=True)
         df[col].replace('B656', 'B653', inplace=True)
         df[col].replace('C141', 'C140', inplace=True)
@@ -354,7 +360,7 @@ def get_TP_VAL_treated():
 
 
 # Função para adequar e formatar as colunas e valores da Tabela S_CLASSEN (arquivo S_CLASSEN.dbf)
-def get_S_CLASSEN_treated():
+def get_S_CLASSEN_treated(path):
     # Conversão da Tabela S_CLASSEN para um objeto pandas DataFrame
     file_name = 'S_CLASSEN'
     df = download_table_dbf(file_name)
@@ -362,9 +368,23 @@ def get_S_CLASSEN_treated():
     df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'CLASSIFICACAO'}, inplace=True)
     # Considera da coluna GESTAO apenas a substring depois de um dígito e um traço
     df['CLASSIFICACAO'].replace(to_replace='^\d{3}\s{1}', value= '', regex=True, inplace=True)
+    # Upload do arquivo "xlsx" que contém os SERV_CLA presentes nos arquivos SPXXaamm (dos anos de 2008 a 2019) e não presentes...
+    # no arquivo S_CLASSEN.dbf. Ou seja, isso parece ser uma falha dos dados do Datasus
+    dataframe = pd.read_excel(path + 'SERV_CLA_OUT_S_CLASSEN_ANOS_2008_2019' + '.xlsx')
+    # Converte a coluna "ID" do objeto "dataframe" de "int" para "string"
+    dataframe['ID'] = dataframe['ID'].astype('str')
+    # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "dataframe" até formar uma "string" de tamanho = 6
+    dataframe['ID'] = dataframe['ID'].apply(lambda x: x.zfill(6))
+    # Adiciona a coluna DESCESTAB e respectivos valores ao objeto "dataframe"
+    dataframe['CLASSIFICACAO'] = 'NAO PROVIDO NO ARQUIVO S_CLASSEN.DBF'
+    # Concatenação do objeto "dataframe" ao objeto "df"
+    frames = []
+    frames.append(df)
+    frames.append(dataframe)
+    dfinal = pd.concat(frames, ignore_index=True)
     # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da tabela SPBR
-    df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
-    return df
+    dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
+    return dfinal
 
 
 # Função para adequar e formatar as colunas e valores da Tabela cid10 (arquivo cid10.dbf) e de 22 TCC com nome CID10_XX (arquivos "cnv")

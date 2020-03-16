@@ -79,7 +79,7 @@ def download_CNESXXaamm(base: str, state: str, year: str, month: str, cache: boo
 
 # Função de download de tabelas do CNES em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name):
-    print(file_name)
+    
     """
     Fetch a table in "dbf" format from Datasus ftp server
     :param file_name: string of file name without format

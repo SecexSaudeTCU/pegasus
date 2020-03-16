@@ -104,11 +104,15 @@ def get_PAXXaamm_treated(state, year, month):
                          '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160','530170',
                          '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
+    df['PA_REGCT'].replace(['7114'], '', inplace=True)
+
     for col in np.array(['PA_INCOUT', 'PA_INCURG']):
         df[col].replace(['0001', '9999'], '1', inplace=True) # "1" de "Sim"
         df[col].replace('0000', '0', inplace=True)           # "0" de "Não"
 
     df['PA_TPUPS'].replace('99', '', inplace=True)
+
+    df['PA_TIPPRE'].replace('00', '', inplace=True)
 
     for col in np.array(['PA_MVM', 'PA_CMP']):
         df[col] = df[col].apply(lambda x: x if len(x) == 6 else '')
@@ -117,7 +121,7 @@ def get_PAXXaamm_treated(state, year, month):
     df['PA_DOCORIG'].replace('P', 'S', inplace=True)
 
     for col in np.array(['PA_CBOCOD', 'PA_SRC_C']):
-        df[col].replace('000000', '', inplace=True)
+        df[col].replace(['000000', '515140'], '', inplace=True)
 
     df['PA_MOTSAI'].replace('00', '0', inplace=True)
 
@@ -146,8 +150,11 @@ def get_PAXXaamm_treated(state, year, month):
     df['PA_RACACOR'].replace(['0', '6', '9', '1M', '1G', '1C', 'DE', 'D', '87', '99'], '', inplace=True)
 
     df['PA_ETNIA'].replace(['0000', '9999'], '', inplace=True)
+    df['PA_ETNIA'].replace(regex='^X.{3}', value='', inplace=True)
 
-    df['PA_NAT_JUR'].replace('0000', '', inplace=True)
+    df['PA_INE'].replace(['0001610902', '0001630520', '0001627112'], '', inplace=True)
+
+    df['PA_NAT_JUR'].replace(['0000', '1244'], '', inplace=True)
 
     # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
     for col in np.array(['PA_CODUNI', 'PA_GESTAO', 'PA_CONDIC', 'PA_UFMUN', 'PA_REGCT', 'PA_TPUPS', 'PA_TIPPRE',
