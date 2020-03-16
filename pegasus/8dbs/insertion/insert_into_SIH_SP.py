@@ -60,7 +60,7 @@ def insert_most_SIH_SP_tables_pandas(path, device, child_db):
     df_TP_VAL = get_TP_VAL_treated()
     df_TP_VAL.to_sql('intpval', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_S_CLASSEN = get_S_CLASSEN_treated()
+    df_S_CLASSEN = get_S_CLASSEN_treated(path)
     df_S_CLASSEN.to_sql('servcla', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CID10 = get_CID10_treated()
@@ -110,6 +110,6 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
                              )
     # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir informações do arquivo principal de dados na tabela arquivos do banco de dados {child_db}.')
+    print(f'Terminou de inserir os metadados do arquivo SP{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo SQLAlchemy-pandas!')
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')

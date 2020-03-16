@@ -127,6 +127,8 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
     state = file_name[2:4]
     year = file_name[4:6]
     month = file_name[6:8]
+    if ((state + year + month == 'SP1112') or ((state == 'SP') and (int(year) >= 13))):
+        month = file_name[6:9]
     main_table = 'pabr'
     counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
     n_rows = counting_rows.iloc[0]['count']
@@ -136,7 +138,10 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
     # Inserção das colunas UF_PA, ANO_PA e MES_PA no objeto pandas DataFrame "df"
     df.insert(1, 'UF_PA', [state]*df.shape[0])
     df.insert(2, 'ANO_PA', [int('20' + year)]*df.shape[0])
-    df.insert(3, 'MES_PA', [month]*df.shape[0])
+    if ((state + year + month == 'SP1112') or ((state == 'SP') and (int(year) >= 13))):
+        df.insert(3, 'MES_PA', [month[0:2]]*df.shape[0])
+    else:
+        df.insert(3, 'MES_PA', [month]*df.shape[0])
     df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
     # Inserção dos dados da tabela principal no banco de dados "child_db"
     df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
@@ -149,6 +154,6 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
                              )
     # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir informações do arquivo principal de dados na tabela arquivos do banco de dados {child_db}.')
+    print(f'Terminou de inserir os metadados do arquivo PA{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo SQLAlchemy-pandas!')
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')

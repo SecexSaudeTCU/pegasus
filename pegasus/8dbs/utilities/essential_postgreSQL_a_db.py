@@ -80,6 +80,9 @@ def files_in_ftp(name_db_pg):
             # CNES do ano de 2005, exceto do cnes_ep, cnes_hb, cnes_rc, cnes_gm, cnes_ee, cnes_ef, cnes_in
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05.{2}', regex=True)]
 
+        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
+
     # SIH
     elif name_db_pg.startswith('sih'):
         # Diretório do host onde estão os dados do banco de dados "name_db_pg" (integrante do SIH) do Datasus
@@ -100,6 +103,9 @@ def files_in_ftp(name_db_pg):
             # "SP" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('SP')]
 
+        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
+
     # SIA
     elif name_db_pg.startswith('sia'):
         # Diretório do host onde estão os dados do banco de dados "name_db_pg" (integrante do SIA) do Datasus
@@ -112,35 +118,18 @@ def files_in_ftp(name_db_pg):
         if name_db_pg == 'sia_pa':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "PA" relativa ao banco de dados dos Procedimentos Ambulatoriais
-            df_ftp = df_ftp[df_ftp['NOME'].str.startswith('PAAM14')]
+            df_ftp = df_ftp[df_ftp['NOME'].str.startswith('PA')]
+            # Adequa no nome de alguns arquivos "dbc" que terminam excepcionalmente em "A" ou "B" transformando...
+            # respectivamente para "a" e "b"
+            df_ftp['NOME'].replace(regex='PASP1112A', value='PASP1112a', inplace=True)
+            df_ftp['NOME'].replace(regex='PASP1112B', value='PASP1112b', inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP1[3-9]0[1-9])A(\.dbc)' : r'\1a\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP1[3-9]1[0-2])A(\.dbc)' : r'\1a\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP1[3-9]0[1-9])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP1[3-9]1[0-2])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
 
-    # SIM
-    elif name_db_pg == 'sim':
-        # Diretório do host onde estão os dados do banco de dados "name_db_pg" (SIM) do Datasus
-        datasus_path = '/dissemin/publicos/SIM/CID10/DORES/'
-
-        # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
-        # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
-        df_ftp = get_dbc_info(datasus_path)
-
-        # Desconsideração das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME contenha a string "1996"
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('1996')]
-        # Desconsideração das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME contenha a string "BR"
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
-
-    # SINASC
-    elif name_db_pg == 'sinasc':
-        # Diretório do host onde estão os dados do banco de dados "name_db_pg" (SINASC) do Datasus
-        datasus_path = '/dissemin/publicos/SINASC/NOV/DNRES/'
-
-        # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
-        # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
-        df_ftp = get_dbc_info(datasus_path)
-
-        # Desconsideração das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME contenha a string "1996"
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('1996')]
-        # Desconsideração das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME contenha a string "BR"
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
+        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SINAN
     elif name_db_pg.startswith('sinan'):
@@ -154,6 +143,9 @@ def files_in_ftp(name_db_pg):
         # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
         # "DENG" relativa ao banco de dados dos agravos dengue e chikungunya
         df_ftp = df_ftp[df_ftp['NOME'].str.startswith('DENG')]
+
+        # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DENG.{2}1[8-9]', regex=True)]
 
     ftp.quit()
 

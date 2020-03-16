@@ -17,19 +17,17 @@ pd.set_option('display.max_rows', None)
 
 """
 Cria um schema do banco de dados (neste computador denominado) "dbsus2" no SGBD PostgreSQL com integridade referencial
-(de "primary and foreign keys") e insere nele dados dos sistemas (do Datasus) CNES, SIH, SIA, SIM, SINASC, SINAN ou XXX
-no SGBD PostgreSQL pelo método pandas.to_sql. Os dados são inseridos por sistema ou sub-sistema (no caso de existência
-de mais de uma tabela principal): CNES_ST, CNES_DC, CNES_PF, CNES_LT, CNES_EQ, CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM,
-CNES_EE, CNES_EF, CNES_IN, SIH_RD, SIH_SP, SIA_PA, SIM, SINASC, SINAN_DENG e XXX. Assim, para cada sistema ou sub-sistema
-do Datasus é criado um schema.
+(de "primary and foreign keys") e insere nele dados dos sistemas (do Datasus) CNES, SIH, SIA, SINAN ou XXX no SGBD PostgreSQL
+pelo método pandas.to_sql. Os dados são inseridos por sub-sistema: CNES_ST, CNES_DC, CNES_PF, CNES_LT, CNES_EQ, CNES_SR,
+CNES_EP, CNES_HB, CNES_RC, CNES_GM, CNES_EE, CNES_EF, CNES_IN, SIH_RD, SIH_SP, SIA_PA, SINAN_DENG ou XXX. Assim, para cada
+sub-sistema do Datasus é criado um schema.
 
 A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos secundários de dados em
-formato "dbf", "cnv" e "xlsx" dos sistemas/sub-sistemas CNES_ST (STXXaamm), CNES_DC (DCXXaamm), CNES_PF (PFXXaamm),
-CNES_LT (LTXXaamm), CNES_EQ (EQXXaamm), CNES_SR (SRXXaamm), CNES_EP (EPXXaamm), CNES_HB (HBXXaamm), CNES_RC (RCXXaamm),
-CNES_GM (GMXXaamm), CNES_EE (EEXXaamm), CNES_EF (EFXXaamm), CNES_IN (INXXaamm), SIH_RD (RDXXaamm), SIH_SP (SPXXaamm),
-SIA_PA (PAXXaamm), SIM (DOXXaaaa), SINASC (DNXXaaaa), SINAN_DENG (DENGXXaa) e XXX. Destaca-se que alguns sistemas, como
-o CNES, se subdividem em várias tabelas principais de dados, que no caso são em número de 13, conforme se pode contabilizar
-acima.
+formato "dbf", "cnv" e "xlsx" dos sub-sistemas CNES_ST (STXXaamm), CNES_DC (DCXXaamm), CNES_PF (PFXXaamm), CNES_LT (LTXXaamm),
+CNES_EQ (EQXXaamm), CNES_SR (SRXXaamm), CNES_EP (EPXXaamm), CNES_HB (HBXXaamm), CNES_RC (RCXXaamm), CNES_GM (GMXXaamm),
+CNES_EE (EEXXaamm), CNES_EF (EFXXaamm), CNES_IN (INXXaamm), SIH_RD (RDXXaamm), SIH_SP (SPXXaamm), SIA_PA (PAXXaamm),
+SINAN_DENG (DENGXXaa) ou XXX. Destaca-se que alguns sistemas, como o CNES, se subdividem em várias tabelas principais de
+dados, que no caso são em número de 13, conforme se pode contabilizar acima.
 
 Os arquivos principais de dados formam a tabela principal (child table) do respectivo sistema ou subsistema e estão em pastas
 específicas do endereço ftp do Datasus (ftp://ftp.datasus.gov.br/dissemin/publicos/) em formato "dbc". Cada arquivo "dbc" é
@@ -77,7 +75,7 @@ if __name__ == '__main__':
     print('\n***************************************************************************************')
     print('First of all, you must read the docstring provided at the beginning of this main module.\n'.upper())
     print('Also, you just do not forget that the PostgreSQL database to be filled must first be created!'.upper())
-    print('Therefore the 3 constants defined at lines 154, 155 and 158 of this main module must...')
+    print('Therefore the 3 constants defined at lines 152, 153 and 156 of this main module must...')
     print('first be adapted to your reality, that is: DB_USER, DB_PASS and DB_NAME; being DB_NAME...')
     print('the name of the database created in PostgreSQL.')
     print('***************************************************************************************\n')
@@ -149,7 +147,7 @@ if __name__ == '__main__':
     df_arquivos_ftp = files_in_ftp(datasus_db)
     os.remove('stuff_ftp_files.txt')
 
-    # Dados de conecção 1 (portanto o DB_NAME já deve ter sido previamente criado com esses dados)
+    # Dados de conexão 1 (portanto o DB_NAME já deve ter sido previamente criado com esses dados)
     DB_TYPE = 'postgresql'
     DB_USER = 'Eric'
     DB_PASS = 'teste'
@@ -170,14 +168,14 @@ if __name__ == '__main__':
     except (Exception, psycopg2.Error) as error:
         print('Error while connecting to PostgreSQL.', error)
 
-    # Dados de conecção 2
+    # Dados de conexão 2
     DB_DRIVER = 'psycopg2'
 
     # URI para o PostgreSQL
-    SQLALCHEMY_DATABASE_URI = '%s+%s://%s:%s@%s:%s/%s' % (DB_TYPE, DB_DRIVER, DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME)
+    DATABASE_URI = '%s+%s://%s:%s@%s:%s/%s' % (DB_TYPE, DB_DRIVER, DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME)
 
     # Cria um "engine" para o SGBD PostgreSQL usando o driver "psycopg2"
-    engine = create_engine(SQLALCHEMY_DATABASE_URI)
+    engine = create_engine(DATABASE_URI)
     # Vincula o schema de "structure" definido no módulo "alchemy_declarative_'datasus_db'_postgreSQL" do package "schemas" ao banco de dados "DBNAME"
     structure.metadata.create_all(engine)
 

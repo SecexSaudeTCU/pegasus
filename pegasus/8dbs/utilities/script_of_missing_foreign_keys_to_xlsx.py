@@ -1205,10 +1205,9 @@ def get_missing_ID_SEGM_CNES_EP():
 
 def get_RDXXaamm_simplified(state, year, month):
     # Lê o arquivo "dbc" como um objeto pandas DataFrame e o salva no formato "parquet"
-    #dataframe = download_SIHXXaamm('RD', state, year, month)
-    dataframe = download_SIHXXaamm('SP', state, year, month)
+    dataframe = download_SIHXXaamm('RD', state, year, month)
     # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela rdbr da base de dados
-    lista_columns = np.array(['SP_ATOPROF'])
+    lista_columns = np.array(['PROC_SOLIC', 'PROC_REA', 'CNES'])
 
     # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
     df = pd.DataFrame(columns=lista_columns)
@@ -1228,18 +1227,20 @@ def get_RDXXaamm_simplified(state, year, month):
     for col in dif_set:
         df[col].replace(np.nan, '', inplace=True)
 
+    df['CNES'] = df['CNES'].apply(lambda x: x.zfill(7))
+    df['CNES'] = df['CNES'].apply(str.strip)
+    df['CNES'] = df['CNES'].apply(lambda x: x if len(x) == 7 else '')
+
     return df
 
-def get_missing_PROC_SOLIC_SIH_RD():
+def get_missing_PROCEDIMENTO_SIH_RD():
     # Conversão da Tabela TB_SIGTAP para um objeto pandas DataFrame
     file_name = 'TB_SIGTAP'
     df = download_table_dbf(file_name)
     # Renomeia as colunas especificadas
     df.rename(index=str, columns={'IP_COD': 'ID', 'IP_DSCR': 'PROCEDIMENTO'}, inplace=True)
-    # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da tabela RDBR
-    df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
 
-    coluna = 'SP_ATOPROF'
+    coluna = ''
     frames = []
     lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
                      'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
@@ -1280,7 +1281,7 @@ def get_missing_PROC_SOLIC_SIH_RD():
     df_dif_ocup.to_excel(os.getcwd() + '\\SIH_RD_' + coluna + '_MISSING.xlsx', index=False)
     print('Game over!')
 
-def get_missing_cnes_SIH_RD():
+def get_missing_CNES_SIH_RD():
     # Conversão da Tabela TCNESBR para um objeto pandas DataFrame
     file_name = 'TCNESBR'
     df1 = download_table_dbf(file_name)
@@ -1311,7 +1312,7 @@ def get_missing_cnes_SIH_RD():
     # Reset o index devido ao sorting prévio e à eventual eliminação de duplicates
     df.reset_index(drop=True, inplace=True)
 
-    coluna = 'CNES'
+    coluna = 'SP_CNES'
     frames = []
     lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
                      'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
@@ -1354,14 +1355,14 @@ def get_missing_cnes_SIH_RD():
 
 
 ###########################################################################################################################################################################
-# SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA #
+# SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP SIH_SP #
 ###########################################################################################################################################################################
 
-def get_PAXXaamm_simplified(state, year, month):
+def get_SPXXaamm_simplified(state, year, month):
     # Lê o arquivo "dbc" como um objeto pandas DataFrame e o salva no formato "parquet"
-    dataframe = download_SIAXXaamm('PA', state, year, month)
-    # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela pabr da base de dados
-    lista_columns = np.array(['PA_CODUNI'])
+    dataframe = download_SIHXXaamm('SP', state, year, month)
+    # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela spbr da base de dados
+    lista_columns = np.array(['SP_PROCREA', 'SP_CNES', 'SP_ATOPROF', 'SERV_CLA'])
 
     # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
     df = pd.DataFrame(columns=lista_columns)
@@ -1381,9 +1382,227 @@ def get_PAXXaamm_simplified(state, year, month):
     for col in dif_set:
         df[col].replace(np.nan, '', inplace=True)
 
+    # Simplifica/corrige a apresentação dos dados das colunas especificadas
+    df['SP_CNES'] = df['SP_CNES'].apply(lambda x: x.zfill(7))
+    df['SP_CNES'] = df['SP_CNES'].apply(str.strip)
+    df['SP_CNES'] = df['SP_CNES'].apply(lambda x: x if len(x) == 7 else '')
+
+    # Atualiza/corrige os labels das colunas especificadas
+    df['SERV_CLA'].replace(['000000'], '', inplace=True)
+
     return df
 
-def get_missing_cnes_SIA_PA():
+
+def get_missing_PROCEDIMENTO_SIH_SP():
+    # Conversão da Tabela TB_SIGTAP para um objeto pandas DataFrame
+    file_name = 'TB_SIGTAP'
+    df = download_table_dbf(file_name)
+    # Renomeia as colunas especificadas
+    df.rename(index=str, columns={'IP_COD': 'ID', 'IP_DSCR': 'PROCEDIMENTO'}, inplace=True)
+
+    coluna = ''
+    frames = []
+    lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
+                     'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
+
+    for ano in range(8, 20):
+        ano = str(ano).zfill(2)
+        for mes in range(1, 13):
+            mes = str(mes).zfill(2)
+            for estado in lista_estados:
+                print('\nSP{}{}{}'.format(estado, ano, mes))
+                try:
+                    df_SP = get_SPXXaamm_simplified(estado, ano, mes)
+                except:
+                    print('O arquivo SP{}{}{} não existe.'.format(estado, ano, mes))
+                    continue
+                else:
+                    print('O número de linhas do SP{}{}{} no início é: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    df_SP = df_SP.drop(df_SP[df_SP[coluna]==''].index)
+                    print('O número de linhas do SP{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    df_SP.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                    print('O número de linhas do SP{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    frames.append(df_SP)
+    full_df = pd.concat(frames, ignore_index=True)
+    print(full_df.shape)
+    full_df.drop_duplicates(subset=coluna, keep='first', inplace=True)
+    print(full_df.shape)
+    print('Finished prestuff!')
+
+    # Converte para um objeto list a coluna OCUP do objeto "full_df"
+    full_codigos = full_df[coluna].tolist()
+
+    # Obtém em um arquivo "xlsx"
+    full_ocup = df['ID'].tolist()
+    dif_ocup = list(set(full_codigos) - set(full_ocup))
+    dif_ocup.sort()
+    df_dif_ocup = pd.DataFrame(columns=['ID'])
+    df_dif_ocup['ID'] = dif_ocup
+    df_dif_ocup.to_excel(os.getcwd() + '\\SIH_SP_' + coluna + '_MISSING.xlsx', index=False)
+    print('Game over!')
+
+
+def get_missing_CNES_SIH_SP():
+    # Conversão da Tabela TCNESBR para um objeto pandas DataFrame
+    file_name = 'TCNESBR'
+    df1 = download_table_dbf(file_name)
+    # Renomeia as colunas especificadas
+    df1.rename(index=str, columns={'CNES': 'ID', 'NOMEFANT': 'DESCESTAB'}, inplace=True)
+    # Remove colunas indesejáveis do objeto pandas DataFrame
+    df1 = df1.drop(['UF_ZI', 'CMPT'], axis=1)
+    # Conversão da Tabela HUF_MEC para um objeto pandas DataFrame
+    file_name = 'HUF_MEC'
+    df2 = download_table_dbf(file_name)
+    # Renomeia as colunas especificadas
+    df2.rename(index=str, columns={'PA_CODUNI_': 'ID', 'FANTASIA': 'DESCESTAB'}, inplace=True)
+    # Conversão da TCC HOSFEDRJ para um objeto pandas DataFrame
+    file_name = 'HOSFEDRJ'
+    df3 = download_table_cnv(file_name)
+    # Renomeia a coluna SIGNIFICACAO
+    df3.rename(index=str, columns={'SIGNIFICACAO': 'DESCESTAB'}, inplace=True)
+    # Conversão de "df1", "df2" e "df3" para um único objeto pandas DataFrame
+    frames = []
+    frames.append(df1)
+    frames.append(df2)
+    frames.append(df3)
+    df = pd.concat(frames, ignore_index=True)
+    # Elimina linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
+    df.drop_duplicates(subset='ID', keep='first', inplace=True)
+    # Ordena as linhas por ordem crescente dos valores da coluna ID
+    df.sort_values(by=['ID'], inplace=True)
+    # Reset o index devido ao sorting prévio e à eventual eliminação de duplicates
+    df.reset_index(drop=True, inplace=True)
+
+    coluna = 'SP_CNES'
+    frames = []
+    lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
+                     'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
+
+    for ano in range(8, 20):
+        ano = str(ano).zfill(2)
+        for mes in range(1, 13):
+            mes = str(mes).zfill(2)
+            for estado in lista_estados:
+                print('\nSP{}{}{}'.format(estado, ano, mes))
+                try:
+                    df_SP = get_SPXXaamm_simplified(estado, ano, mes)
+                except:
+                    print('O arquivo SP{}{}{} não existe.'.format(estado, ano, mes))
+                    continue
+                else:
+                    print('O número de linhas do SP{}{}{} no início é: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    df_SP = df_SP.drop(df_SP[df_SP[coluna]==''].index)
+                    print('O número de linhas do SP{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    df_SP.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                    print('O número de linhas do SP{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    frames.append(df_SP)
+    full_df = pd.concat(frames, ignore_index=True)
+    print(full_df.shape)
+    full_df.drop_duplicates(subset=coluna, keep='first', inplace=True)
+    print(full_df.shape)
+    print('Finished prestuff!')
+
+    # Converte para um objeto list a coluna OCUP do objeto "full_df"
+    full_codigos = full_df[coluna].tolist()
+
+    # Obtém em um arquivo "xlsx"
+    full_ocup = df['ID'].tolist()
+    dif_ocup = list(set(full_codigos) - set(full_ocup))
+    dif_ocup.sort()
+    df_dif_ocup = pd.DataFrame(columns=['ID'])
+    df_dif_ocup['ID'] = dif_ocup
+    df_dif_ocup.to_excel(os.getcwd() + '\\SIH_SP_' + coluna + '_MISSING.xlsx', index=False)
+    print('Game over!')
+
+
+def get_missing_SERV_CLA_SIH_SP():
+    # Conversão da Tabela S_CLASSEN para um objeto pandas DataFrame
+    file_name = 'S_CLASSEN'
+    df = download_table_dbf(file_name)
+    # Renomeia as colunas especificadas
+    df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'CLASSIFICACAO'}, inplace=True)
+    # Considera da coluna GESTAO apenas a substring depois de um dígito e um traço
+    df['CLASSIFICACAO'].replace(to_replace='^\d{3}\s{1}', value= '', regex=True, inplace=True)
+
+    coluna = 'SERV_CLA'
+    frames = []
+    lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
+                     'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
+
+    for ano in range(8, 20):
+        ano = str(ano).zfill(2)
+        for mes in range(1, 13):
+            mes = str(mes).zfill(2)
+            for estado in lista_estados:
+                print('\nSP{}{}{}'.format(estado, ano, mes))
+                try:
+                    df_SP = get_SPXXaamm_simplified(estado, ano, mes)
+                except:
+                    print('O arquivo SP{}{}{} não existe.'.format(estado, ano, mes))
+                    continue
+                else:
+                    print('O número de linhas do SP{}{}{} no início é: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    df_SP = df_SP.drop(df_SP[df_SP[coluna]==''].index)
+                    print('O número de linhas do SP{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    df_SP.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                    print('O número de linhas do SP{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_SP.shape[0]))
+                    frames.append(df_SP)
+    full_df = pd.concat(frames, ignore_index=True)
+    print(full_df.shape)
+    full_df.drop_duplicates(subset=coluna, keep='first', inplace=True)
+    print(full_df.shape)
+    print('Finished prestuff!')
+
+    # Converte para um objeto list a coluna OCUP do objeto "full_df"
+    full_codigos = full_df[coluna].tolist()
+
+    # Obtém em um arquivo "xlsx"
+    full_ocup = df['ID'].tolist()
+    dif_ocup = list(set(full_codigos) - set(full_ocup))
+    dif_ocup.sort()
+    df_dif_ocup = pd.DataFrame(columns=['ID'])
+    df_dif_ocup['ID'] = dif_ocup
+    df_dif_ocup.to_excel(os.getcwd() + '\\SIH_SP_' + coluna + '_MISSING.xlsx', index=False)
+    print('Game over!')
+
+
+
+###########################################################################################################################################################################
+# SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA #
+###########################################################################################################################################################################
+
+def get_PAXXaamm_simplified(state, year, month):
+    # Lê o arquivo "dbc" como um objeto pandas DataFrame e o salva no formato "parquet"
+    dataframe = download_SIAXXaamm('PA', state, year, month)
+    # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela pabr da base de dados
+    lista_columns = np.array(['PA_CODUNI', 'PA_PROC_ID'])
+
+    # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
+    df = pd.DataFrame(columns=lista_columns)
+
+    # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
+    # as colunas da variável "df" não presentes na variável dataframe
+    for col in df.columns.values:
+        for coluna in dataframe.columns.values:
+            if coluna == col:
+                df[col] = dataframe[coluna].tolist()
+                break
+
+    # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+    dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
+
+    # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
+    for col in dif_set:
+        df[col].replace(np.nan, '', inplace=True)
+
+    # Simplifica/corrige a apresentação dos dados das colunas especificadas
+    df['PA_CODUNI'] = df['PA_CODUNI'].apply(lambda x: x.zfill(7))
+    df['PA_CODUNI'] = df['PA_CODUNI'].apply(str.strip)
+    df['PA_CODUNI'] = df['PA_CODUNI'].apply(lambda x: x if len(x) == 7 else '')
+
+    return df
+
+def get_missing_CNES_SIA_PA():
 
     frames = []
     lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
@@ -1415,19 +1634,101 @@ def get_missing_cnes_SIA_PA():
         for mes in range(1, 13):
             mes = str(mes).zfill(2)
             for estado in lista_estados:
-                print('\nPA{}{}{}'.format(estado, ano, mes))
-                try:
-                    df_PA = get_PAXXaamm_simplified(estado, ano, mes)
-                except:
-                    print('O arquivo PA{}{}{} não existe.'.format(estado, ano, mes))
-                    continue
+                if (((estado == 'SP') and (int(ano) == 11) and (int(mes) == 12)) or ((estado == 'SP') and (int(ano) >= 13))):
+                    for s in ['a', 'b']:
+                        mes = mes + s
+                        print('\nPA{}{}{}'.format(estado, ano, mes))
+                        try:
+                            df_PA = get_PAXXaamm_simplified(estado, ano, mes)
+                        except:
+                            print('O arquivo PA{}{}{} não existe.'.format(estado, ano, mes))
+                            continue
+                        else:
+                            print('O número de linhas do PA{}{}{} no início é: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                            df_PA = df_PA.drop(df_PA[df_PA[coluna]==''].index)
+                            print('O número de linhas do PA{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                            df_PA.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                            print('O número de linhas do PA{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                            frames.append(df_PA)
                 else:
-                    print('O número de linhas do PA{}{}{} no início é: {}'.format(estado, ano, mes, df_PA.shape[0]))
-                    df_PA = df_PA.drop(df_PA[df_PA[coluna]==''].index)
-                    print('O número de linhas do PA{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_PA.shape[0]))
-                    df_PA.drop_duplicates(subset=coluna, keep='first', inplace=True)
-                    print('O número de linhas do PA{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_PA.shape[0]))
-                    frames.append(df_PA)
+                    print('\nPA{}{}{}'.format(estado, ano, mes))
+                    try:
+                        df_PA = get_PAXXaamm_simplified(estado, ano, mes)
+                    except:
+                        print('O arquivo PA{}{}{} não existe.'.format(estado, ano, mes))
+                        continue
+                    else:
+                        print('O número de linhas do PA{}{}{} no início é: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                        df_PA = df_PA.drop(df_PA[df_PA[coluna]==''].index)
+                        print('O número de linhas do PA{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                        df_PA.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                        print('O número de linhas do PA{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                        frames.append(df_PA)
+    full_df = pd.concat(frames, ignore_index=True)
+    print(full_df.shape)
+    full_df.drop_duplicates(subset=coluna, keep='first', inplace=True)
+    print(full_df.shape)
+    print('Finished prestuff!')
+
+    # Converte para um objeto list a coluna OCUP do objeto "full_df"
+    full_codigos = full_df[coluna].tolist()
+
+    # Obtém em um arquivo "xlsx"
+    full_ocup = df['ID'].tolist()
+    dif_ocup = list(set(full_codigos) - set(full_ocup))
+    dif_ocup.sort()
+    df_dif_ocup = pd.DataFrame(columns=['ID'])
+    df_dif_ocup['ID'] = dif_ocup
+    df_dif_ocup.to_excel(os.getcwd() + '\\SIA_' + coluna + '_MISSING.xlsx', index=False)
+    print('Game over!')
+
+def get_missing_PROCEDIMENTO_SIA_PA():
+
+    file_name = 'TB_SIGTAP'
+    df = download_table_dbf(file_name)
+    # Renomeia as colunas especificadas
+    df.rename(index=str, columns={'IP_COD': 'ID', 'IP_DSCR': 'PROCEDIMENTO'}, inplace=True)
+
+    coluna = 'PA_PROC_ID'
+    frames = []
+    lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
+                     'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
+
+    for ano in range(19, 20):
+        ano = str(ano).zfill(2)
+        for mes in range(9, 13):
+            mes = str(mes).zfill(2)
+            for estado in lista_estados:
+                if (((estado == 'SP') and (int(ano) == 11) and (int(mes) == 12)) or ((estado == 'SP') and (int(ano) >= 13))):
+                    for s in ['a', 'b']:
+                        month = mes + s
+                        print('\nPA{}{}{}'.format(estado, ano, month))
+                        try:
+                            df_PA = get_PAXXaamm_simplified(estado, ano, month)
+                        except:
+                            print('O arquivo PA{}{}{} não existe.'.format(estado, ano, month))
+                            continue
+                        else:
+                            print('O número de linhas do PA{}{}{} no início é: {}'.format(estado, ano, month, df_PA.shape[0]))
+                            df_PA = df_PA.drop(df_PA[df_PA[coluna]==''].index)
+                            print('O número de linhas do PA{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, month, df_PA.shape[0]))
+                            df_PA.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                            print('O número de linhas do PA{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, month, df_PA.shape[0]))
+                            frames.append(df_PA)
+                else:
+                    print('\nPA{}{}{}'.format(estado, ano, mes))
+                    try:
+                        df_PA = get_PAXXaamm_simplified(estado, ano, mes)
+                    except:
+                        print('O arquivo PA{}{}{} não existe.'.format(estado, ano, mes))
+                        continue
+                    else:
+                        print('O número de linhas do PA{}{}{} no início é: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                        df_PA = df_PA.drop(df_PA[df_PA[coluna]==''].index)
+                        print('O número de linhas do PA{}{}{} após exclusão das string vazias é: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                        df_PA.drop_duplicates(subset=coluna, keep='first', inplace=True)
+                        print('O número de linhas do PA{}{}{} após eliminação das próprias duplicates: {}'.format(estado, ano, mes, df_PA.shape[0]))
+                        frames.append(df_PA)
     full_df = pd.concat(frames, ignore_index=True)
     print(full_df.shape)
     full_df.drop_duplicates(subset=coluna, keep='first', inplace=True)
@@ -1474,8 +1775,15 @@ if __name__ == '__main__':
         get_missing_ID_SEGM_CNES_EP()
     elif datasus_db == 'SIH':
         from insertion.data_wrangling.online.download_SIH import download_SIHXXaamm, download_table_dbf, download_table_cnv
-        get_missing_PROC_SOLIC_SIH_RD()
-        #get_missing_cnes_SIH_RD()
+        #get_missing_PROCEDIMENTO_SIH_RD()
+        #get_missing_CNES_SIH_RD()
+        #get_missing_PROCEDIMENTO_SIA_PA()
+        get_missing_CNES_SIH_SP()
+        #get_missing_SERV_CLA_SIH_SP()
+
+
+
     elif datasus_db == 'SIA':
         from insertion.data_wrangling.online.download_SIA import download_SIAXXaamm, download_table_dbf, download_table_cnv
-        get_missing_cnes_SIA_PA()
+        #get_missing_CNES_SIA_PA()
+        get_missing_PROCEDIMENTO_SIA_PA()

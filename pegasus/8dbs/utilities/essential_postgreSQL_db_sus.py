@@ -88,6 +88,9 @@ def files_in_ftp(child_db):
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" se refira aos anos de 2005
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05', regex=True)]
 
+        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
+
     # SIH
     elif child_db == 'sih':
         # Diretório do host onde estão os dados do banco de dados "child_db" (SIH) do Datasus
@@ -100,15 +103,8 @@ def files_in_ftp(child_db):
         # Desconsidera a linha de "df_ftp" cuja coluna "NOME" contenha "RDAC0909" por estar sem dado esse arquivo
         df_ftp = df_ftp[~df_ftp['NOME'].str.startswith('RDAC0909')]
 
-    # SIA
-    elif child_db == 'sia':
-        # Diretório do host onde estão os dados do banco de dados "child_db" (SIA) do Datasus
-        datasus_path = '/dissemin/publicos/SIASUS/200801_/Dados/'
-        # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
-        # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
-        df_ftp = get_dbc_info(datasus_path)
-        # Considera apenas as linhas de "df_ftp" cuja coluna "NOME" começa pelas string "PA" ou "XX"
-        df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^PA)')]
+        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIM
     elif child_db == 'sim':
@@ -124,6 +120,9 @@ def files_in_ftp(child_db):
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" a string "BR"
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
 
+        # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DO.{2}201[8-9]', regex=True)]
+
     # SINASC
     elif child_db == 'sinasc':
         # Diretório do host onde estão os dados do banco de dados "child_db" (SINASC) do Datasus
@@ -138,15 +137,8 @@ def files_in_ftp(child_db):
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" a string "BR"
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
 
-    # SINAN
-    elif child_db == 'sinan':
-        # Diretório do host onde estão os dados do banco de dados "child_db" (SINAN) do Datasus
-        datasus_path = '/dissemin/publicos/SINAN/DADOS/FINAIS/'
-        # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
-        # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
-        df_ftp = get_dbc_info(datasus_path)
-        # Considera apenas as linhas de "df_ftp" cuja coluna "NOME" começa pelas string "DENG" ou "XX"
-        df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^DENG)')]
+        # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
+        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DN.{2}201[8-9]', regex=True)]
 
     # Reset o index devido à eventual eliminação de linhas
     df_ftp.reset_index(drop=True, inplace=True)
