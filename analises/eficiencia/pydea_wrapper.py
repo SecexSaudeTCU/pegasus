@@ -133,7 +133,7 @@ class ModeloDEA:
         # Salva arquivo de entrada com a coluna EFICIENCIA com respectivos escores DEA
         arquivo_entrada_basename = os.path.basename(os.path.splitext(data_file)[0])
         arquivo_resultado_final = os.path.join(
-            diretorio_saida, '{arquivo_entrada}_resultado_clusterizado.xlsx'.format(arquivo_entrada=arquivo_entrada_basename)
+            diretorio_saida, 'resultado_{arquivo_entrada}.xlsx'.format(arquivo_entrada=arquivo_entrada_basename)
         )
         df.to_excel(arquivo_resultado_final, index=False)
         return df

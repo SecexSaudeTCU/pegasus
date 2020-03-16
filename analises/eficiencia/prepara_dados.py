@@ -13,23 +13,39 @@ Prepara planilhas para clusterização e análise DEA.
 
 import os
 import pandas as pd
+from consts import DIRETORIO_DADOS_INTERMEDIARIOS, DIRETORIO_DADOS_ORIGINAIS, UF_REGIAO, NATJUR_ESFERA
 import pandas_profiling
 
 if __name__ == '__main__':
 
     # Ano dos dados para DEA (para fis de clusterização, estamos sempre utilizando os dados de 2018)
-    ANO = '2018'
-
-    # Obtem diretório raiz do projeto
-    DIRETORIO_RAIZ_PROJETO = os.path.dirname(os.path.realpath(__file__))
-
-    # Diretórios de dados e resultados
-    DIRETORIO_DADOS_ORIGINAIS = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'originais')
-    DIRETORIO_DADOS_INTERMEDIARIOS = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'intermediarios')
+    ANO = '2017'
 
     # Carrega dados da planilha gerada pelo Eric
     arquivo_dados = os.path.join(DIRETORIO_DADOS_ORIGINAIS, 'd{ANO}.csv'.format(ANO=ANO))
     df_tudo = pd.read_csv(arquivo_dados)
+
+    # Adicionar coluna REGIAO antes da coluna UF
+    regioes = [UF_REGIAO[uf] for uf in df_tudo.UF]
+    pos_col_antes_uf = df_tudo.columns.to_list().index('UF')
+    df_tudo.insert(loc=pos_col_antes_uf, column='REGIAO', value=regioes)
+
+    # Adiciona coluna ESFERA depois da coluna TIPO
+    esfera_federativa = [NATJUR_ESFERA[nat_jur] for nat_jur in df_tudo.NAT_JURIDICA]
+    pos_col_antes_tipo = df_tudo.columns.to_list().index('TIPO')
+    df_tudo.insert(loc=pos_col_antes_tipo, column='ESFERA_FEDERATIVA', value=esfera_federativa)
+
+    # Adicionar coluna FAIXA_LEITOS depois de NAT_JURIDICA
+    pos_depois_nat_jur = pos_col_antes_tipo = df_tudo.columns.to_list().index('NAT_JURIDICA')
+    def retorna_faixa_leitos(num_leitos):
+        if num_leitos < 1: return 'NA'
+        if num_leitos < 26: return '1 a 25'
+        if num_leitos < 51: return '26 a 50'
+        if num_leitos < 201: return '101 a 200'
+        if num_leitos < 301: return '201 a 300'
+        return 'Mais de 300'
+    faixa_leitos = df_tudo.CNES_LEITOS_SUS.apply(retorna_faixa_leitos)
+    df_tudo.insert(loc=pos_depois_nat_jur, column='FAIXA_LEITOS', value=faixa_leitos)
 
     # Substiui nans pelo valor zero nos valores da produção do SIA e do SIH
     df_tudo.VALOR_SIA = df_tudo.VALOR_SIA.fillna(value=0)
