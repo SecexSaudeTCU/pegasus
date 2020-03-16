@@ -10,16 +10,14 @@ Prepara planilhas para clusterização e análise DEA.
      - Unidades com valor zero em variável utilizada pela DEA (sobram 2.861 de 3.304)
 """
 
-
 import os
 import pandas as pd
-from consts import DIRETORIO_DADOS_INTERMEDIARIOS, DIRETORIO_DADOS_ORIGINAIS, UF_REGIAO, NATJUR_ESFERA
-import pandas_profiling
+from consts import DIRETORIO_DADOS_INTERMEDIARIOS, DIRETORIO_DADOS_ORIGINAIS, UF_REGIAO, NATJUR_ESFERA, NATJUR_TIPO_ADMIN_PUB
 
 if __name__ == '__main__':
 
     # Ano dos dados para DEA (para fis de clusterização, estamos sempre utilizando os dados de 2018)
-    ANO = '2017'
+    ANO = '2018'
 
     # Carrega dados da planilha gerada pelo Eric
     arquivo_dados = os.path.join(DIRETORIO_DADOS_ORIGINAIS, 'd{ANO}.csv'.format(ANO=ANO))
@@ -35,8 +33,13 @@ if __name__ == '__main__':
     pos_col_antes_tipo = df_tudo.columns.to_list().index('TIPO')
     df_tudo.insert(loc=pos_col_antes_tipo, column='ESFERA_FEDERATIVA', value=esfera_federativa)
 
+    # Adiciona coluna TIPO_ADMIN_PUB depois da coluna TIPO
+    pos_col_antes_tipo = df_tudo.columns.to_list().index('TIPO')
+    tipo_admin_pub = [NATJUR_TIPO_ADMIN_PUB[nat_jur] for nat_jur in df_tudo.NAT_JURIDICA]
+    df_tudo.insert(loc=pos_col_antes_tipo, column='TIPO_ADMIN_PUB', value=tipo_admin_pub)
+
+
     # Adicionar coluna FAIXA_LEITOS depois de NAT_JURIDICA
-    pos_depois_nat_jur = pos_col_antes_tipo = df_tudo.columns.to_list().index('NAT_JURIDICA')
     def retorna_faixa_leitos(num_leitos):
         if num_leitos < 1: return 'NA'
         if num_leitos < 26: return '1 a 25'
@@ -44,6 +47,9 @@ if __name__ == '__main__':
         if num_leitos < 201: return '101 a 200'
         if num_leitos < 301: return '201 a 300'
         return 'Mais de 300'
+
+
+    pos_depois_nat_jur = pos_col_antes_tipo = df_tudo.columns.to_list().index('NAT_JURIDICA')
     faixa_leitos = df_tudo.CNES_LEITOS_SUS.apply(retorna_faixa_leitos)
     df_tudo.insert(loc=pos_depois_nat_jur, column='FAIXA_LEITOS', value=faixa_leitos)
 
@@ -117,9 +123,8 @@ if __name__ == '__main__':
     # Verifica se ao final houve algum hospital somatória de proporções de procedimentos inferior a 0.99
     idx = df_hosp_pubs.columns.to_list().index('SIA-0101')
     num_com_soma_inferior_a_um = sum(df_hosp_pubs[df_hosp_pubs.columns[idx::]].sum(axis=1) < 0.999)
-    assert(num_com_soma_inferior_a_um == 0)
+    assert (num_com_soma_inferior_a_um == 0)
 
     # Salva planilha para DEA
     arquivo_para_dea = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'hosp_pubs_{ANO}.xlsx'.format(ANO=ANO))
     df_hosp_pubs.to_excel(arquivo_para_dea, index=False)
-

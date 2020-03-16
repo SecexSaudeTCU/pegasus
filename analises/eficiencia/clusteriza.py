@@ -1,25 +1,18 @@
 """
-Clusteriza as unidades de saude e salva planilhas com a coluna CLUSTER
-adicionada com os respectivos clusters encontrados.
+Clusteriza as unidades de saude e salva planilhas com a coluna CLUSTER adicionada com os respectivos clusters
+encontrados. Após a clusterização, são feitas algumas análises, explicadas com mais detalhes abaixo.
 """
 
 import os
 import pandas as pd
 from sklearn.cluster import KMeans
+from consts import DIRETORIO_DADOS_ORIGINAIS, DIRETORIO_DADOS_INTERMEDIARIOS
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
     #
     ANO = '2018'
-
-    # Obtem diretório raiz do projeto
-    DIRETORIO_RAIZ_PROJETO = os.path.dirname(os.path.realpath(__file__))
-
-    # Diretórios de dados e resultados
-    DIRETORIO_DADOS_ORIGINAIS = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'originais')
-    DIRETORIO_DADOS_INTERMEDIARIOS = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'intermediarios')
-    DIRETORIO_DADOS_RESULTADOS = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'resultados')
 
     # Carrega dados da planilha gerada pelo Eric
     arquivo_para_clusterizacao = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'hosp_pubs_{ANO}.xlsx'.format(ANO=ANO))
@@ -29,28 +22,6 @@ if __name__ == '__main__':
     idx_coluna_primeiro_proc = df_hosp_pubs.columns.to_list().index('SIA-0101')
     colunas_para_clust = df_hosp_pubs.columns[idx_coluna_primeiro_proc::].to_list()
     df_para_clust = df_hosp_pubs[colunas_para_clust]
-    #df_para_clust = df_para_clust.set_index(df_hosp_pubs['CNES'])
-
-    # Mostra gráfico do cotovelo para mostrar a variação da inércia de acordo com o número de clusters
-    min_max_num_clusters = range(4, 30)
-    inercias = []
-    
-    # Treina k-means para cada valor de k
-    for k in min_max_num_clusters:
-        modelo = KMeans(n_clusters=k, random_state=42)
-        modelo.fit(df_para_clust)
-        inercias.append(modelo.inertia_)
-
-    # Plota gráfico da variação da inércia de acordo com o número de clusters
-    plt.ioff()  # Desabilita o modo iterativo do matplotlib (para não mostrar os gráficos)
-    plt.plot(min_max_num_clusters, inercias, '-o')
-    plt.xlabel('Número de clusters')
-    plt.ylabel('Inércia')
-    plt.title('Gráfico do "cotovelo" para determinação do número de clusters')
-    plt.grid()
-    plt.xticks(min_max_num_clusters)
-    arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'kmeans_inercia_vs_k.png')
-    plt.savefig(arquivo_grafico_inercia)
 
     # Número de clusters determinado pela técnica do jolho
     NUMERO_CLUSTERS = 10
@@ -64,12 +35,49 @@ if __name__ == '__main__':
 
     # Salva planilha original com a coluna CLUSTER adicionada
     arquivo_dados_basename = os.path.basename(os.path.splitext(arquivo_para_clusterizacao)[0])
-    arquivo_dados_clusterizados = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, arquivo_dados_basename + '_clusterizado.xlsx')
+    arquivo_dados_clusterizados = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
+                                               arquivo_dados_basename + '_clusterizado.xlsx')
     df_hosp_pubs.to_excel(arquivo_dados_clusterizados, index=False)
 
     """
-    A Criação dos clusters termina aqui. Após isto, há somente código para análise da clusterização.
+    A Criação dos clusters termina aqui. Após isto, há somente código para análise da clusterização. Ao final da
+    execução, o script salva na pasta de resultados intermediários:
+        - Gráfico do joelho, mostrando a variação da inércia de acordo com número de clusters
+        - Tabela mostrando o número de elementos po cluster
+        - Gráficos de barras mostrando o perfil de procedimentos de cadas cluster
     """
+    # Número mínimo e máximo de cluster para a análise
+    MIN_CLUSTERS, MAX_CLUSTERS = 4, 15
+    min_max_num_clusters = range(MIN_CLUSTERS, MAX_CLUSTERS)
+    inercias = []
+
+    # Inicializa dicionáro para armazenar o número de unidades por cluster (em ordem decrescente)
+    num_unidades_por_cluster = {}
+
+    # Treina k-means para cada valor de k
+    for k in min_max_num_clusters:
+        modelo = KMeans(n_clusters=k, random_state=42)
+        modelo.fit(df_para_clust)
+        inercias.append(modelo.inertia_)
+        num_por_cluster = pd.value_counts(modelo.labels_).sort_values(ascending=False).to_list()
+        num_por_cluster_padded = num_por_cluster + (MAX_CLUSTERS - k - 1) * ['-']
+        num_unidades_por_cluster[k] = num_por_cluster_padded
+
+    # Cria dataframe e salva planilha com o número de unidades por cluster
+    df_num_por_cluster = pd.DataFrame(num_unidades_por_cluster)
+    arquivo_num_por_cluster = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
+                                           'num_elementos_por_cluster_{ANO}'.format(ANO=ANO))
+
+    # Plota gráfico da variação da inércia de acordo com o número de clusters
+    plt.ioff()  # Desabilita o modo iterativo do matplotlib (para não mostrar os gráficos)
+    plt.plot(min_max_num_clusters, inercias, '-o')
+    plt.xlabel('Número de clusters')
+    plt.ylabel('Inércia')
+    plt.title('Gráfico do "cotovelo" para determinação do número de clusters')
+    plt.grid()
+    plt.xticks(min_max_num_clusters)
+    arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'kmeans_inercia_vs_k.png')
+    plt.savefig(arquivo_grafico_inercia)
 
     # Carrega mapeamente entre códigos de subgrupos da SIGTAP e suas descrições
     arquivo_mapa_subgrupo_desc = os.path.join(DIRETORIO_DADOS_ORIGINAIS, 'sigtap_mapa_codigo_subgrupo.xlsx')
@@ -92,7 +100,6 @@ if __name__ == '__main__':
 
     # Para cada cluster
     for k in range(0, NUMERO_CLUSTERS):
-
         # Obtém hospitais do cluster (Repara que no filtro, utilizamos a variável df_hosp_pubs ao invés da df_cluster)
         df_cluster = df_para_clust[df_hosp_pubs.CLUSTER == k]
 
@@ -115,5 +122,6 @@ if __name__ == '__main__':
 
     # Salva planilha com os centroids
     df_centroids = pd.DataFrame(centroids)
-    arquivo_centroids = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'centroids_kmeans_{k}_clusters.xlsx'.format(k=NUMERO_CLUSTERS))
+    arquivo_centroids = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
+                                     'centroids_kmeans_{k}_clusters.xlsx'.format(k=NUMERO_CLUSTERS))
     df_centroids.to_excel(arquivo_centroids)

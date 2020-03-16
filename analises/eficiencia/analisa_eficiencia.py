@@ -15,7 +15,7 @@ if __name__ == '__main__':
     DIRETORIO_DADOS_RESULTADOS = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'resultados')
 
     # Carrega resultados da análise DEA por cluster
-    arquivo_resultado_2018 = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'resultados', 'perfil_hosp_pubs_oss_dez_2018_clusterizado_resultado_clusterizado.xlsx')
+    arquivo_resultado_2018 = os.path.join(DIRETORIO_RAIZ_PROJETO, 'dados', 'resultados', 'resultado_hosp_pubs_2018_clusterizado.xlsx')
     df_resultado = pd.read_excel(arquivo_resultado_2018)
 
     # Remove undiades com eficiência 'Infeasible' ou 'Unbounded'
@@ -36,4 +36,30 @@ if __name__ == '__main__':
 
     # Normaliza eficiências para o intervalor de 0 a 1
     df_feasible.loc[:, 'EFICIENCIA_NORMALIZADA'] = ((std_scores - std_scores.min()) / (std_scores.max() - std_scores.min())).values
+
+
+    df_feasible.EFICIENCIA_NORMALIZADA.hist(bins=300)
+
+    df_feasible.groupby('SE_GERIDA_OSS').EFICIENCIA_NORMALIZADA.mean()
+
+    """
+    Avaliar a ordenação das médias das eficiências dos TIPO_UNIDADEs e verificar que elas são explicadas pelas seguintes regras:
+      ESPECIALIZADO > GERAL, 
+      PRONTO-SOCORRO > HOSPITAL, 
+      MISTA = GERAL + SOCORRO, 
+      H.DIA/ISOLADO é exceção.
+    """
+    df_feasible.groupby('TIPO_UNIDADE').EFICIENCIA_NORMALIZADA.mean().sort_values()
+
+    """
+    Avaliar a ordenação das médias das eficiências da ATIVIDADE_ENSINO e verificar que elas são explicadas pelas seguintes regras:
+      MAIS ENSINO == MAIS EFICIENTE
+    """
+    df_feasible.groupby('ATIVIDADE_ENSINO').EFICIENCIA_NORMALIZADA.mean().sort_values()
+
+    """
+    Nenhum padrão óbvio identificado.
+    """
+    df_feasible.groupby('NAT_JURIDICA').EFICIENCIA_NORMALIZADA.mean().sort_values()
+
 
