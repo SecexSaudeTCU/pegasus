@@ -17,7 +17,7 @@ from consts import DIRETORIO_DADOS_INTERMEDIARIOS, DIRETORIO_DADOS_ORIGINAIS, UF
 if __name__ == '__main__':
 
     # Ano dos dados para DEA (para fis de clusterização, estamos sempre utilizando os dados de 2018)
-    ANO = '2018'
+    ANO = '2019'
 
     # Carrega dados da planilha gerada pelo Eric
     arquivo_dados = os.path.join(DIRETORIO_DADOS_ORIGINAIS, 'd{ANO}.csv'.format(ANO=ANO))

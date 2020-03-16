@@ -1,6 +1,15 @@
 """
-Clusteriza as unidades de saude e salva planilhas com a coluna CLUSTER adicionada com os respectivos clusters
-encontrados. Após a clusterização, são feitas algumas análises, explicadas com mais detalhes abaixo.
+Clusteriza com k-means as unidades hospitalares e salva planilhas com a coluna CLUSTER adicionada com os respectivos
+clusters encontrados.
+
+Nota:
+O número k de clusters é determinado automaticamente. Para a análise DEA, segundo [Cooper et al, 2011], o número mínimo
+de DMUs deve ser superior a três vezes a soma de variáveis de entrada e saída. Portanto, o número de cluster k é
+determinado como o maior possível que não gere clusters com menos de 15 DMUs (3 vezes número de variáveis de entrada e
+saídas que estamos utilizando na DEA).
+
+Após a clusterização, são feitas algumas análises, explicadas com mais detalhes abaixo.
+TODO: mover estas análises para script próprio
 """
 
 import os
@@ -12,7 +21,10 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
 
     #
-    ANO = '2018'
+    ANO = '2019'
+
+    # Número mínimo de unidades por cluster (3 x o número de variáveis utilizadas na DEA)
+    NUMERO_MINIMO_UNIDADES_POR_CLUSTER = 3 * 5
 
     # Carrega dados da planilha gerada pelo Eric
     arquivo_para_clusterizacao = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'hosp_pubs_{ANO}.xlsx'.format(ANO=ANO))
@@ -23,11 +35,33 @@ if __name__ == '__main__':
     colunas_para_clust = df_hosp_pubs.columns[idx_coluna_primeiro_proc::].to_list()
     df_para_clust = df_hosp_pubs[colunas_para_clust]
 
-    # Número de clusters determinado pela técnica do jolho
+    # Número de clusters determinado pela técnica do cotovelo
     NUMERO_CLUSTERS = 10
 
-    # Treina kmeans
-    modelo = KMeans(n_clusters=NUMERO_CLUSTERS, random_state=42)
+    # Número mínimo e máximo de cluster para a análise
+    MIN_CLUSTERS, MAX_CLUSTERS = 4, 30
+
+    # Inicializa o número de clusters
+    numero_clusters = None
+
+    # Treina k-means para cada valor de k
+    for k in range(MIN_CLUSTERS, MAX_CLUSTERS):
+
+        # Treina k-means
+        modelo = KMeans(n_clusters=k, random_state=42)
+        modelo.fit(df_para_clust)
+
+        # Obtém lista de número de elementos por cluster em ordem decrescente
+        num_por_cluster = pd.value_counts(modelo.labels_).sort_values(ascending=False).to_list()
+
+        # Caso o cluster com menor número de elementos tenha menos do que o NUMERO_MINIMO_UNIDADES_POR_CLUSTER
+        if num_por_cluster[-1] < NUMERO_MINIMO_UNIDADES_POR_CLUSTER:
+            # Salva o número de clusters da iteração anterior e interrompe o loop
+            numero_clusters = k - 1
+            break
+
+    # Treina kmeans com o número de cluster identificado anteriormente
+    modelo = KMeans(n_clusters=numero_clusters, random_state=42)
     modelo.fit(df_para_clust)
 
     # Adiciona a coluna CLUSTER ao dataframe
@@ -40,42 +74,48 @@ if __name__ == '__main__':
     df_hosp_pubs.to_excel(arquivo_dados_clusterizados, index=False)
 
     """
+    TODO: mover o código a seguir para script próprio de análise de resultados
     A Criação dos clusters termina aqui. Após isto, há somente código para análise da clusterização. Ao final da
     execução, o script salva na pasta de resultados intermediários:
         - Gráfico do joelho, mostrando a variação da inércia de acordo com número de clusters
-        - Tabela mostrando o número de elementos po cluster
+        - Tabela mostrando o número de elementos por cluster de acordo com o valor de k
         - Gráficos de barras mostrando o perfil de procedimentos de cadas cluster
     """
-    # Número mínimo e máximo de cluster para a análise
-    MIN_CLUSTERS, MAX_CLUSTERS = 4, 15
-    min_max_num_clusters = range(MIN_CLUSTERS, MAX_CLUSTERS)
+
+    # Inicializa lista para armazenar as inércias para plotar o gráficodo cotovelo
     inercias = []
 
     # Inicializa dicionáro para armazenar o número de unidades por cluster (em ordem decrescente)
     num_unidades_por_cluster = {}
 
     # Treina k-means para cada valor de k
-    for k in min_max_num_clusters:
+    for k in range(MIN_CLUSTERS, MAX_CLUSTERS):
+        # Treina kmeans e salve inércia
         modelo = KMeans(n_clusters=k, random_state=42)
         modelo.fit(df_para_clust)
         inercias.append(modelo.inertia_)
+
+        # Obtém lista de número de elementos por cluster em ordem decrescente
         num_por_cluster = pd.value_counts(modelo.labels_).sort_values(ascending=False).to_list()
+
+        # Adiciona '-'s para tornar que todas as listas de elementos por cluster tenham tamanho k e adiciona ao dict
         num_por_cluster_padded = num_por_cluster + (MAX_CLUSTERS - k - 1) * ['-']
         num_unidades_por_cluster[k] = num_por_cluster_padded
 
     # Cria dataframe e salva planilha com o número de unidades por cluster
     df_num_por_cluster = pd.DataFrame(num_unidades_por_cluster)
     arquivo_num_por_cluster = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
-                                           'num_elementos_por_cluster_{ANO}'.format(ANO=ANO))
+                                           'num_elementos_por_cluster_{ANO}.xlsx'.format(ANO=ANO))
+    df_num_por_cluster.to_excel(arquivo_num_por_cluster)
 
     # Plota gráfico da variação da inércia de acordo com o número de clusters
     plt.ioff()  # Desabilita o modo iterativo do matplotlib (para não mostrar os gráficos)
-    plt.plot(min_max_num_clusters, inercias, '-o')
+    plt.plot(range(MIN_CLUSTERS, MAX_CLUSTERS), inercias, '-o')
     plt.xlabel('Número de clusters')
     plt.ylabel('Inércia')
     plt.title('Gráfico do "cotovelo" para determinação do número de clusters')
     plt.grid()
-    plt.xticks(min_max_num_clusters)
+    plt.xticks(range(MIN_CLUSTERS, MAX_CLUSTERS))
     arquivo_grafico_inercia = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'kmeans_inercia_vs_k.png')
     plt.savefig(arquivo_grafico_inercia)
 

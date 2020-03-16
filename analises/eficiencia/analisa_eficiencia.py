@@ -63,3 +63,9 @@ if __name__ == '__main__':
     df_feasible.groupby('NAT_JURIDICA').EFICIENCIA_NORMALIZADA.mean().sort_values()
 
 
+
+    df_feasible.groupby('ESFERA_FEDERATIVA').EFICIENCIA_NORMALIZADA.mean().sort_values()
+    df_feasible.groupby('FAIXA_LEITOS').EFICIENCIA_NORMALIZADA.mean().sort_values()
+    df_feasible.groupby('TIPO_ADMIN_PUB').EFICIENCIA_NORMALIZADA.mean().sort_values()
+    df_feasible.groupby('REGIAO').EFICIENCIA_NORMALIZADA.mean().sort_values()
+    df_feasible.groupby('UF').EFICIENCIA_NORMALIZADA.mean().sort_values()
