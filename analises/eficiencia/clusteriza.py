@@ -157,7 +157,8 @@ if __name__ == '__main__':
         ax.grid()
         ax.set_xlim((0, 1.))
         plt.tight_layout()
-        arquivo_grafico_barras_cluster = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS, 'cluster_{k}.png'.format(k=k))
+        arquivo_grafico_barras_cluster = os.path.join(DIRETORIO_DADOS_INTERMEDIARIOS,
+                                                      'cluster_{ano}_{k}.png'.format(ano=ANO, k=k))
         plt.savefig(arquivo_grafico_barras_cluster)
 
     # Salva planilha com os centroids
