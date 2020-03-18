@@ -1694,9 +1694,9 @@ def get_missing_PROCEDIMENTO_SIA_PA():
     lista_estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
                      'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
 
-    for ano in range(19, 20):
+    for ano in range(8, 20):
         ano = str(ano).zfill(2)
-        for mes in range(9, 13):
+        for mes in range(1, 13):
             mes = str(mes).zfill(2)
             for estado in lista_estados:
                 if (((estado == 'SP') and (int(ano) == 11) and (int(mes) == 12)) or ((estado == 'SP') and (int(ano) >= 13))):
@@ -1780,9 +1780,6 @@ if __name__ == '__main__':
         #get_missing_PROCEDIMENTO_SIA_PA()
         get_missing_CNES_SIH_SP()
         #get_missing_SERV_CLA_SIH_SP()
-
-
-
     elif datasus_db == 'SIA':
         from insertion.data_wrangling.online.download_SIA import download_SIAXXaamm, download_table_dbf, download_table_cnv
         #get_missing_CNES_SIA_PA()

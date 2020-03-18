@@ -3,11 +3,12 @@
 ############################################################################################################################################################################
 
 import time
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 
-from .data_wrangling.prepare_SINASC import *
+from .data_wrangling import prepare_SINASC
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -24,85 +25,85 @@ def insert_most_SINASC_tables_pandas(path, device, child_db):
 
     # Chama funções definidas no módulo "prepare_SINASC" do package "data_wrangling"
 
-    df_CNESDN = get_CNESDN_treated(path)
+    df_CNESDN = prepare_SINASC.get_CNESDN_treated(path)
     df_CNESDN.to_sql('codestab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = get_TABUF_treated()
+    df_TABUF = prepare_SINASC.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = get_CADMUN_treated()
+    df_CADMUN = prepare_SINASC.get_CADMUN_treated()
     df_CADMUN.to_sql('codmunnasc', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_LOCOCOR = get_LOCOCOR_treated()
+    df_LOCOCOR = prepare_SINASC.get_LOCOCOR_treated()
     df_LOCOCOR.to_sql('locnasc', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_SITCONJU = get_SITCONJU_treated()
+    df_SITCONJU = prepare_SINASC.get_SITCONJU_treated()
     df_SITCONJU.to_sql('estcivmae', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_INSTRUC = get_INSTRUC_treated()
+    df_INSTRUC = prepare_SINASC.get_INSTRUC_treated()
     df_INSTRUC.to_sql('escmae', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABOCUP_2TCC = get_TABOCUP_2TCC_treated(path)
+    df_TABOCUP_2TCC = prepare_SINASC.get_TABOCUP_2TCC_treated(path)
     df_TABOCUP_2TCC.to_sql('codocupmae', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_SEMANAS = get_SEMANAS_treated()
+    df_SEMANAS = prepare_SINASC.get_SEMANAS_treated()
     df_SEMANAS.to_sql('gestacao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "codmunnasc"
     df_CADMUN.to_sql('codmunres', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_GRAVIDEZ = get_GRAVIDEZ_treated()
+    df_GRAVIDEZ = prepare_SINASC.get_GRAVIDEZ_treated()
     df_GRAVIDEZ.to_sql('gravidez', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_PARTO = get_PARTO_treated()
+    df_PARTO = prepare_SINASC.get_PARTO_treated()
     df_PARTO.to_sql('parto', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CONSULT = get_CONSULT_treated()
+    df_CONSULT = prepare_SINASC.get_CONSULT_treated()
     df_CONSULT.to_sql('consultas', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_RACA = get_RACA_treated()
+    df_RACA = prepare_SINASC.get_RACA_treated()
     df_RACA.to_sql('racacor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CID10 = get_CID10_treated()
+    df_CID10 = prepare_SINASC.get_CID10_treated()
     df_CID10.to_sql('codanomal', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NAT1212 = get_NAT1212_treated()
+    df_NAT1212 = prepare_SINASC.get_NAT1212_treated()
     df_NAT1212.to_sql('naturalmae', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "codmunnasc"
     df_CADMUN.to_sql('codmunnatu', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESC2010 = get_ESC2010_treated()
+    df_ESC2010 = prepare_SINASC.get_ESC2010_treated()
     df_ESC2010.to_sql('escmae2010', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "racacor"
     df_RACA.to_sql('racacormae', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPMETODO = get_TPMETODO_treated()
+    df_TPMETODO = prepare_SINASC.get_TPMETODO_treated()
     df_TPMETODO.to_sql('tpmetestim', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPAPRESENT = get_TPAPRESENT_treated(path)
+    df_TPAPRESENT = prepare_SINASC.get_TPAPRESENT_treated(path)
     df_TPAPRESENT.to_sql('tpapresent', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_STTRABPART = get_STTRABPART_treated(path)
+    df_STTRABPART = prepare_SINASC.get_STTRABPART_treated(path)
     df_STTRABPART.to_sql('sttrabpart', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_STPARTO = get_STPARTO_treated()
+    df_STPARTO = prepare_SINASC.get_STPARTO_treated()
     df_STPARTO.to_sql('stcesparto', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPASSIST = get_TPASSIST_treated()
+    df_TPASSIST = prepare_SINASC.get_TPASSIST_treated()
     df_TPASSIST.to_sql('tpnascassi', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPFUNCRESP = get_TPFUNCRESP_treated(path)
+    df_TPFUNCRESP = prepare_SINASC.get_TPFUNCRESP_treated(path)
     df_TPFUNCRESP.to_sql('tpfuncresp', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESCAGR1 = get_ESCAGR1_treated()
+    df_ESCAGR1 = prepare_SINASC.get_ESCAGR1_treated()
     df_ESCAGR1.to_sql('escmaeagr1', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABPAIS = get_TABPAIS_treated()
+    df_TABPAIS = prepare_SINASC.get_TABPAIS_treated()
     df_TABPAIS.to_sql('codpaisres', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ROBSON = get_ROBSON_treated()
+    df_ROBSON = prepare_SINASC.get_ROBSON_treated()
     df_ROBSON.to_sql('tprobson', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
@@ -114,7 +115,7 @@ def insert_most_SINASC_tables_pandas(path, device, child_db):
 ###########################################################################################################################################################################
 
 # Função que utiliza para a inserção de dados principais da "child_db" o pandas.to_sql + SQLAlchemy
-def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
+def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
     start = time.time()
     counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
     qtd_files_pg = counting_rows.iloc[0]['count']
@@ -128,7 +129,7 @@ def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, devic
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo DN{state}{year}...')
     # Chama a função "get_DNXXaaaa_treated" do módulo "prepare_SINASC" do package "data_wrangling"
-    df = get_DNXXaaaa_treated(state, year)
+    df = prepare_SINASC.get_DNXXaaaa_treated(state, year)
     # Inserção das colunas UF_DN e ANO_DN no objeto pandas DataFrame "df"
     df.insert(1, 'UF_DN', [state]*df.shape[0])
     df.insert(2, 'ANO_DN', [int(year)]*df.shape[0])

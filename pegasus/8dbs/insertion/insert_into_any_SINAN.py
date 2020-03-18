@@ -1,13 +1,12 @@
 ############################################################################################################################################################################
-#  CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
+#     SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY SINAN_ANY      #
 ############################################################################################################################################################################
 
 import time
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
-
-from .data_wrangling.prepare_CNES_RC import *
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -17,23 +16,22 @@ from .data_wrangling.prepare_CNES_RC import *
 ############################################################################################################################################################################
 
 # Função que utiliza para a inserção de dados não principais o pandas.to_sql + SQLAlchemy
-def insert_most_CNES_RC_tables_pandas(path, device, child_db):
+def insert_most_SINAN_DENG_tables_pandas(path, device, child_db):
     # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
-    # Chama funções definidas no módulo "prepare_CNES_RC" do package "data_wrangling"
-    df_CADGERBR = get_CADGERBR_treated(path)
-    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+    from .data_wrangling import prepare_SINAN_DENG
 
-    df_TABUF = get_TABUF_treated()
+    # Chama funções definidas no módulo "prepare_SINAN_DENG" do package "data_wrangling"
+    df_Classdeng = prepare_SINAN_DENG.get_Classdeng_treated()
+    df_Classdeng.to_sql('classifin', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TABUF = prepare_SINAN_DENG.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = get_CADMUN_treated()
-    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_REGRAS = get_REGRAS_treated()
-    df_REGRAS.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+    df_CADMUN = prepare_SINAN_DENG.get_CADMUN_treated()
+    df_CADMUN.to_sql('municip', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
 ###########################################################################################################################################################################
@@ -50,24 +48,32 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {parent_db}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do CNES_RC
-    state = file_name[2:4]
-    year = file_name[4:6]
-    month = file_name[6:8]
-    main_table = 'rcbr'
+    # Tratamento de dados principais do SINAN_XXXX
+    base = file_name[0:4]
+    state = file_name[4:6]
+    year = file_name[6:8]
+    main_table = base.lower() + 'br'
     counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
     n_rows = counting_rows.iloc[0]['count']
-    print(f'\nIniciando a lida com o arquivo RC{state}{year}{month}...')
-    # Chama a função "get_RCXXaamm_treated" do módulo "prepare_CNES_RC" do package "data_wrangling"
-    df = get_RCXXaamm_treated(state, year, month)
-    # Inserção das colunas UF_RC, ANO_RC e MES_RC no objeto pandas DataFrame "df"
-    df.insert(1, 'UF_RC', [state]*df.shape[0])
-    df.insert(2, 'ANO_RC', [int('20' + year)]*df.shape[0])
-    df.insert(3, 'MES_RC', [month]*df.shape[0])
-    df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
+    print(f'\nIniciando a lida com o arquivo {base}{state}{year}...')
+
+    # Criação de objeto string do nome de uma função de tratamento de dados da tabela principal "main_table"...
+    # do "child_db" contida no respectivo módulo do package "data_wrangling"
+    func_string = 'get_' + base + 'XXaa_treated'
+
+    # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
+    module = __import__('insertion.data_wrangling.prepare_SINAN_' + base, fromlist=[func_string], level=0)
+    func_treatment = getattr(module, func_string)
+
+    # Chama a função "func_treatment" do módulo "prepare_SINAN_XXXX" do package "data_wrangling"
+    df = func_treatment(state, year)
+    # Inserção das colunas UF_XXXX e ANO_XXXX no objeto pandas DataFrame "df"
+    df.insert(1, 'UF_' + base, [state]*df.shape[0])
+    df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
+
     # Inserção dos dados da tabela principal no banco de dados "child_db"
     df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os dados do arquivo RC{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
+    print(f'Terminou de inserir os dados do arquivo {base}{state}{year} na tabela {main_table} do banco de dados {child_db}.')
 
     # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
     file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
@@ -76,6 +82,6 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
                              )
     # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os metadados do arquivo RC{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
+    print(f'Terminou de inserir os metadados do arquivo {base}{state}{year} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
     print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')

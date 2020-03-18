@@ -85,12 +85,12 @@ if __name__ == '__main__':
         pass
 
     # Nome do banco de dados do Datasus almejado
-    datasus_db = input('\nEnter the Datasus database name (CNES/SIH/SIA/SIM/SINASC/SINAN/XXX): ').lower()
+    datasus_db = input('\nEnter the Datasus database name (CNES/SIH/SIA/SIM/SINASC/SINAN/XXX/YYY): ').lower()
     if datasus_db == 'sia':
-        print('\nUse the module "main_any.py" but it is only available there: sia_pa!')
+        print('\nUse the module "main_any.py" and it is still only available sia_pa!')
         quit()
     elif datasus_db == 'sinan':
-        print('\nUse the module "main_any.py" but it is only available there: sinan_deng!')
+        print('\nUse the module "main_any.py" and it is still only available sinan_deng!')
         quit()
     else:
         print('\nTo its goal...\n')
@@ -106,10 +106,10 @@ if __name__ == '__main__':
     # Criação de objetos string do nome das duas funções de inserção de dados do "datasus_db" contidas no respectivo...
     # módulo do package "insertion"
     str_most = 'insert_most_' + datasus_db.upper() + '_tables_pandas'
-    str_main = 'insert_main_tables_e_files_info_pandas'
+    str_main = 'insert_main_table_e_file_info_pandas'
 
     # Importação das duas funções de inserção de dados do "datasus_db" usando a função nativa "__import__"
-    module2 = __import__('insertion.insert_into_' + datasus_db.upper(), fromlist=[str_most, str_main], level=0)
+    module2 = __import__('insertion.insert_into_all_' + datasus_db.upper(), fromlist=[str_most, str_main], level=0)
 
     # Colocação do nome das duas funções de inserção de dados importadas nas variáveis "most_tables" e "main_tables"
     most_tables = getattr(module2, str_most)

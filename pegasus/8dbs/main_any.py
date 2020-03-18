@@ -75,7 +75,7 @@ if __name__ == '__main__':
     print('\n***************************************************************************************')
     print('First of all, you must read the docstring provided at the beginning of this main module.\n'.upper())
     print('Also, you just do not forget that the PostgreSQL database to be filled must first be created!'.upper())
-    print('Therefore the 3 constants defined at lines 152, 153 and 156 of this main module must...')
+    print('Therefore the 3 constants defined at lines 155, 156 and 159 of this main module must...')
     print('first be adapted to your reality, that is: DB_USER, DB_PASS and DB_NAME; being DB_NAME...')
     print('the name of the database created in PostgreSQL.')
     print('***************************************************************************************\n')
@@ -114,11 +114,11 @@ if __name__ == '__main__':
     # SIA
     elif datasus_db == 'sia':
         print('\nPA: Procedimentos Ambulatoriais')
-        sub_db = input('Enter the intended SIA "sub" database initials (PA/XX): ').lower()
+        sub_db = input('Enter the intended SIA "sub" database initials (PA/XX/.../YY): ').lower()
     # SINAN
     elif datasus_db == 'sinan':
         print('\nDENG: Dengue e Chikungunya\n')
-        sub_db = input('Enter the intended SINAN "sub" database initials (DENG/XXXX): ').lower()
+        sub_db = input('Enter the intended SINAN "sub" database initials (DENG/XXXX/.../YYYY): ').lower()
     datasus_db += '_' + sub_db
     print('\nTo its goal...\n')
 
@@ -136,7 +136,10 @@ if __name__ == '__main__':
     str_main = 'insert_main_table_e_file_info_pandas'
 
     # Importação das duas funções de inserção de dados do "datasus_db" usando a função nativa "__import__"
-    module2 = __import__('insertion.insert_into_' + datasus_db.upper(), fromlist=[str_most, str_main], level=0)
+    if datasus_db.startswith('sinan'):
+        module2 = __import__('insertion.insert_into_any_' + datasus_db.upper()[:-5], fromlist=[str_most, str_main], level=0)
+    else:
+        module2 = __import__('insertion.insert_into_any_' + datasus_db.upper()[:-3], fromlist=[str_most, str_main], level=0)
 
     # Colocação do nome das duas funções de inserção de dados importadas nas variáveis "most_tables" e "main_table"
     most_tables = getattr(module2, str_most)

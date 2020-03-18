@@ -3,11 +3,12 @@
 ############################################################################################################################################################################
 
 import time
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 
-from .data_wrangling.prepare_SIM import *
+from .data_wrangling import prepare_SIM
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -24,73 +25,73 @@ def insert_most_SIM_tables_pandas(path, device, child_db):
 
     # Chama funções definidas no módulo "prepare_SIM" do package "data_wrangling"
 
-    df_TIPOBITO = get_TIPOBITO_treated()
+    df_TIPOBITO = prepare_SIM.get_TIPOBITO_treated()
     df_TIPOBITO.to_sql('tipobito', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NAT1212 = get_NAT1212_treated(path)
+    df_NAT1212 = prepare_SIM.get_NAT1212_treated(path)
     df_NAT1212.to_sql('naturale', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = get_TABUF_treated()
+    df_TABUF = prepare_SIM.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = get_CADMUN_treated()
+    df_CADMUN = prepare_SIM.get_CADMUN_treated()
     df_CADMUN.to_sql('codmunnatu', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_RACA = get_RACA_treated()
+    df_RACA = prepare_SIM.get_RACA_treated()
     df_RACA.to_sql('racacor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESTCIV = get_ESTCIV_treated()
+    df_ESTCIV = prepare_SIM.get_ESTCIV_treated()
     df_ESTCIV.to_sql('estciv', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESC = get_INSTRUC_treated()
+    df_ESC = prepare_SIM.get_INSTRUC_treated()
     df_ESC.to_sql('esc', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESCSERIE = get_ESCSERIE_treated()
+    df_ESCSERIE = prepare_SIM.get_ESCSERIE_treated()
     df_ESCSERIE.to_sql('esc2010', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABOCUP_2TCC = get_TABOCUP_2TCC_treated(path)
+    df_TABOCUP_2TCC = prepare_SIM.get_TABOCUP_2TCC_treated(path)
     df_TABOCUP_2TCC.to_sql('ocup', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "codmunnatu"
     df_CADMUN.to_sql('codmunres', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_LOCOCOR = get_LOCOCOR_treated()
+    df_LOCOCOR = prepare_SIM.get_LOCOCOR_treated()
     df_LOCOCOR.to_sql('lococor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CNESDO18_3TCC = get_CNESDO18_3TCC_treated(path)
+    df_CNESDO18_3TCC = prepare_SIM.get_CNESDO18_3TCC_treated(path)
     df_CNESDO18_3TCC.to_sql('codestab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "codmunnatu"
     df_CADMUN.to_sql('codmunocor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPMORTEOCO = get_TPMORTEOCO_treated(path)
+    df_TPMORTEOCO = prepare_SIM.get_TPMORTEOCO_treated(path)
     df_TPMORTEOCO.to_sql('tpmorteoco', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CID10 = get_CID10_treated(path)
+    df_CID10 = prepare_SIM.get_CID10_treated(path)
     df_CID10.to_sql('causabas', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TIPOVIOL = get_TIPOVIOL_treated()
+    df_TIPOVIOL = prepare_SIM.get_TIPOVIOL_treated()
     df_TIPOVIOL.to_sql('circobito', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_FONTINFO = get_FONTINFO_treated()
+    df_FONTINFO = prepare_SIM.get_FONTINFO_treated()
     df_FONTINFO.to_sql('fonte', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "causabas"
     df_CID10.to_sql('causabas_o', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ATESTANT = get_ATESTANT_treated()
+    df_ATESTANT = prepare_SIM.get_ATESTANT_treated()
     df_ATESTANT.to_sql('atestante', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_FONTEINV = get_FONTEINV_treated()
+    df_FONTEINV = prepare_SIM.get_FONTEINV_treated()
     df_FONTEINV.to_sql('fonteinv', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESCAGR1 = get_ESCAGR1_treated()
+    df_ESCAGR1 = prepare_SIM.get_ESCAGR1_treated()
     df_ESCAGR1.to_sql('escmaeagr1', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "escmaearg1"
     df_ESCAGR1.to_sql('escfalagr1', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPOBITOCOR = get_TPOBITOCOR_treated(path)
+    df_TPOBITOCOR = prepare_SIM.get_TPOBITOCOR_treated(path)
     df_TPOBITOCOR.to_sql('tpobitocor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
@@ -102,7 +103,7 @@ def insert_most_SIM_tables_pandas(path, device, child_db):
 ###########################################################################################################################################################################
 
 # Função que utiliza para a inserção de dados principais da "child_db" o pandas.to_sql + SQLAlchemy
-def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
+def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
     start = time.time()
     counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
     qtd_files_pg = counting_rows.iloc[0]['count']
@@ -116,7 +117,7 @@ def insert_main_tables_e_files_info_pandas(file_name, directory, date_ftp, devic
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo DO{state}{year}...')
     # Chama a função "get_DOXXaaaa_treated" do módulo "prepare_SIM" do package "data_wrangling"
-    df = get_DOXXaaaa_treated(state, year)
+    df = prepare_SIM.get_DOXXaaaa_treated(state, year)
     # Inserção das colunas UF_DO e ANO_DO no objeto pandas DataFrame "df"
     df.insert(1, 'UF_DO', [state]*df.shape[0])
     df.insert(2, 'ANO_DO', [int(year)]*df.shape[0])

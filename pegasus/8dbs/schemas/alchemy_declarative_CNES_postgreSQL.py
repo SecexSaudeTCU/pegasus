@@ -97,6 +97,13 @@ class ESFERAA(Base):
     ID = Column(String(2), primary_key=True)                                    # Primary key
     ADMINISTRACAO = Column(String(66))                                          # Logical key
 
+# Tabela dos tipos de retenção de tributos do estabelecimento
+class RETENCAO(Base):
+    __tablename__ = 'retencao'
+    __table_args__ = {'schema': 'cnes'}
+    ID = Column(String(2), primary_key=True)                                    # Primary key
+    RETENCAO = Column(String(66))                                               # Logical key
+
 # Tabela dos tipos de atividade de ensino, se houver
 class ATIVIDAD(Base):
     __tablename__ = 'atividad'
@@ -195,8 +202,8 @@ class STBR(Base):
     tpgestao = relationship('TPGESTAO')
     ESFERAA_ID = Column(String(2), ForeignKey('cnes.esferaa.ID'))               # Foreign key
     esferaa = relationship('ESFERAA')
-    RETENCAO_ID = Column(String(2), ForeignKey('cnes.codir.ID'))                # Foreign key
-    codir = relationship('CODIR')
+    RETENCAO_ID = Column(String(2), ForeignKey('cnes.retencao.ID'))             # Foreign key
+    retencao = relationship('RETENCAO')
     ATIVIDAD_ID = Column(String(2), ForeignKey('cnes.atividad.ID'))             # Foreign key
     atividad = relationship('ATIVIDAD')
     NATUREZA_ID = Column(String(2), ForeignKey('cnes.natureza.ID'))             # Foreign key
@@ -695,8 +702,8 @@ class SRBR(Base):
     esferaa = relationship('ESFERAA')
     ATIVIDAD_ID = Column(String(2), ForeignKey('cnes.atividad.ID'))             # Foreign key
     atividad = relationship('ATIVIDAD')
-    RETENCAO_ID = Column(String(2), ForeignKey('cnes.codir.ID'))                # Foreign key
-    codir = relationship('CODIR')
+    RETENCAO_ID = Column(String(2), ForeignKey('cnes.retencao.ID'))             # Foreign key
+    retencao = relationship('RETENCAO')
     NATUREZA_ID = Column(String(2), ForeignKey('cnes.natureza.ID'))             # Foreign key
     natureza = relationship('NATUREZA')
     CLIENTEL_ID = Column(String(2), ForeignKey('cnes.clientel.ID'))             # Foreign key
@@ -977,8 +984,8 @@ class EEBR(Base):
     CNPJ_MAN = Column(String(14))                                               # Atributo
     ESFERAA_ID = Column(String(2), ForeignKey('cnes.esferaa.ID'))               # Foreign key
     esferaa = relationship('ESFERAA')
-    RETENCAO_ID = Column(String(2), ForeignKey('cnes.codir.ID'))                # Foreign key
-    codir = relationship('CODIR')
+    RETENCAO_ID = Column(String(2), ForeignKey('cnes.retencao.ID'))             # Foreign key
+    retencao = relationship('RETENCAO')
     ATIVIDAD_ID = Column(String(2), ForeignKey('cnes.atividad.ID'))             # Foreign key
     atividad = relationship('ATIVIDAD')
     NATUREZA_ID = Column(String(2), ForeignKey('cnes.natureza.ID'))             # Foreign key
@@ -1042,8 +1049,8 @@ class EFBR(Base):
     CNPJ_MAN = Column(String(14))                                               # Atributo
     ESFERAA_ID = Column(String(2), ForeignKey('cnes.esferaa.ID'))               # Foreign key
     esferaa = relationship('ESFERAA')
-    RETENCAO_ID = Column(String(2), ForeignKey('cnes.codir.ID'))                # Foreign key
-    codir = relationship('CODIR')
+    RETENCAO_ID = Column(String(2), ForeignKey('cnes.retencao.ID'))             # Foreign key
+    retencao = relationship('RETENCAO')
     ATIVIDAD_ID = Column(String(2), ForeignKey('cnes.atividad.ID'))             # Foreign key
     atividad = relationship('ATIVIDAD')
     NATUREZA_ID = Column(String(2), ForeignKey('cnes.natureza.ID'))             # Foreign key
@@ -1107,8 +1114,8 @@ class INBR(Base):
     CNPJ_MAN = Column(String(14))                                               # Atributo
     ESFERAA_ID = Column(String(2), ForeignKey('cnes.esferaa.ID'))               # Foreign key
     esferaa = relationship('ESFERAA')
-    RETENCAO_ID = Column(String(2), ForeignKey('cnes.codir.ID'))                # Foreign key
-    codir = relationship('CODIR')
+    RETENCAO_ID = Column(String(2), ForeignKey('cnes.retencao.ID'))             # Foreign key
+    retencao = relationship('RETENCAO')
     ATIVIDAD_ID = Column(String(2), ForeignKey('cnes.atividad.ID'))             # Foreign key
     atividad = relationship('ATIVIDAD')
     NATUREZA_ID = Column(String(2), ForeignKey('cnes.natureza.ID'))             # Foreign key

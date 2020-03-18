@@ -86,9 +86,9 @@ def get_SPXXaamm_treated(state, year, month):
         df[col].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
         df[col].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
         df[col].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-        df[col].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                         '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                         '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+        df[col].replace(['530000', '530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                         '530090', '530100', '530110',  '530120', '530130', '530135', '530140', '530150',
+                         '530160', '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
     for col in np.array(['SP_DTINTER', 'SP_DTSAIDA']):
         df[col] = df[col].apply(lambda x: x if len(x) == 8 else '')
