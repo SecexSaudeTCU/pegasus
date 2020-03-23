@@ -10,7 +10,6 @@ import pandas as pd
 
 from .online.download_SINAN import download_SINANXXaa, download_table_dbf, download_table_cnv
 
-
 """
 Script de tratamento de dados do SINAN_DENG (agravos dengue e chikungunya) para atender ao framework do SGBD PostgreSQL.
 Válido para os arquivos de dados DENGXXaa (DENG = Notificação de agravo de dengue ou chikungunya; XX = Estado; aaaa = Ano)...

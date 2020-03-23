@@ -13,11 +13,6 @@ from dbfread import DBF
 from .folder import CACHEPATH
 from .read import read_dbc, read_cnv
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\susana\\insertion\\data_wrangling\\online\\')
-# from folder import CACHEPATH
-# from read import read_dbc, read_cnv
-
 """
 Lê arquivos principais de dados do SINASC (DNXXaaaa = Declaração de Nascimento) constante do endereço ftp
 do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato "parquet".
@@ -68,7 +63,7 @@ def download_DNXXaaaa(state: str, year: str, cache: bool=True):
         if cache:
             df.to_parquet(cachefile)
         return df
-        
+
 
 # Função de download de tabelas do SINASC em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name):

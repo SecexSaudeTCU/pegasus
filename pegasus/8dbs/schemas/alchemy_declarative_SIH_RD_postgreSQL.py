@@ -23,10 +23,11 @@ class RDBR(Base):
     # Aqui se define as colunas para a tabela inbr (o mesmo é realizado com as outras "class")
     # Note que cada coluna é também um atributo de instância (o mesmo se aplica às outras "class")
     N_AIH = Column(String(13))                                                  # Logical key
-    IDENT_ID = Column(String(2), ForeignKey('sih_rd.ident.ID'))                 # Foreign key
     UF_RD = Column(String(2))                                                   # Atributo
     ANO_RD = Column(Integer)                                                    # Atributo
     MES_RD = Column(String(2))                                                  # Atributo
+    IDENT_ID = Column(String(2), ForeignKey('sih_rd.ident.ID'))                 # Foreign key
+    ident = relationship('IDENT')
     UFZI_ID = Column(String(6), ForeignKey('sih_rd.ufzi.ID'))                   # Foreign key
     ufzi = relationship('UFZI')
     ANO_CMPT = Column(Integer)                                                  # Atributo
@@ -123,6 +124,13 @@ class RDBR(Base):
     VAL_SP_GES = Column(Float)                                                  # Atributo
     CONTAGEM = Column(BigInteger, primary_key=True)                             # Primary Key
 
+# Tabela dos tipos de AIH
+class IDENT(Base):
+    __tablename__ = 'ident'
+    __table_args__ = {'schema': 'sih_rd'}
+    ID = Column(String(2), primary_key=True)                                    # Primary key
+    TIPO_AIH = Column(String(66))                                               # Logical key
+
 # Tabela dos municípios gestor
 class UFZI(Base):
     __tablename__ = 'ufzi'
@@ -154,13 +162,6 @@ class ESPEC(Base):
     __table_args__ = {'schema': 'sih_rd'}
     ID = Column(String(2), primary_key=True)                                    # Primary key
     LEITO = Column(String(66))                                                  # Logical key
-
-# Tabela dos tipos de AIH
-class IDENT(Base):
-    __tablename__ = 'ident'
-    __table_args__ = {'schema': 'sih_rd'}
-    ID = Column(String(2), primary_key=True)                                    # Primary key
-    TIPO_AIH = Column(String(66))                                               # Logical key
 
 # Tabela dos municípios de residência do paciente
 class MUNICRES(Base):

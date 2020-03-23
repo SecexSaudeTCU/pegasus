@@ -7,11 +7,6 @@ import pandas as pd
 
 from .folder import CACHEPATH
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\susana\\insertion\\data_wrangling\\online\\')
-# from folder import CACHEPATH
-
-
 """
 The function read_dbc is based on the work of Flávio Coelho (https://github.com/fccoelho/PySUS)
 

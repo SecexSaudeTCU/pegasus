@@ -13,12 +13,6 @@ from dbfread import DBF
 from .folder import CACHEPATH
 from .read import read_dbc, read_cnv
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\8dbs\\insertion\\data_wrangling\\online\\')
-# from folder import CACHEPATH
-# from read import read_dbc, read_cnv
-
-
 """
 Lê arquivos de dados do SIH (RDXXaamm = AIH Reduzidas; SPXXaamm = AIH Serviços Profissionais)
 constante do endereço ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva

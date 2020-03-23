@@ -121,11 +121,11 @@ class RDBR(Base):
     # Aqui se define as colunas para a tabela rdbr (o mesmo é realizado com as outras "class")
     # Note que cada coluna é também um atributo de instância (o mesmo se aplica às outras "class")
     N_AIH = Column(String(13))                                                  # Logical key
-    IDENT_ID = Column(String(2), ForeignKey('sih.ident.ID'))                    # Foreign key
-    ident = relationship('IDENT')
     UF_RD = Column(String(2))                                                   # Atributo
     ANO_RD = Column(Integer)                                                    # Atributo
     MES_RD = Column(String(2))                                                  # Atributo
+    IDENT_ID = Column(String(2), ForeignKey('sih.ident.ID'))                    # Foreign key
+    ident = relationship('IDENT')
     UFZI_ID = Column(String(6), ForeignKey('sih.ufzi.ID'))                      # Foreign key
     ufzi = relationship('UFZI')
     ANO_CMPT = Column(Integer)                                                  # Atributo

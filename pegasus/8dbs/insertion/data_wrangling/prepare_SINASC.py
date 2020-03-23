@@ -10,7 +10,6 @@ import pandas as pd
 
 from .online.download_SINASC import download_DNXXaaaa, download_table_dbf, download_table_cnv
 
-
 """
 Script de tratamento de dados do SINASC para atender ao framework do SGBD PostgreSQL.
 Válido para os arquivos de dados DNXXaaaa (DN = Declaração de Nascimento; XX = Estado; aaaa = Ano)...
@@ -313,6 +312,12 @@ def get_CNESDN_treated(path):
     dfinal = pd.concat(frames, ignore_index=True)
     # Renomeia a coluna CODESTAB
     dfinal.rename(index=str, columns={'CODESTAB': 'ID'}, inplace=True)
+    # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
+    dfinal.drop_duplicates(subset='ID', keep='first', inplace=True)
+    # Ordena eventualmente as linhas por ordem crescente dos valores da coluna ID
+    dfinal.sort_values(by=['ID'], inplace=True)
+    # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
+    dfinal.reset_index(drop=True, inplace=True)
     # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da coluna CODESTAB_ID da tabela DNBR
     dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?']
     return dfinal
@@ -452,6 +457,12 @@ def get_TABOCUP_2TCC_treated(path):
     frames.append(df)
     frames.append(dataframe)
     dfinal = pd.concat(frames, ignore_index=True)
+    # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
+    dfinal.drop_duplicates(subset='ID', keep='first', inplace=True)
+    # Ordena eventualmente as linhas por ordem crescente dos valores da coluna ID
+    dfinal.sort_values(by=['ID'], inplace=True)
+    # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
+    dfinal.reset_index(drop=True, inplace=True)
     # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da coluna "CODOCUPMAE_ID" da tabela DNBR
     dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
     return dfinal

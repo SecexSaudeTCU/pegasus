@@ -13,11 +13,6 @@ from dbfread import DBF
 from .folder import CACHEPATH
 from .read import read_dbc, read_cnv
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\susana\\insertion\\data_wrangling\\online\\')
-# from folder import CACHEPATH
-# from read import read_dbc, read_cnv
-
 """
 Lê arquivos principais de dados do SIM (DOXXaaaa = Declaração de Óbito) constante do endereço ftp
 do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato "parquet".

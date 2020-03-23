@@ -10,11 +10,6 @@ import pandas as pd
 
 from .online.download_SIH import download_SIHXXaamm, download_table_dbf, download_table_cnv
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\8dbs\\insertion\\data_wrangling\\online\\')
-# from download_SIH import download_SIHXXaamm, download_table_dbf, download_table_cnv
-
-
 """
 Script de tratamento de dados do SIH_RD (AIH Reduzidas) para atender ao framework do SGBD PostgreSQL.
 Válido para os arquivos de dados RDXXaamm (RD = Reduzidas; XX = Estado; aa = Ano; mm = Mês)...
@@ -333,7 +328,11 @@ def get_TB_SIGTAP_treated(path):
     frames.append(df)
     frames.append(dataframe)
     dfinal = pd.concat(frames, ignore_index=True)
+    # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
     dfinal.drop_duplicates(subset='ID', keep='first', inplace=True)
+    # Ordena eventualmente as linhas por ordem crescente dos valores da coluna ID
+    dfinal.sort_values(by=['ID'], inplace=True)
+    # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
     dfinal.reset_index(drop=True, inplace=True)
     # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da tabela RDBR
     dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
@@ -581,6 +580,12 @@ def get_CNES_treated(path):
     frames.append(df)
     frames.append(dataframe)
     dfinal = pd.concat(frames, ignore_index=True)
+    # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
+    dfinal.drop_duplicates(subset='ID', keep='first', inplace=True)
+    # Ordena eventualmente as linhas por ordem crescente dos valores da coluna ID
+    dfinal.sort_values(by=['ID'], inplace=True)
+    # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
+    dfinal.reset_index(drop=True, inplace=True)
     # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da tabela RDBR
     dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
     return dfinal

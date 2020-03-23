@@ -13,12 +13,6 @@ from dbfread import DBF
 from .folder import CACHEPATH
 from .read import read_dbc, read_cnv
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\8dbs\\insertion\\data_wrangling\\online\\')
-# from folder import CACHEPATH
-# from read import read_dbc, read_cnv
-
-
 """
 Lê arquivos principais de dados do CNES (STXXaamm = Estabelecimentos; DCXXaamm = Dados Complementares;
 PFXXaamm = Profissionais; LTXXaamm = Leitos; EQXXaamm = Equipamentos; SRXXaamm = Serviço Especializado;
@@ -79,7 +73,7 @@ def download_CNESXXaamm(base: str, state: str, year: str, month: str, cache: boo
 
 # Função de download de tabelas do CNES em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name):
-    
+
     """
     Fetch a table in "dbf" format from Datasus ftp server
     :param file_name: string of file name without format

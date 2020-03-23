@@ -13,11 +13,6 @@ from dbfread import DBF
 from .folder import CACHEPATH
 from .read import read_dbc, read_cnv
 
-# import sys
-# sys.path.append('C:\\Users\\ericc\\Desktop\\susana\\insertion\\data_wrangling\\online\\')
-# from folder import CACHEPATH
-# from read import read_dbc, read_cnv
-
 """
 Messy system!!!!!
 
@@ -73,7 +68,7 @@ def download_SINANXXaa(base: str, state: str, year: str, cache: bool=True):
         if cache:
             df.to_parquet(cachefile)
         return df
-        
+
 
 # Função de download de tabelas do SINAN em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name, cache=True):
