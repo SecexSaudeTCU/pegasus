@@ -111,6 +111,9 @@ def get_RDXXaamm_treated(state, year, month):
         df[col] = df[col].apply(str.strip)
         df[col] = df[col].apply(lambda x: x if len(x) == 4 else '')
 
+    for col in np.array(['AUD_JUST', 'SIS_JUST']):
+        df[col].replace(to_replace=',', value= '', regex=True, inplace=True)
+
     # Atualiza/corrige os labels das colunas especificadas
     for col in np.array(['UF_ZI', 'MUNIC_RES', 'MUNIC_MOV']):
         df[col] = df[col].apply(lambda x: x if len(x) == 6 else '')
@@ -690,8 +693,3 @@ if __name__ == '__main__':
 
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
-
-    #df = get_RDXXaamm_treated('AC', '11', '12')
-
-    df = get_TB_SIGTAP_treated()
-    print(df)

@@ -460,8 +460,3 @@ if __name__ == '__main__':
 
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
-
-    #df = get_RDXXaamm_treated('AC', '11', '12')
-
-    df = get_CID10_treated()
-    print(df)

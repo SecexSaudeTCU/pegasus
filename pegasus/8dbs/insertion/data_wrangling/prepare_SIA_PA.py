@@ -39,7 +39,7 @@ def get_PAXXaamm_treated(state, year, month):
                               'PA_CMP', 'PA_PROC_ID', 'PA_TPFIN', 'PA_NIVCPL', 'PA_DOCORIG', 'PA_AUTORIZ', 'PA_CNSMED',
                               'PA_CBOCOD', 'PA_MOTSAI', 'PA_OBITO', 'PA_ENCERR', 'PA_PERMAN', 'PA_ALTA', 'PA_TRANSF',
                               'PA_CIDPRI', 'PA_CIDSEC', 'PA_CIDCAS', 'PA_CATEND', 'PA_IDADE', 'IDADEMIN', 'IDADEMAX',
-                              'PA_FLIDADE', 'PA_SEXO', 'PA_RACACOR', 'PA_MUNPCN', 'PA_ QTDPRO', 'PA_QTDAPR', 'PA_VALPRO',
+                              'PA_FLIDADE', 'PA_SEXO', 'PA_RACACOR', 'PA_MUNPCN', 'PA_QTDPRO', 'PA_QTDAPR', 'PA_VALPRO',
                               'PA_VALAPR', 'PA_UFDIF', 'PA_MNDIF', 'PA_DIF_VAL', 'NU_VPA_TOT', 'NU_PA_TOT', 'PA_INDICA',
                               'PA_CODOCO', 'PA_FLQT', 'PA_FLER', 'PA_ETNIA', 'PA_VL_CF', 'PA_VL_CL', 'PA_VL_INC', 'PA_SRC_C',
                               'PA_INE', 'PA_NAT_JUR'])
@@ -74,6 +74,8 @@ def get_PAXXaamm_treated(state, year, month):
     for col in np.array(['PA_TPUPS', 'PA_TPFIN', 'PA_CATEND', 'PA_RACACOR']):
         for i in np.array(['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']):
             df[col].replace(i, str(int(i)), inplace=True)
+
+    df['PA_AUTORIZ'].replace(to_replace=',', value= '', regex=True, inplace=True)
 
     for col in np.array(['PA_CBOCOD', 'PA_SRC_C']):
         df[col] = df[col].apply(lambda x: x.zfill(6))
@@ -121,7 +123,9 @@ def get_PAXXaamm_treated(state, year, month):
 
     for col in np.array(['PA_CIDPRI', 'PA_CIDSEC', 'PA_CIDCAS']):
         df[col] = df[col].apply(lambda x: x.upper())
-        df[col].replace(['0000', '9999', 'C200', 'C560', 'C610', 'C640', 'C970', 'G455', 'R007', 'R495'], '', inplace=True)
+        df[col].replace(['0000', '9999', 'C200', 'C550', 'C560', 'C610', 'C640',
+                         'C800', 'C970', 'G455', 'J460', 'J462', 'J464', 'J465',
+                         'J466', 'J467', 'J470', 'J481', 'J484', 'R007', 'R495'], '', inplace=True)
         df[col].replace('B501', 'B508', inplace=True)
         df[col].replace('B656', 'B653', inplace=True)
         df[col].replace('C141', 'C140', inplace=True)
@@ -147,7 +151,7 @@ def get_PAXXaamm_treated(state, year, month):
     df['PA_ETNIA'].replace(['0000', '9999'], '', inplace=True)
     df['PA_ETNIA'].replace(regex='^X.{3}', value='', inplace=True)
 
-    df['PA_INE'].replace(['0001610902', '0001630520', '0001627112'], '', inplace=True)
+    df['PA_INE'].replace(['0001610902', '0001619055', '0001630520', '0001627112', '0001636383'], '', inplace=True)
 
     df['PA_NAT_JUR'].replace(['0000', '1244'], '', inplace=True)
 
@@ -667,9 +671,3 @@ if __name__ == '__main__':
 
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
-
-    #df = get_RDXXaamm_treated('AC', '11', '12')
-
-    df = get_natjur_treated()
-    print(df)
-    #print(max(df['OCUPACAO'].str.len()))
