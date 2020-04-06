@@ -64,7 +64,7 @@ def download_CNESXXaamm(base: str, state: str, year: str, month: str, cache: boo
                 ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
             except:
                 raise Exception(f'Could not access {fname}.')
-        df = read_dbc(fname, signature='iso-8859-1')
+        df = read_dbc(fname, 'iso-8859-1')
         ftp.close()
         if cache:
             df.to_parquet(cachefile)
