@@ -1,3 +1,4 @@
+
 import os
 import subprocess
 from tempfile import NamedTemporaryFile
@@ -12,7 +13,7 @@ The function read_dbc is based on the work of Flávio Coelho (https://github.com
 
 """
 
-def read_dbc(filename, encoding='utf-8'):
+def read_dbc(filename, signature='utf-8'):
 
     """
     Opens a Datasus "dbc" file and return its contents as a pandas
@@ -28,7 +29,7 @@ def read_dbc(filename, encoding='utf-8'):
     with NamedTemporaryFile(delete=False) as tf:
         file = dbc2dbf(filename)
         tf.name = file
-        dbf = DBF(tf.name, encoding=encoding)
+        dbf = DBF(tf.name, encoding=signature)
         df = pd.DataFrame(iter(dbf))
     os.unlink(tf.name)
     return df
@@ -44,19 +45,9 @@ def dbc2dbf(infile):
     """
 
     infile = infile.decode()
-
-    # Nome do arquivo .dbc que será descompactado
-    arquivo_dbc = os.path.join(CACHEPATH, infile)
-
-    # Executa conversor .dbc para .dbf do TabWin
-    subprocess.run(['C:/TabWin/dbf2dbc.exe', arquivo_dbc])
-
-    # Remove arquivo .dbc
-    os.remove(arquivo_dbc)
-
-    # Obtém nome do arquivo .dbf gerado pelo conversor
-    outfile = os.getcwd() + '/' + infile[:-4] + '.dbf'
-
+    subprocess.run(['C:\\TabWin\\dbf2dbc.exe', CACHEPATH + '\\' + infile])
+    os.remove(CACHEPATH + '\\' + infile)
+    outfile = os.getcwd() + '\\' + infile[:-4] + '.dbf'
     return outfile
 
 
@@ -101,7 +92,7 @@ def read_cnv(filename):
     lista_significacao = []  # "Inicialização" da lista de decodificações
     lista_id = []  # "Inicialização" da lista de códigos
     # Leitura do arquivo texto
-    if filename[:-4] in ['SINAN_Classdeng', 'CNES_NATUREZA']:   # Estes são arquivos "cnv" cujos números de algarismos dos códigos estão na segunda linha do arquivo
+    if filename[:-4] in ['SINAN_Classdeng', 'cnv/CNES_NATUREZA']:   # Estes são arquivos "cnv" cujos números de algarismos dos códigos estão na segunda linha do arquivo
         for linha in fhandler:
             k += 1
             linha = linha.rstrip()
@@ -116,9 +107,10 @@ def read_cnv(filename):
                 lista_significacao.append(linha[9:60].strip())
                 lista_id.append(linha[60:60+size_id].strip())
 
-    elif filename[:-4] in ['CNES_TP_ESTAB', 'CNES_NATJUR', 'SIH_LEITOS']:  # Estes são arquivos "cnv" cujas significações não começam na posição (python) 9 (mas na 11),...
-                                                                           # cujos códigos não começam na posição (python) 60 (mas na 112) de cada linha do arquivo,...
-                                                                           # e cujos números de algarismos dos códigos não são o segundo elemento listado na primeira linha (mas o terceiro)
+    elif filename[:-4] in ['cnv/CNES_TP_ESTAB', 'cnv/CNES_NATJUR', 'SIH_LEITOS']:  # Estes são arquivos "cnv" cujas significações não começam na posição (python) 9...
+                                                                                   # (mas na 11), cujos códigos não começam na posição (python) 60 (mas na 112) de...
+                                                                                   # cada linha do arquivo, e cujos números de algarismos dos códigos não são o segundo...
+                                                                                   # elemento listado na primeira linha (mas o terceiro)
         for linha in fhandler:
             k += 1
             linha = linha.rstrip()
@@ -130,7 +122,7 @@ def read_cnv(filename):
                 lista_significacao.append(linha[11:112].strip())
                 lista_id.append(linha[112:112+size_id].strip())
 
-    elif filename[:-4] == 'CNES_Equip_Tp':  # Os dois últimos dígitos da coluna de códigos desse arquivo permite construir a parent table CODEQUIP e assim...
+    elif filename[:-4] == 'cnv/CNES_Equip_Tp':  # Os dois últimos dígitos da coluna de códigos desse arquivo permite construir a parent table CODEQUIP e assim...
                                             # decodificar a coluna CODEQUIP_ID da tabela eqbr do banco de dados CNES_EQ
         size_id = 2
         for linha in fhandler:

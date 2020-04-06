@@ -2,11 +2,13 @@
 #    CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY CNES_ANY     #
 ############################################################################################################################################################################
 
+import os
 import time
 from datetime import datetime
 
 import numpy as np
 import pandas as pd
+import psycopg2
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -15,8 +17,9 @@ import pandas as pd
 # AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES #
 ############################################################################################################################################################################
 
-def insert_most_CNES_ST_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_ST_tables(path, device, child_db):
+
     label1 = 'append'
     label2 = 'ID'
 
@@ -81,16 +84,15 @@ def insert_most_CNES_ST_tables_pandas(path, device, child_db):
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
-# Função que utiliza para a inserção de dados não principais o pandas.to_sql + SQLAlchemy
-def insert_most_CNES_DC_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_DC_tables(path, device, child_db):
+
     label1 = 'append'
     label2 = 'ID'
 
     from .data_wrangling import prepare_CNES_DC
 
     # Chama funções definidas no módulo "prepare_CNES_DC" do package "data_wrangling"
-
     df_CADGERBR = prepare_CNES_DC.get_CADGERBR_treated(path)
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -100,9 +102,9 @@ def insert_most_CNES_DC_tables_pandas(path, device, child_db):
     df_CADMUN = prepare_CNES_DC.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_PF_tables(path, device, child_db):
 
-def insert_most_CNES_PF_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -129,9 +131,9 @@ def insert_most_CNES_PF_tables_pandas(path, device, child_db):
     df_VINCULO = prepare_CNES_PF.get_VINCULO_treated()
     df_VINCULO.to_sql('vinculac', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_LT_tables(path, device, child_db):
 
-def insert_most_CNES_LT_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -153,9 +155,9 @@ def insert_most_CNES_LT_tables_pandas(path, device, child_db):
     df_Esp_leit = prepare_CNES_LT.get_Esp_leit_treated()
     df_Esp_leit.to_sql('codleito', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_EQ_tables(path, device, child_db):
 
-def insert_most_CNES_EQ_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -177,9 +179,9 @@ def insert_most_CNES_EQ_tables_pandas(path, device, child_db):
     df_Equip_Tp = prepare_CNES_EQ.get_Equip_Tp_treated()
     df_Equip_Tp.to_sql('codequip', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_SR_tables(path, device, child_db):
 
-def insert_most_CNES_SR_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -243,9 +245,9 @@ def insert_most_CNES_SR_tables_pandas(path, device, child_db):
     df_NATJUR = prepare_CNES_SR.get_NATJUR_treated()
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_EP_tables(path, device, child_db):
 
-def insert_most_CNES_EP_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -282,9 +284,9 @@ def insert_most_CNES_EP_tables_pandas(path, device, child_db):
     df_TP_DESAT = prepare_CNES_EP.get_TP_DESAT_treated()
     df_TP_DESAT.to_sql('tpdesat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_HB_tables(path, device, child_db):
 
-def insert_most_CNES_HB_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -303,9 +305,9 @@ def insert_most_CNES_HB_tables_pandas(path, device, child_db):
     df_HABILITA = prepare_CNES_HB.get_HABILITA_treated()
     df_HABILITA.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_GM_tables(path, device, child_db):
 
-def insert_most_CNES_GM_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -324,9 +326,9 @@ def insert_most_CNES_GM_tables_pandas(path, device, child_db):
     df_GESTAO = prepare_CNES_GM.get_GESTAO_treated()
     df_GESTAO.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_EE_tables(path, device, child_db):
 
-def insert_most_CNES_EE_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -384,9 +386,9 @@ def insert_most_CNES_EE_tables_pandas(path, device, child_db):
     df_NATJUR = prepare_CNES_EE.get_NATJUR_treated()
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_EF_tables(path, device, child_db):
 
-def insert_most_CNES_EF_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -444,9 +446,9 @@ def insert_most_CNES_EF_tables_pandas(path, device, child_db):
     df_NATJUR = prepare_CNES_EF.get_NATJUR_treated()
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_IN_tables(path, device, child_db):
 
-def insert_most_CNES_IN_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -501,9 +503,9 @@ def insert_most_CNES_IN_tables_pandas(path, device, child_db):
     df_NATJUR = prepare_CNES_IN.get_NATJUR_treated()
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_RC_tables(path, device, child_db):
 
-def insert_most_CNES_RC_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
 
@@ -524,26 +526,27 @@ def insert_most_CNES_RC_tables_pandas(path, device, child_db):
 
 
 ###########################################################################################################################################################################
-# pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+#         copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas         #
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 #  MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE #
 ###########################################################################################################################################################################
 
-# Função que utiliza para a inserção de dados principais da "child_db" o pandas.to_sql + SQLAlchemy
-def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
+# Função que utiliza "copy_expert " para a inserção de dados principais e "pandas.to_sql" para a inserção
+# dos respectivos metadados no banco de dados "child_db"
+def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, child_db, connection_data):
     start = time.time()
-    counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
+    counting_rows = pd.read_sql(f'''SELECT COUNT('NOME') FROM {child_db}.arquivos''', con=device)
     qtd_files_pg = counting_rows.iloc[0]['count']
-    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {parent_db}/PostgreSQL é {qtd_files_pg}.')
+    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do CNES_XX
+    # Tratamento de dados principais do CNES
     base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:6]
     month = file_name[6:8]
     main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
+    counting_rows = pd.read_sql(f'''SELECT COUNT(*) from {child_db}.{main_table}''', con=device)
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}.')
 
@@ -553,17 +556,40 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
 
     # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
     module = __import__('insertion.data_wrangling.prepare_CNES_' + base, fromlist=[func_string], level=0)
-    func_treatment = getattr(module, func_string)
+    func_treat_main_table = getattr(module, func_string)
 
-    # Chama a função "func_treatment" do módulo "prepare_CNES_XX" do package "data_wrangling"
-    df = func_treatment(state, year, month)
+    # Chama a função "func_treat_main_table" do módulo "prepare_CNES_XX" do package "data_wrangling"
+    df = func_treat_main_table(state, year, month)
     # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
     df.insert(3, 'MES_' + base, [month]*df.shape[0])
-    df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
-    # Inserção dos dados da tabela principal no banco de dados "child_db"
-    df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
+
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do CNES_XX armazenado no objeto
+    # pandas DataFrame "df"
+    df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False)
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do CNES_XX
+    f = open(base + state + year + month + '.csv', 'r')
+    # Conecta ao banco de dados mãe "DB_NAME" do SGBD PostgreSQL usando o módulo python "psycopg2"
+    conn = psycopg2.connect(dbname=connection_data[0],
+                            host=connection_data[1],
+                            port=connection_data[2],
+                            user=connection_data[3],
+                            password=connection_data[4])
+    # Criação de um cursor da conexão tipo "psycopg2" referenciado à variável "cursor"
+    cursor = conn.cursor()
+    # Faz a inserção dos dados armazenados em "f" na tabela "main_table" do banco de dados "child_db"
+    # usando o método "copy_expert" do "psycopg2"
+    cursor.copy_expert(f'''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+    conn.commit()
+    # Encerra o cursor
+    cursor.close()
+    # Encerra a conexão
+    conn.close()
+    # Encerra o file handler
+    f.close()
+    # Remoção do arquivo "csv"
+    os.remove(base + state + year + month + '.csv')
     print(f'Terminou de inserir os dados do arquivo {base}{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
 
     # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
@@ -575,4 +601,4 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL!')

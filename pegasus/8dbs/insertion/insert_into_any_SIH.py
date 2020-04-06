@@ -2,11 +2,13 @@
 #  SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY #
 ############################################################################################################################################################################
 
+import os
 import time
 from datetime import datetime
 
 import numpy as np
 import pandas as pd
+import psycopg2
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -15,16 +17,15 @@ import pandas as pd
 # AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES #
 ############################################################################################################################################################################
 
-# Função que utiliza para a inserção de dados não principais o pandas.to_sql + SQLAlchemy
-def insert_most_SIH_RD_tables_pandas(path, device, child_db):
-    # Inserção dos dados das tabelas não principais no banco de dados
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_SIH_RD_tables(path, device, child_db):
+
     label1 = 'append'
     label2 = 'ID'
 
     from .data_wrangling import prepare_SIH_RD
 
     # Chama funções definidas no módulo "prepare_SIH_RD" do package "data_wrangling"
-
     df_TABUF = prepare_SIH_RD.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -113,8 +114,15 @@ def insert_most_SIH_RD_tables_pandas(path, device, child_db):
     df_etnia.to_sql('etnia', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
-# Função que utiliza para a inserção de dados não principais o pandas.to_sql + SQLAlchemy
-def insert_most_SIH_SP_tables_pandas(path, device, child_db):
+############################################################################################################################################################################
+#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+############################################################################################################################################################################
+############################################################################################################################################################################
+# AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES #
+############################################################################################################################################################################
+
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_SIH_SP_tables(path, device, child_db):
     # Inserção dos dados das tabelas não principais no banco de dados
     label1 = 'append'
     label2 = 'ID'
@@ -122,7 +130,6 @@ def insert_most_SIH_SP_tables_pandas(path, device, child_db):
     from .data_wrangling import prepare_SIH_SP
 
     # Chama funções definidas no módulo "prepare_SIH_SP" do package "data_wrangling"
-
     df_TB_SIGTAP = prepare_SIH_SP.get_TB_SIGTAP_treated(path)
     df_TB_SIGTAP.to_sql('spprocrea', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -170,18 +177,19 @@ def insert_most_SIH_SP_tables_pandas(path, device, child_db):
 
 
 ###########################################################################################################################################################################
-# pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+#         copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas         #
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 #  MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE #
 ###########################################################################################################################################################################
 
-# Função que utiliza para a inserção de dados principais da "child_db" o pandas.to_sql + SQLAlchemy
-def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
+# Função que utiliza "copy_expert " para a inserção de dados principais e "pandas.to_sql" para a inserção
+# dos respectivos metadados no banco de dados "child_db"
+def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, child_db, connection_data):
     start = time.time()
-    counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
+    counting_rows = pd.read_sql(f'''SELECT COUNT('NOME') FROM {child_db}.arquivos''', con=device)
     qtd_files_pg = counting_rows.iloc[0]['count']
-    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {parent_db}/PostgreSQL é {qtd_files_pg}.')
+    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
     # Tratamento de dados principais do SIH_XX
     base = file_name[0:2]
@@ -189,7 +197,7 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
     year = file_name[4:6]
     month = file_name[6:8]
     main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
+    counting_rows = pd.read_sql(f'''SELECT COUNT(*) from {child_db}.{main_table}''', con=device)
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}...')
 
@@ -199,20 +207,44 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
 
     # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
     module = __import__('insertion.data_wrangling.prepare_SIH_' + base, fromlist=[func_string], level=0)
-    func_treatment = getattr(module, func_string)
+    func_treat_main_table = getattr(module, func_string)
 
-    # Chama a função "func_treatment" do módulo "prepare_SIH_XX" do package "data_wrangling"
-    df = func_treatment(state, year, month)
-    # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
+    # Chama a função "func_treat_main_table" do módulo "prepare_SIH_XX" do package "data_wrangling"
+    df = func_treat_main_table(state, year, month)
+    # Inserção das colunas UF_XX, ANO_XX, MES_XX e CONTAGEM no objeto pandas DataFrame "df"
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
     df.insert(3, 'MES_' + base, [month]*df.shape[0])
-    df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
-    # Inserção dos dados da tabela principal no banco de dados "child_db"
-    df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
+
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do SIH_XX armazenado no objeto
+    # pandas DataFrame "df"
+    df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False)
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do SIH_XX
+    f = open(base + state + year + month + '.csv', 'r')
+    # Conecta ao banco de dados mãe "DB_NAME" do SGBD PostgreSQL usando o módulo python "psycopg2"
+    conn = psycopg2.connect(dbname=connection_data[0],
+                            host=connection_data[1],
+                            port=connection_data[2],
+                            user=connection_data[3],
+                            password=connection_data[4])
+    # Criação de um cursor da conexão tipo "psycopg2" referenciado à variável "cursor"
+    cursor = conn.cursor()
+    # Faz a inserção dos dados armazenados em "f" na tabela "main_table" do banco de dados "child_db"
+    # usando o método "copy_expert" do "psycopg2"
+    cursor.copy_expert(f'''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+    conn.commit()
+    # Encerra o cursor
+    cursor.close()
+    # Encerra a conexão
+    conn.close()
+    # Encerra o file handler
+    f.close()
+    # Remoção do arquivo "csv"
+    os.remove(base + state + year + month + '.csv')
     print(f'Terminou de inserir os dados do arquivo {base}{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
 
-    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
+    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados
+    # principal carregado
     file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
                              columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
                              index=None
@@ -221,4 +253,4 @@ def insert_main_table_e_file_info_pandas(file_name, directory, date_ftp, device,
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')
+    print(f'Demorou {round((end - start), 1)} segundos para essas duas inserções no {connection_data[0]}/PostgreSQL!')

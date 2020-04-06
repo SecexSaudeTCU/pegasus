@@ -5,7 +5,7 @@
 import os
 
 import psycopg2
-from sqlalchemy import create_engine, event, DDL
+from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 
@@ -73,9 +73,8 @@ if __name__ == '__main__':
     print('\n***************************************************************************************')
     print('First of all, you must read the docstring provided at the beginning of this main module.\n'.upper())
     print('Also, you just do not forget that the PostgreSQL database to be filled must first be created!'.upper())
-    print('Therefore the 3 constants defined at lines 125, 126 and 129 of this main module must...')
-    print('first be adapted to your reality, that is: DB_USER, DB_PASS and DB_NAME; being DB_NAME...')
-    print('the name of the database created in PostgreSQL.')
+    print('Therefore the 3 constants defined at lines 115, 118 and 119 of this main module must...')
+    print('first be adapted to your reality, that is: DB_NAME, DB_USER and DB_PASS.')
     print('***************************************************************************************\n')
 
     decision = input("You better really type 'q' if you have not done the recommended above or type anything otherwise: ")
@@ -95,25 +94,17 @@ if __name__ == '__main__':
     else:
         print('\nTo its goal...\n')
 
-    # Importação da variável "Base" do respectivo módulo do "datasus_db" do package "schemas"
-    module1 = __import__('schemas.alchemy_declarative_' + datasus_db.upper() + '_postgreSQL', fromlist=['Base'], level=0)
-    structure = module1.Base
-
-    # Cria o schema do banco de dados child "datasus_db" do banco de dados mãe "DB_NAME" utilizando as classes definidas...
-    # no respectivo módulo do package "schemas"
-    event.listen(structure.metadata, 'before_create', DDL('CREATE SCHEMA IF NOT EXISTS %s' % (datasus_db)))
-
     # Criação de objetos string do nome das duas funções de inserção de dados do "datasus_db" contidas no respectivo...
     # módulo do package "insertion"
-    str_most = 'insert_most_' + datasus_db.upper() + '_tables_pandas'
-    str_main = 'insert_main_table_e_file_info_pandas'
+    str_most = 'insert_into_most_' + datasus_db.upper() + '_tables'
+    str_main = 'insert_into_main_table_and_arquivos'
 
     # Importação das duas funções de inserção de dados do "datasus_db" usando a função nativa "__import__"
-    module2 = __import__('insertion.insert_into_all_' + datasus_db.upper(), fromlist=[str_most, str_main], level=0)
+    module1 = __import__('insertion.insert_into_all_' + datasus_db.upper(), fromlist=[str_most, str_main], level=0)
 
     # Colocação do nome das duas funções de inserção de dados importadas nas variáveis "most_tables" e "main_tables"
-    most_tables = getattr(module2, str_most)
-    main_tables = getattr(module2, str_main)
+    most_tables = getattr(module1, str_most)
+    main_tables = getattr(module1, str_main)
 
     # Chama a função "files_in_ftp" contida no módulo "essential_postgreSQL_db_sus" do package "utilities" tendo como parâmetro...
     # a variável "datasus_db"
@@ -121,36 +112,47 @@ if __name__ == '__main__':
     os.remove('stuff_ftp_files.txt')
 
     # Dados de conexão 1 (portanto o DB_NAME já deve ter sido previamente criado com esses dados)
-    DB_TYPE = 'postgresql'
-    DB_USER = 'Eric'
-    DB_PASS = 'teste'
+    DB_NAME = 'dbsus'      # De acordo com o usuário; Nome do banco de dados mãe
     DB_HOST = '127.0.0.1'
     DB_PORT = '5432'
-    DB_NAME = 'dbsus'     # Nome no PostgreSQL do banco de dados mãe agregador dos bancos de dados do Datasus
+    DB_USER = 'username'   # De acordo com o usuário
+    DB_PASS = 'password'   # De acordo com o usuário
+    # Criação de objeto ndarray que armazena os referidos objetos string
+    DB_DADOS = np.array([DB_NAME, DB_HOST, DB_PORT, DB_USER, DB_PASS])
 
     try:
-        # Conecta ao SGBD PostgreSQL usando o módulo python "psycopg2"
+        # Conecta ao banco de dados mãe "DB_NAME" do SGBD PostgreSQL usando o módulo python "psycopg2"
         conn = psycopg2.connect(dbname=DB_NAME, host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASS)
         print(conn.get_dsn_parameters(),'\n')
-        # Criação de um cursor da conecção tipo "psycopg2" referenciado à variável "cursor"
+        # Criação de um cursor da conexão tipo "psycopg2" referenciado à variável "cursor"
         cursor = conn.cursor()
-        # Chama a função "get_tables_e_count_postgreSQL" contida no módulo "essential_postgreSQL_db_sus" do package "utilities"
+        # Inicializa o schema denominado "datasus_db" no banco de dados mãe "DB_NAME"
+        cursor.execute(f'CREATE SCHEMA IF NOT EXISTS {datasus_db};')
+        conn.commit()
+        # Chama a função "get_tables_e_count_postgreSQL" contida no módulo "essential_postgreSQL_a_db" do package "utilities"
         dict_tabelas_e_counts_pg = get_tables_e_count_postgreSQL(cursor, datasus_db)
-        conn.close()
+        # Encerra o cursor
         cursor.close()
+        # Encerra a conexão
+        conn.close()
     except (Exception, psycopg2.Error) as error:
         print('Error while connecting to PostgreSQL.', error)
 
-    # Dados de conexão 2
+    # Importação da função "create_tables" de criação do schema do banco de dados "datasus_db" existente no respectivo
+    # módulo do package "schemas" usando a função python "__import__"
+    module2 = __import__('schemas.sql_' + datasus_db.upper() + '_postgreSQL', fromlist=['create_tables'], level=0)
+    # Referenciação da função "create_tables" à variável deste módulo denominada "create_schema"
+    create_schema = getattr(module2, 'create_tables')
+    # Uso da função "create_schema" para a criação do schema do banco de dados "datasus_db"
+    create_schema(DB_DADOS, datasus_db)
+
+    # Dados de conexão 2 (para uso da função "create_engine" do SQLAlchemy)
+    DB_TYPE = 'postgresql'
     DB_DRIVER = 'psycopg2'
-
-    # URI para o PostgreSQL
+    # URI do banco de dados mãe "DB_NAME" do SGBD PostgreSQL
     DATABASE_URI = '%s+%s://%s:%s@%s:%s/%s' % (DB_TYPE, DB_DRIVER, DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME)
-
-    # Cria um "engine" para o SGBD PostgreSQL usando o driver "psycopg2"
+    # Cria um "engine" para o banco de dados mãe "DB_NAME" usando a função "create_engine" do SQLAlchemy
     engine = create_engine(DATABASE_URI)
-    # Vincula o schema de "structure" definido no módulo "alchemy_declarative_'datasus_db'_postgreSQL" do package "schemas" ao banco de dados "DBNAME"
-    structure.metadata.create_all(engine)
 
     # Chama a função "files_in_postgreSQL" contida no módulo "essential_postgreSQL_db_sus" do package "utilities"
     df_arquivos_pg = files_in_postgreSQL(dict_tabelas_e_counts_pg, datasus_db, engine)
@@ -186,7 +188,8 @@ if __name__ == '__main__':
         # Remoção dos arquivos "cnv" baixados numa pasta zipada do endereço ftp do Datasus
         if datasus_db == 'cnes':
             os.remove('TAB_CNES.zip')
-            os.rmdir('TAB_DBF_CNV')
+            os.rmdir('TAB_DBF')
+            os.rmdir('cnv')
         elif datasus_db == 'sih':
             os.remove('TAB_SIH.zip')
             os.rmdir('CNV')
@@ -204,9 +207,10 @@ if __name__ == '__main__':
         elif datasus_db == 'sinan':
             os.remove('TAB_SINAN.zip')
 
+    print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
     # Carrega dados da tabela principal do "datasus_db" no PostgreSQL
     for i in range(qtd_arqs_datasus):
         # Chama a função "main_tables" para a inserção de dados na tabela principal (child table) + respectivas informações na tabela arquivos...
         # usando o pandas.to_sql "do" SQLAlchemy
         main_tables(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i], df_arqs_nao_carregados.DATA_INSERCAO_FTP[i],
-                    engine, datasus_db, DB_NAME)
+                    engine, datasus_db, DB_DADOS)

@@ -64,7 +64,7 @@ def download_CNESXXaamm(base: str, state: str, year: str, month: str, cache: boo
                 ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
             except:
                 raise Exception(f'Could not access {fname}.')
-        df = read_dbc(fname, encoding='iso-8859-1')
+        df = read_dbc(fname, signature='iso-8859-1')
         ftp.close()
         if cache:
             df.to_parquet(cachefile)
@@ -97,24 +97,24 @@ def download_table_dbf(file_name):
         zip = ZipFile(folder, 'r')
         try:
             fname = file_name + '.DBF'
-            zip.extract('TAB_DBF_CNV/' + fname)
+            zip.extract('TAB_DBF/' + fname)
         except:
             try:
                 fname = file_name + '.dbf'
-                zip.extract('TAB_DBF_CNV/' + fname)
+                zip.extract('TAB_DBF/' + fname)
             except:
                 raise Exception(f'Could not access {file_name}.')
 
     if (file_name == 'CADMUN') or (file_name == 'TABUF'):
         dbf = DBF(fname)
     else:
-        dbf = DBF('TAB_DBF_CNV/' + fname, encoding='iso-8859-1')
+        dbf = DBF('TAB_DBF/' + fname, encoding='iso-8859-1')
     df = pd.DataFrame(iter(dbf))
 
     if (file_name == 'CADMUN') or (file_name == 'TABUF'):
         os.unlink(fname)
     else:
-        os.unlink('TAB_DBF_CNV/' + fname)
+        os.unlink('TAB_DBF/' + fname)
 
     return df
 
@@ -139,16 +139,16 @@ def download_table_cnv(file_name):
     zip = ZipFile(folder, 'r')
     try:
         fname = file_name + '.CNV'
-        zip.extract(fname)
+        zip.extract('cnv/' + fname)
     except:
         try:
             fname = file_name + '.cnv'
-            zip.extract(fname)
+            zip.extract('cnv/' + fname)
         except:
             raise Exception(f'Could not access {file_name}.')
 
-    os.rename(fname, 'CNES_' + fname)
+    os.rename('cnv/' + fname, 'cnv/CNES_' + fname)
 
-    df = read_cnv('CNES_' + fname)
+    df = read_cnv('cnv/CNES_' + fname)
 
     return df
