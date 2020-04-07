@@ -63,7 +63,7 @@ def download_SINANXXaa(base: str, state: str, year: str, cache: bool=True):
                 ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
             except:
                 raise Exception(f'Could not access {fname}.')
-        df = read_dbc(fname, encoding='iso-8859-1')
+        df = read_dbc(fname, 'iso-8859-1')
         ftp.close()
         if cache:
             df.to_parquet(cachefile)

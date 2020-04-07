@@ -144,11 +144,11 @@ if __name__ == '__main__':
     os.remove('stuff_ftp_files.txt')
 
     # Dados de conexão 1 (portanto o DB_NAME já deve ter sido previamente criado com esses dados)
-    DB_NAME = 'dbsus4'      # De acordo com o usuário; Nome do banco de dados mãe
+    DB_NAME = 'dbsus2'     # De acordo com o usuário; Nome do banco de dados mãe
     DB_HOST = '127.0.0.1'
     DB_PORT = '5432'
-    DB_USER = 'Eric'        # De acordo com o usuário
-    DB_PASS = 'teste'       # De acordo com o usuário
+    DB_USER = 'username'   # De acordo com o usuário
+    DB_PASS = 'password'   # De acordo com o usuário
     # Criação de objeto ndarray que armazena os referidos objetos string
     DB_DADOS = np.array([DB_NAME, DB_HOST, DB_PORT, DB_USER, DB_PASS])
 
