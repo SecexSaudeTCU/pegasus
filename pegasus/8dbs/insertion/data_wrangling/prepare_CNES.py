@@ -1,6 +1,6 @@
-###########################################################################################################################################################################
-#  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES   #
-###########################################################################################################################################################################
+#################################################################################################################################
+#  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
+#################################################################################################################################
 
 import os
 from datetime import datetime
@@ -35,62 +35,67 @@ class DataCnesMain:
         self.month = month
 
 
-    # Método para ler como um objeto pandas DataFrame um arquivo principal de dados do CNES e adequar e formatar suas colunas e valores
+    # Método para ler como um objeto pandas DataFrame um arquivo principal de dados do CNES e adequar e formatar suas colunas...
+    # e valores
     def get_CNESXXaamm_treated(self):
         # Lê o arquivo "dbc" como um objeto pandas DataFrame e ainda o salva no formato "parquet"
         dataframe = download_CNESXXaamm(self.base, self.state, self.year, self.month)
         print(f'O número de linhas do arquivo {self.base}{self.state}{self.year}{self.month} é {dataframe.shape[0]}.')
 
-        ###################################################################################################################################################################
-        # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
+        ###########################################################################################################################
         if self.base == 'ST':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela stbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'COD_CEP', 'CPF_CNPJ', 'PF_PJ', 'NIV_DEP', 'CNPJ_MAN', 'COD_IR', 'VINC_SUS',
-                                      'TPGESTAO', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT',
-                                      'NIV_HIER', 'TP_PREST', 'CO_BANCO', 'CO_AGENC', 'C_CORREN', 'ALVARA', 'DT_EXPED', 'ORGEXPED',
-                                      'AV_ACRED', 'CLASAVAL', 'DT_ACRED', 'AV_PNASS', 'DT_PNASS', 'GESPRG1E', 'GESPRG1M', 'GESPRG2E',
-                                      'GESPRG2M', 'GESPRG4E', 'GESPRG4M', 'NIVATE_A', 'GESPRG3E', 'GESPRG3M', 'GESPRG5E', 'GESPRG5M',
-                                      'GESPRG6E', 'GESPRG6M', 'NIVATE_H', 'QTLEITP1', 'QTLEITP2', 'QTLEITP3', 'LEITHOSP', 'QTINST01',
-                                      'QTINST02', 'QTINST03', 'QTINST04', 'QTINST05', 'QTINST06', 'QTINST07', 'QTINST08', 'QTINST09',
-                                      'QTINST10', 'QTINST11', 'QTINST12', 'QTINST13', 'QTINST14', 'URGEMERG', 'QTINST15', 'QTINST16',
-                                      'QTINST17', 'QTINST18', 'QTINST19', 'QTINST20', 'QTINST21', 'QTINST22', 'QTINST23', 'QTINST24',
-                                      'QTINST25', 'QTINST26', 'QTINST27', 'QTINST28', 'QTINST29', 'QTINST30', 'ATENDAMB', 'QTINST31',
-                                      'QTINST32', 'QTINST33', 'CENTRCIR', 'QTINST34', 'QTINST35', 'QTINST36', 'QTINST37', 'CENTROBS',
-                                      'QTLEIT05', 'QTLEIT06', 'QTLEIT07', 'QTLEIT09', 'QTLEIT19', 'QTLEIT20', 'QTLEIT21', 'QTLEIT22',
-                                      'QTLEIT23', 'QTLEIT32', 'QTLEIT34', 'QTLEIT38', 'QTLEIT39', 'QTLEIT40', 'CENTRNEO', 'ATENDHOS',
-                                      'SERAP01P', 'SERAP01T', 'SERAP02P', 'SERAP02T', 'SERAP03P', 'SERAP03T', 'SERAP04P', 'SERAP04T',
-                                      'SERAP05P', 'SERAP05T', 'SERAP06P', 'SERAP06T', 'SERAP07P', 'SERAP07T', 'SERAP08P', 'SERAP08T',
-                                      'SERAP09P', 'SERAP09T', 'SERAP10P', 'SERAP10T', 'SERAP11P', 'SERAP11T', 'SERAPOIO', 'RES_BIOL',
-                                      'RES_QUIM', 'RES_RADI', 'RES_COMU', 'COLETRES', 'COMISS01', 'COMISS02', 'COMISS03', 'COMISS04',
-                                      'COMISS05', 'COMISS06', 'COMISS07', 'COMISS08', 'COMISS09', 'COMISS10', 'COMISS11', 'COMISS12',
-                                      'COMISSAO', 'AP01CV01', 'AP01CV02', 'AP01CV05', 'AP01CV06', 'AP01CV03', 'AP01CV04', 'AP02CV01',
-                                      'AP02CV02', 'AP02CV05', 'AP02CV06', 'AP02CV03', 'AP02CV04', 'AP03CV01', 'AP03CV02', 'AP03CV05',
-                                      'AP03CV06', 'AP03CV03', 'AP03CV04', 'AP04CV01', 'AP04CV02', 'AP04CV05', 'AP04CV06', 'AP04CV03',
-                                      'AP04CV04', 'AP05CV01', 'AP05CV02', 'AP05CV05', 'AP05CV06', 'AP05CV03', 'AP05CV04', 'AP06CV01',
-                                      'AP06CV02', 'AP06CV05', 'AP06CV06', 'AP06CV03', 'AP06CV04', 'AP07CV01', 'AP07CV02', 'AP07CV05',
-                                      'AP07CV06', 'AP07CV03', 'AP07CV04', 'ATEND_PR', 'NAT_JUR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'COD_CEP', 'CPF_CNPJ', 'PF_PJ', 'NIV_DEP', 'CNPJ_MAN', 'COD_IR',
+                                      'VINC_SUS', 'TPGESTAO', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL',
+                                      'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TP_PREST', 'CO_BANCO', 'CO_AGENC', 'C_CORREN',
+                                      'ALVARA', 'DT_EXPED', 'ORGEXPED', 'AV_ACRED', 'CLASAVAL', 'DT_ACRED', 'AV_PNASS',
+                                      'DT_PNASS', 'GESPRG1E', 'GESPRG1M', 'GESPRG2E', 'GESPRG2M', 'GESPRG4E', 'GESPRG4M',
+                                      'NIVATE_A', 'GESPRG3E', 'GESPRG3M', 'GESPRG5E', 'GESPRG5M', 'GESPRG6E', 'GESPRG6M',
+                                      'NIVATE_H', 'QTLEITP1', 'QTLEITP2', 'QTLEITP3', 'LEITHOSP', 'QTINST01', 'QTINST02',
+                                      'QTINST03', 'QTINST04', 'QTINST05', 'QTINST06', 'QTINST07', 'QTINST08', 'QTINST09',
+                                      'QTINST10', 'QTINST11', 'QTINST12', 'QTINST13', 'QTINST14', 'URGEMERG', 'QTINST15',
+                                      'QTINST16', 'QTINST17', 'QTINST18', 'QTINST19', 'QTINST20', 'QTINST21', 'QTINST22',
+                                      'QTINST23', 'QTINST24', 'QTINST25', 'QTINST26', 'QTINST27', 'QTINST28', 'QTINST29',
+                                      'QTINST30', 'ATENDAMB', 'QTINST31', 'QTINST32', 'QTINST33', 'CENTRCIR', 'QTINST34',
+                                      'QTINST35', 'QTINST36', 'QTINST37', 'CENTROBS', 'QTLEIT05', 'QTLEIT06', 'QTLEIT07',
+                                      'QTLEIT09', 'QTLEIT19', 'QTLEIT20', 'QTLEIT21', 'QTLEIT22', 'QTLEIT23', 'QTLEIT32',
+                                      'QTLEIT34', 'QTLEIT38', 'QTLEIT39', 'QTLEIT40', 'CENTRNEO', 'ATENDHOS', 'SERAP01P',
+                                      'SERAP01T', 'SERAP02P', 'SERAP02T', 'SERAP03P', 'SERAP03T', 'SERAP04P', 'SERAP04T',
+                                      'SERAP05P', 'SERAP05T', 'SERAP06P', 'SERAP06T', 'SERAP07P', 'SERAP07T', 'SERAP08P',
+                                      'SERAP08T', 'SERAP09P', 'SERAP09T', 'SERAP10P', 'SERAP10T', 'SERAP11P', 'SERAP11T',
+                                      'SERAPOIO', 'RES_BIOL', 'RES_QUIM', 'RES_RADI', 'RES_COMU', 'COLETRES', 'COMISS01',
+                                      'COMISS02', 'COMISS03', 'COMISS04', 'COMISS05', 'COMISS06', 'COMISS07', 'COMISS08',
+                                      'COMISS09', 'COMISS10', 'COMISS11', 'COMISS12', 'COMISSAO', 'AP01CV01', 'AP01CV02',
+                                      'AP01CV05', 'AP01CV06', 'AP01CV03', 'AP01CV04', 'AP02CV01', 'AP02CV02', 'AP02CV05',
+                                      'AP02CV06', 'AP02CV03', 'AP02CV04', 'AP03CV01', 'AP03CV02', 'AP03CV05', 'AP03CV06',
+                                      'AP03CV03', 'AP03CV04', 'AP04CV01', 'AP04CV02', 'AP04CV05', 'AP04CV06', 'AP04CV03',
+                                      'AP04CV04', 'AP05CV01', 'AP05CV02', 'AP05CV05', 'AP05CV06', 'AP05CV03', 'AP05CV04',
+                                      'AP06CV01', 'AP06CV02', 'AP06CV05', 'AP06CV06', 'AP06CV03', 'AP06CV04', 'AP07CV01',
+                                      'AP07CV02', 'AP07CV05', 'AP07CV06', 'AP07CV03', 'AP07CV04', 'ATEND_PR', 'NAT_JUR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -107,10 +112,12 @@ class DataCnesMain:
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['NIV_DEP'].replace('5', '', inplace=True)
 
@@ -119,7 +126,8 @@ class DataCnesMain:
 
             df['TPGESTAO'].replace('S', 'Z', inplace=True)
 
-            for col in np.array(['ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TURNO_AT', 'TP_PREST']):
+            for col in np.array(['ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA',
+                                 'CLIENTEL', 'TURNO_AT', 'TP_PREST']):
                 df[col].replace('99', '', inplace=True)
 
             df['TP_UNID'].replace(['3', '84', '85'], '', inplace=True)
@@ -134,8 +142,8 @@ class DataCnesMain:
 
             for col in np.array(['AV_ACRED', 'AV_PNASS']):
                 df[col].replace(['0', '3', '4', '5', '6', '7', '8', '9'], '', inplace=True)
-                df[col].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
-
+                df[col].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto...
+                                                        # string "0" do domínio binário
 
             df['CLASAVAL'].replace(['N', 'A'], '', inplace=True)
 
@@ -144,178 +152,205 @@ class DataCnesMain:
             df['NAT_JUR'].replace('3301', '3000', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
-            for col in np.array(['CNES', 'CODUFMUN', 'PF_PJ', 'NIV_DEP', 'COD_IR', 'TPGESTAO', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD',
-                                 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TP_PREST', 'ORGEXPED', 'CLASAVAL', 'NAT_JUR']):
+            for col in np.array(['CNES', 'CODUFMUN', 'PF_PJ', 'NIV_DEP', 'COD_IR', 'TPGESTAO', 'ESFERA_A',
+                                 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT',
+                                 'NIV_HIER', 'TP_PREST', 'ORGEXPED', 'CLASAVAL', 'NAT_JUR']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
             for col in np.array(['COD_CEP', 'CPF_CNPJ', 'CNPJ_MAN', 'CO_BANCO', 'CO_AGENC', 'C_CORREN', 'ALVARA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
-            df['DT_EXPED'] = df['DT_EXPED'].apply(lambda x: datetime.strptime(x, '%Y%m%d').date() if x != '' else datetime(2099, 1, 1).date())
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            df['DT_EXPED'] = df['DT_EXPED'].apply(lambda x: datetime.strptime(x, '%Y%m%d').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
             for col in np.array(['DT_ACRED', 'DT_PNASS']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela...
+            # data futura "2099-01-01"
             for col in np.array(['DT_EXPED', 'DT_ACRED', 'DT_PNASS']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
-            for col in np.array(['VINC_SUS', 'AV_ACRED', 'AV_PNASS', 'GESPRG1E', 'GESPRG1M', 'GESPRG2E', 'GESPRG2M', 'GESPRG4E', 'GESPRG4M',
-                                 'NIVATE_A', 'GESPRG3E', 'GESPRG3M', 'GESPRG5E', 'GESPRG5M', 'GESPRG6E', 'GESPRG6M', 'NIVATE_H', 'LEITHOSP',
-                                 'URGEMERG', 'ATENDAMB', 'CENTRCIR', 'CENTROBS', 'CENTRNEO', 'ATENDHOS', 'SERAP01P', 'SERAP01T', 'SERAP02P',
-                                 'SERAP02T', 'SERAP03P', 'SERAP03T', 'SERAP04P', 'SERAP04T', 'SERAP05P', 'SERAP05T', 'SERAP06P', 'SERAP06T',
-                                 'SERAP07P', 'SERAP07T', 'SERAP08P', 'SERAP08T', 'SERAP09P', 'SERAP09T', 'SERAP10P', 'SERAP10T', 'SERAP11P',
-                                 'SERAP11T', 'SERAPOIO', 'RES_BIOL', 'RES_QUIM', 'RES_RADI', 'RES_COMU', 'COLETRES', 'COMISS01', 'COMISS02',
-                                 'COMISS03', 'COMISS04', 'COMISS05', 'COMISS06', 'COMISS07', 'COMISS08', 'COMISS09', 'COMISS10', 'COMISS11',
-                                 'COMISS12', 'COMISSAO', 'AP01CV01', 'AP01CV02', 'AP01CV05', 'AP01CV06', 'AP01CV03', 'AP01CV04', 'AP02CV01',
-                                 'AP02CV02', 'AP02CV05', 'AP02CV06', 'AP02CV03', 'AP02CV04', 'AP03CV01', 'AP03CV02', 'AP03CV05', 'AP03CV06',
-                                 'AP03CV03', 'AP03CV04', 'AP04CV01', 'AP04CV02', 'AP04CV05', 'AP04CV06', 'AP04CV03', 'AP04CV04', 'AP05CV01',
-                                 'AP05CV02', 'AP05CV05', 'AP05CV06', 'AP05CV03', 'AP05CV04', 'AP06CV01', 'AP06CV02', 'AP06CV05', 'AP06CV06',
-                                 'AP06CV03', 'AP06CV04', 'AP07CV01', 'AP07CV02', 'AP07CV05', 'AP07CV06', 'AP07CV03', 'AP07CV04', 'ATEND_PR']):
+            for col in np.array(['VINC_SUS', 'AV_ACRED', 'AV_PNASS', 'GESPRG1E', 'GESPRG1M', 'GESPRG2E', 'GESPRG2M',
+                                 'GESPRG4E', 'GESPRG4M', 'NIVATE_A', 'GESPRG3E', 'GESPRG3M', 'GESPRG5E', 'GESPRG5M',
+                                 'GESPRG6E', 'GESPRG6M', 'NIVATE_H', 'LEITHOSP', 'URGEMERG', 'ATENDAMB', 'CENTRCIR',
+                                 'CENTROBS', 'CENTRNEO', 'ATENDHOS', 'SERAP01P', 'SERAP01T', 'SERAP02P', 'SERAP02T',
+                                 'SERAP03P', 'SERAP03T', 'SERAP04P', 'SERAP04T', 'SERAP05P', 'SERAP05T', 'SERAP06P',
+                                 'SERAP06T', 'SERAP07P', 'SERAP07T', 'SERAP08P', 'SERAP08T', 'SERAP09P', 'SERAP09T',
+                                 'SERAP10P', 'SERAP10T', 'SERAP11P', 'SERAP11T', 'SERAPOIO', 'RES_BIOL', 'RES_QUIM',
+                                 'RES_RADI', 'RES_COMU', 'COLETRES', 'COMISS01', 'COMISS02', 'COMISS03', 'COMISS04',
+                                 'COMISS05', 'COMISS06', 'COMISS07', 'COMISS08', 'COMISS09', 'COMISS10', 'COMISS11',
+                                 'COMISS12', 'COMISSAO', 'AP01CV01', 'AP01CV02', 'AP01CV05', 'AP01CV06', 'AP01CV03',
+                                 'AP01CV04', 'AP02CV01', 'AP02CV02', 'AP02CV05', 'AP02CV06', 'AP02CV03', 'AP02CV04',
+                                 'AP03CV01', 'AP03CV02', 'AP03CV05', 'AP03CV06', 'AP03CV03', 'AP03CV04', 'AP04CV01',
+                                 'AP04CV02', 'AP04CV05', 'AP04CV06', 'AP04CV03', 'AP04CV04', 'AP05CV01', 'AP05CV02',
+                                 'AP05CV05', 'AP05CV06', 'AP05CV03', 'AP05CV04', 'AP06CV01', 'AP06CV02', 'AP06CV05',
+                                 'AP06CV06', 'AP06CV03', 'AP06CV04', 'AP07CV01', 'AP07CV02', 'AP07CV05', 'AP07CV06',
+                                 'AP07CV03', 'AP07CV04', 'ATEND_PR']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
-            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de quantidades
-            # ou para o valor None caso a coluna esteja com a string vazia
-            for col in np.array(['QTLEITP1', 'QTLEITP2', 'QTLEITP3', 'QTINST01', 'QTINST02', 'QTINST03', 'QTINST04', 'QTINST05', 'QTINST06',
-                                 'QTINST07', 'QTINST08', 'QTINST09', 'QTINST10', 'QTINST11', 'QTINST12', 'QTINST13', 'QTINST14', 'QTINST15',
-                                 'QTINST16', 'QTINST17', 'QTINST18', 'QTINST19', 'QTINST20', 'QTINST21', 'QTINST22', 'QTINST23', 'QTINST24',
-                                 'QTINST25', 'QTINST26', 'QTINST27', 'QTINST28', 'QTINST29', 'QTINST30', 'QTINST31', 'QTINST32', 'QTINST33',
-                                 'QTINST34', 'QTINST35', 'QTINST36', 'QTINST37', 'QTLEIT05', 'QTLEIT06', 'QTLEIT07', 'QTLEIT09', 'QTLEIT19',
-                                 'QTLEIT20', 'QTLEIT21', 'QTLEIT22', 'QTLEIT23', 'QTLEIT32', 'QTLEIT34', 'QTLEIT38', 'QTLEIT39', 'QTLEIT40']):
+            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de...
+            # quantidades ou para o valor None caso a coluna esteja com a string vazia
+            for col in np.array(['QTLEITP1', 'QTLEITP2', 'QTLEITP3', 'QTINST01', 'QTINST02', 'QTINST03', 'QTINST04',
+                                 'QTINST05', 'QTINST06', 'QTINST07', 'QTINST08', 'QTINST09', 'QTINST10', 'QTINST11',
+                                 'QTINST12', 'QTINST13', 'QTINST14', 'QTINST15', 'QTINST16', 'QTINST17', 'QTINST18',
+                                 'QTINST19', 'QTINST20', 'QTINST21', 'QTINST22', 'QTINST23', 'QTINST24', 'QTINST25',
+                                 'QTINST26', 'QTINST27', 'QTINST28', 'QTINST29', 'QTINST30', 'QTINST31', 'QTINST32',
+                                 'QTINST33', 'QTINST34', 'QTINST35', 'QTINST36', 'QTINST37', 'QTLEIT05', 'QTLEIT06',
+                                 'QTLEIT07', 'QTLEIT09', 'QTLEIT19', 'QTLEIT20', 'QTLEIT21', 'QTLEIT22', 'QTLEIT23',
+                                 'QTLEIT32', 'QTLEIT34', 'QTLEIT38', 'QTLEIT39', 'QTLEIT40']):
                 df[col] = df[col].apply(lambda x: round(float(x),0) if x != '' else None)
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'PF_PJ': 'PFPJ_ID',
-                                          'NIV_DEP': 'NIVDEP_ID', 'COD_IR': 'CODIR_ID', 'TPGESTAO': 'TPGESTAO_ID',
-                                          'ESFERA_A': 'ESFERAA_ID', 'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID',
-                                          'NATUREZA': 'NATUREZA_ID', 'CLIENTEL': 'CLIENTEL_ID', 'TP_UNID': 'TPUNID_ID',
-                                          'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',  'TP_PREST': 'TPPREST_ID',
-                                          'ORGEXPED': 'ORGEXPED_ID', 'CLASAVAL': 'CLASAVAL_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'PF_PJ': 'PFPJ_ID', 'NIV_DEP': 'NIVDEP_ID',
+                                          'COD_IR': 'CODIR_ID', 'TPGESTAO': 'TPGESTAO_ID',
+                                          'ESFERA_A': 'ESFERAA_ID', 'RETENCAO': 'RETENCAO_ID',
+                                          'ATIVIDAD': 'ATIVIDAD_ID', 'NATUREZA': 'NATUREZA_ID',
+                                          'CLIENTEL': 'CLIENTEL_ID', 'TP_UNID': 'TPUNID_ID',
+                                          'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',
+                                          'TP_PREST': 'TPPREST_ID', 'ORGEXPED': 'ORGEXPED_ID',
+                                          'CLASAVAL': 'CLASAVAL_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo ST{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo ST{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC #
+        ###########################################################################################################################
         elif self.base == 'DC':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela dcbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'S_HBSAGP', 'S_HBSAGN', 'S_DPI', 'S_DPAC', 'S_REAGP', 'S_REAGN', 'S_REHCV',
-                                      'MAQ_PROP', 'MAQ_OUTR', 'F_AREIA', 'F_CARVAO', 'ABRANDAD', 'DEIONIZA', 'OSMOSE_R', 'OUT_TRAT',
-                                      'CNS_NEFR', 'DIALISE', 'SIMUL_RD', 'PLANJ_RD', 'ARMAZ_FT', 'CONF_MAS', 'SALA_MOL', 'BLOCOPER',
-                                      'S_ARMAZE', 'S_PREPAR', 'S_QCDURA', 'S_QLDURA', 'S_CPFLUX', 'S_SIMULA', 'S_ACELL6', 'S_ALSEME',
-                                      'S_ALCOME', 'ORTV1050', 'ORV50150', 'OV150500', 'UN_COBAL', 'EQBRBAIX', 'EQBRMEDI', 'EQBRALTA',
-                                      'EQ_MAREA', 'EQ_MINDI', 'EQSISPLN', 'EQDOSCLI', 'EQFONSEL', 'CNS_ADM', 'CNS_OPED', 'CNS_CONC',
-                                      'CNS_OCLIN', 'CNS_MRAD', 'CNS_FNUC', 'QUIMRADI', 'S_RECEPC', 'S_TRIHMT', 'S_TRICLI', 'S_COLETA',
-                                      'S_AFERES', 'S_PREEST', 'S_PROCES', 'S_ESTOQU', 'S_DISTRI', 'S_SOROLO', 'S_IMUNOH', 'S_PRETRA',
-                                      'S_HEMOST', 'S_CONTRQ', 'S_BIOMOL', 'S_IMUNFE', 'S_TRANSF', 'S_SGDOAD', 'QT_CADRE', 'QT_CENRE',
-                                      'QT_REFSA', 'QT_CONRA', 'QT_EXTPL', 'QT_FRE18', 'QT_FRE30', 'QT_AGIPL', 'QT_SELAD', 'QT_IRRHE',
-                                      'QT_AGLTN', 'QT_MAQAF', 'QT_REFRE', 'QT_REFAS', 'QT_CAPFL', 'CNS_HMTR', 'CNS_HMTL', 'CNS_CRES',
-                                      'CNS_RTEC', 'HEMOTERA'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'S_HBSAGP', 'S_HBSAGN', 'S_DPI', 'S_DPAC', 'S_REAGP',
+                                      'S_REAGN', 'S_REHCV', 'MAQ_PROP', 'MAQ_OUTR', 'F_AREIA', 'F_CARVAO',
+                                      'ABRANDAD', 'DEIONIZA', 'OSMOSE_R', 'OUT_TRAT', 'CNS_NEFR', 'DIALISE',
+                                      'SIMUL_RD', 'PLANJ_RD', 'ARMAZ_FT', 'CONF_MAS', 'SALA_MOL', 'BLOCOPER',
+                                      'S_ARMAZE', 'S_PREPAR', 'S_QCDURA', 'S_QLDURA', 'S_CPFLUX', 'S_SIMULA',
+                                      'S_ACELL6', 'S_ALSEME', 'S_ALCOME', 'ORTV1050', 'ORV50150', 'OV150500',
+                                      'UN_COBAL', 'EQBRBAIX', 'EQBRMEDI', 'EQBRALTA', 'EQ_MAREA', 'EQ_MINDI',
+                                      'EQSISPLN', 'EQDOSCLI', 'EQFONSEL', 'CNS_ADM', 'CNS_OPED', 'CNS_CONC',
+                                      'CNS_OCLIN', 'CNS_MRAD', 'CNS_FNUC', 'QUIMRADI', 'S_RECEPC', 'S_TRIHMT',
+                                      'S_TRICLI', 'S_COLETA', 'S_AFERES', 'S_PREEST', 'S_PROCES', 'S_ESTOQU',
+                                      'S_DISTRI', 'S_SOROLO', 'S_IMUNOH', 'S_PRETRA', 'S_HEMOST', 'S_CONTRQ',
+                                      'S_BIOMOL', 'S_IMUNFE', 'S_TRANSF', 'S_SGDOAD', 'QT_CADRE', 'QT_CENRE',
+                                      'QT_REFSA', 'QT_CONRA', 'QT_EXTPL', 'QT_FRE18', 'QT_FRE30', 'QT_AGIPL',
+                                      'QT_SELAD', 'QT_IRRHE', 'QT_AGLTN', 'QT_MAQAF', 'QT_REFRE', 'QT_REFAS',
+                                      'QT_CAPFL', 'CNS_HMTR', 'CNS_HMTL', 'CNS_CRES', 'CNS_RTEC', 'HEMOTERA'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
             for col in np.array(['CNES', 'CODUFMUN']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
-            for col in np.array(['CNS_NEFR', 'CNS_ADM', 'CNS_OPED', 'CNS_CONC', 'CNS_OCLIN', 'CNS_MRAD', 'CNS_FNUC', 'CNS_HMTR',
-                                 'CNS_HMTL', 'CNS_CRES', 'CNS_RTEC']):
+            for col in np.array(['CNS_NEFR', 'CNS_ADM', 'CNS_OPED', 'CNS_CONC', 'CNS_OCLIN', 'CNS_MRAD',
+                                 'CNS_FNUC', 'CNS_HMTR', 'CNS_HMTL', 'CNS_CRES', 'CNS_RTEC']):
                 df[col].replace('', None, inplace=True)
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
-            for col in np.array(['F_AREIA', 'F_CARVAO', 'ABRANDAD', 'DEIONIZA', 'OSMOSE_R', 'OUT_TRAT', 'DIALISE', 'QUIMRADI',
-                                 'HEMOTERA']):
+            for col in np.array(['F_AREIA', 'F_CARVAO', 'ABRANDAD', 'DEIONIZA', 'OSMOSE_R',
+                                 'OUT_TRAT', 'DIALISE', 'QUIMRADI', 'HEMOTERA']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
-            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de quantidades
-            # ou para o valor None caso a coluna esteja com a string vazia
-            for col in np.array(['S_HBSAGP', 'S_HBSAGN', 'S_DPI', 'S_DPAC', 'S_REAGP', 'S_REAGN', 'S_REHCV', 'MAQ_PROP', 'MAQ_OUTR',
-                                 'SIMUL_RD', 'PLANJ_RD', 'ARMAZ_FT', 'CONF_MAS', 'SALA_MOL', 'BLOCOPER', 'S_ARMAZE', 'S_PREPAR',
-                                 'S_QCDURA', 'S_QLDURA', 'S_CPFLUX', 'S_SIMULA', 'S_ACELL6', 'S_ALSEME', 'S_ALCOME', 'ORTV1050',
-                                 'ORV50150', 'OV150500', 'UN_COBAL', 'EQBRBAIX', 'EQBRMEDI', 'EQBRALTA', 'EQ_MAREA', 'EQ_MINDI',
-                                 'EQSISPLN', 'EQDOSCLI', 'EQFONSEL', 'S_RECEPC', 'S_TRIHMT', 'S_TRICLI', 'S_COLETA', 'S_AFERES',
-                                 'S_PREEST', 'S_PROCES', 'S_ESTOQU', 'S_DISTRI', 'S_SOROLO', 'S_IMUNOH', 'S_PRETRA', 'S_HEMOST',
-                                 'S_CONTRQ', 'S_BIOMOL', 'S_IMUNFE', 'S_TRANSF', 'S_SGDOAD', 'QT_CADRE', 'QT_CENRE', 'QT_REFSA',
-                                 'QT_CONRA', 'QT_EXTPL', 'QT_FRE18', 'QT_FRE30', 'QT_AGIPL', 'QT_SELAD', 'QT_IRRHE', 'QT_AGLTN',
-                                 'QT_MAQAF', 'QT_REFRE', 'QT_REFAS', 'QT_CAPFL']):
+            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de...
+            # quantidades ou para o valor None caso a coluna esteja com a string vazia
+            for col in np.array(['S_HBSAGP', 'S_HBSAGN', 'S_DPI', 'S_DPAC', 'S_REAGP', 'S_REAGN', 'S_REHCV',
+                                 'MAQ_PROP', 'MAQ_OUTR', 'SIMUL_RD', 'PLANJ_RD', 'ARMAZ_FT', 'CONF_MAS',
+                                 'SALA_MOL', 'BLOCOPER', 'S_ARMAZE', 'S_PREPAR', 'S_QCDURA', 'S_QLDURA',
+                                 'S_CPFLUX', 'S_SIMULA', 'S_ACELL6', 'S_ALSEME', 'S_ALCOME', 'ORTV1050',
+                                 'ORV50150', 'OV150500', 'UN_COBAL', 'EQBRBAIX', 'EQBRMEDI', 'EQBRALTA',
+                                 'EQ_MAREA', 'EQ_MINDI', 'EQSISPLN', 'EQDOSCLI', 'EQFONSEL', 'S_RECEPC',
+                                 'S_TRIHMT', 'S_TRICLI', 'S_COLETA', 'S_AFERES', 'S_PREEST', 'S_PROCES',
+                                 'S_ESTOQU', 'S_DISTRI', 'S_SOROLO', 'S_IMUNOH', 'S_PRETRA', 'S_HEMOST',
+                                 'S_CONTRQ', 'S_BIOMOL', 'S_IMUNFE', 'S_TRANSF', 'S_SGDOAD', 'QT_CADRE',
+                                 'QT_CENRE', 'QT_REFSA', 'QT_CONRA', 'QT_EXTPL', 'QT_FRE18', 'QT_FRE30',
+                                 'QT_AGIPL', 'QT_SELAD', 'QT_IRRHE', 'QT_AGLTN', 'QT_MAQAF', 'QT_REFRE',
+                                 'QT_REFAS', 'QT_CAPFL']):
                 df[col] = df[col].apply(lambda x: round(float(x),0) if x != '' else None)
 
             # Renomeia colunas que são foreign keys
             df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo DC{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo DC{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
+        ###########################################################################################################################
         elif self.base == 'PF':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela pfbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'CBO', 'CBOUNICO', 'NOMEPROF', 'CNS_PROF', 'CONSELHO', 'REGISTRO', 'VINCULAC',
-                                      'VINCUL_C', 'VINCUL_A', 'VINCUL_N', 'PROF_SUS', 'PROFNSUS', 'HORAOUTR', 'HORAHOSP', 'HORA_AMB'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'CBO', 'CBOUNICO', 'NOMEPROF', 'CNS_PROF',
+                                      'CONSELHO', 'REGISTRO', 'VINCULAC', 'VINCUL_C', 'VINCUL_A',
+                                      'VINCUL_N', 'PROF_SUS', 'PROFNSUS', 'HORAOUTR', 'HORAHOSP', 'HORA_AMB'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
             # Simplifica/corrige a apresentação dos dados das colunas especificadas
+
             for col in np.array(['CBO', 'CBOUNICO', 'VINCULAC']):
                 df[col] = df[col].apply(lambda x: x.zfill(6))
                 df[col] = df[col].apply(str.strip)
@@ -326,18 +361,22 @@ class DataCnesMain:
             df['CONSELHO'] = df['CONSELHO'].apply(lambda x: x if len(x) == 2 else '')
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             for col in np.array(['CBO', 'CBOUNICO', 'VINCULAC']):
                 df[col].replace('000000', '', inplace=True)
 
-            df['CONSELHO'].replace(['00', '01', '02', '05', '06', '08', '09', '11', '13', '14', '16', '27', '31', '98', '99'], '', inplace=True)
+            df['CONSELHO'].replace(['00', '01', '02', '05', '06', '08', '09', '11',
+                                    '13', '14', '16', '27', '31', '98', '99'], '', inplace=True)
 
             df['VINCULAC'].replace(['010603', '040101'], '', inplace=True)
 
@@ -353,46 +392,49 @@ class DataCnesMain:
             for col in np.array(['VINCUL_C', 'VINCUL_A', 'VINCUL_N', 'PROF_SUS', 'PROFNSUS']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
-            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de quantidades
-            # ou para o valor None caso a coluna esteja com a string vazia
+            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de...
+            # quantidades ou para o valor None caso a coluna esteja com a string vazia
             for col in np.array(['HORAOUTR', 'HORAHOSP', 'HORA_AMB']):
                 df[col] = df[col].apply(lambda x: round(float(x),0) if x != '' else None)
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'CBO': 'CBO_ID', 'CBOUNICO': 'CBOUNICO_ID', 'CONSELHO': 'CONSELHO_ID',
-                                          'VINCULAC': 'VINCULAC_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'CBO': 'CBO_ID', 'CBOUNICO': 'CBOUNICO_ID',
+                                          'CONSELHO': 'CONSELHO_ID', 'VINCULAC': 'VINCULAC_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo PF{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo PF{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
+        ###########################################################################################################################
         elif self.base == 'LT':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela ltbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TP_LEITO', 'CODLEITO', 'QT_EXIST', 'QT_CONTR', 'QT_SUS'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TP_LEITO', 'CODLEITO',
+                                      'QT_EXIST', 'QT_CONTR', 'QT_SUS'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -401,57 +443,63 @@ class DataCnesMain:
             df['CODLEITO'] = df['CODLEITO'].apply(lambda x: str(tryconvert(x, '', int)))
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
             for col in np.array(['CNES', 'CODUFMUN', 'TP_LEITO', 'CODLEITO']):
                 df[col].replace('', 'NA', inplace=True)
 
-            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de quantidades
-            # ou para o valor None caso a coluna esteja com a string vazia
+            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de...
+            # quantidades ou para o valor None caso a coluna esteja com a string vazia
             for col in np.array(['QT_EXIST', 'QT_CONTR', 'QT_SUS']):
                 df[col] = df[col].apply(lambda x: round(float(x),0) if x != '' else None)
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'TP_LEITO': 'TPLEITO_ID', 'CODLEITO': 'CODLEITO_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'TP_LEITO': 'TPLEITO_ID', 'CODLEITO': 'CODLEITO_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo LT{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo LT{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
+        ###########################################################################################################################
         elif self.base == 'EQ':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela eqbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TIPEQUIP', 'CODEQUIP', 'QT_EXIST', 'QT_USO', 'IND_SUS', 'ND_NSUS'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TIPEQUIP', 'CODEQUIP',
+                                      'QT_EXIST', 'QT_USO', 'IND_SUS', 'ND_NSUS'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -460,16 +508,19 @@ class DataCnesMain:
             df['CODEQUIP'] = df['CODEQUIP'].apply(lambda x: str(tryconvert(x, '', int)))
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
-            df['CODEQUIP'].replace(['19', '20', '24', '25', '26', '27', '28', '29', '30', '43', '65', '66', '67', '68',
-                                    '69', '70', '79'], '', inplace=True)
+            df['CODEQUIP'].replace(['19', '20', '24', '25', '26', '27', '28', '29', '30',
+                                    '43', '65', '66', '67', '68', '69', '70', '79'], '', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
             for col in np.array(['CNES', 'CODUFMUN', 'TIPEQUIP', 'CODEQUIP']):
@@ -479,48 +530,51 @@ class DataCnesMain:
             for col in np.array(['IND_SUS', 'ND_NSUS']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
-            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de quantidades
-            # ou para o valor None caso a coluna esteja com a string vazia
+            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de...
+            # quantidades ou para o valor None caso a coluna esteja com a string vazia
             for col in np.array(['QT_EXIST', 'QT_USO']):
                 df[col] = df[col].apply(lambda x: round(float(x),0) if x != '' else None)
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'TIPEQUIP': 'TIPEQUIP_ID', 'CODEQUIP': 'CODEQUIP_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'TIPEQUIP': 'TIPEQUIP_ID', 'CODEQUIP': 'CODEQUIP_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo EQ{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo EQ{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
+        ###########################################################################################################################
         elif self.base == 'SR':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela srbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'SERV_ESP', 'CLASS_SR', 'SRVUNICO', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
-                                      'ESFERA_A', 'ATIVIDAD', 'RETENCAO', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER',
-                                      'TERCEIRO', 'CNPJ_MAN', 'CARACTER', 'AMB_NSUS', 'AMB_SUS', 'HOSP_NSUS', 'HOSP_SUS', 'CONTSRVU',
-                                      'CNESTERC', 'NAT_JUR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'SERV_ESP', 'CLASS_SR', 'SRVUNICO', 'TPGESTAO',
+                                      'PF_PJ', 'CPF_CNPJ', 'NIV_DEP', 'ESFERA_A', 'ATIVIDAD', 'RETENCAO',
+                                      'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
+                                      'CNPJ_MAN', 'CARACTER', 'AMB_NSUS', 'AMB_SUS', 'HOSP_NSUS', 'HOSP_SUS',
+                                      'CONTSRVU', 'CNESTERC', 'NAT_JUR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -537,24 +591,29 @@ class DataCnesMain:
                 df[col] = df[col].apply(str.strip)
                 df[col] = df[col].apply(lambda x: x if len(x) == 3 else '')
 
-            for col in np.array(['ESFERA_A', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER']):
+            for col in np.array(['ESFERA_A', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL',
+                                 'TP_UNID', 'TURNO_AT', 'NIV_HIER']):
                 for i in np.array(['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']):
                     df[col].replace(i, str(int(i)), inplace=True)
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             for col in np.array(['SERV_ESP', 'SRVUNICO']):
                 df[col].replace(['000', '023', '026', '137', '138'], '', inplace=True)
 
             df['CLASS_SR'].replace(regex=['^\d{3}0{3}$', '^\d{3}9{3}$','^13[78]\d{3}$'], value='', inplace=True)
-            df['CLASS_SR'].replace(['006053', '121005', '130002', '026109', '500001', '500002', '513003'], '', inplace=True)
+            df['CLASS_SR'].replace(['006053', '121005', '130002', '026109',
+                                    '500001', '500002', '513003'], '', inplace=True)
 
             df['TPGESTAO'].replace('S', 'Z', inplace=True)
 
@@ -570,7 +629,8 @@ class DataCnesMain:
             df['NIV_HIER'].replace(['0', '99'], '', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto
+                                                           # string "0" do domínio binário
 
             df['CARACTER'].replace('9', '', inplace=True)
 
@@ -579,8 +639,9 @@ class DataCnesMain:
             df['NAT_JUR'].replace('3301', '3000', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
-            for col in np.array(['CNES', 'CODUFMUN', 'SERV_ESP', 'CLASS_SR', 'SRVUNICO', 'TPGESTAO', 'PF_PJ', 'NIV_DEP', 'ESFERA_A', 'ATIVIDAD',
-                                 'RETENCAO', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'CARACTER', 'NAT_JUR']):
+            for col in np.array(['CNES', 'CODUFMUN', 'SERV_ESP', 'CLASS_SR', 'SRVUNICO', 'TPGESTAO',
+                                 'PF_PJ', 'NIV_DEP', 'ESFERA_A', 'ATIVIDAD', 'RETENCAO', 'NATUREZA',
+                                 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'CARACTER', 'NAT_JUR']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
@@ -592,67 +653,78 @@ class DataCnesMain:
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'SERV_ESP': 'SERVESP_ID', 'CLASS_SR': 'CLASSSR_ID',
-                                          'SRVUNICO': 'SRVUNICO_ID', 'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID',
-                                          'NIV_DEP': 'NIVDEP_ID', 'ESFERA_A': 'ESFERAA_ID', 'ATIVIDAD': 'ATIVIDAD_ID',
-                                          'RETENCAO': 'RETENCAO_ID', 'NATUREZA': 'NATUREZA_ID', 'CLIENTEL':'CLIENTEL_ID',
-                                          'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'SERV_ESP': 'SERVESP_ID', 'CLASS_SR': 'CLASSSR_ID',
+                                          'SRVUNICO': 'SRVUNICO_ID', 'TPGESTAO': 'TPGESTAO_ID',
+                                          'PF_PJ': 'PFPJ_ID', 'NIV_DEP': 'NIVDEP_ID',
+                                          'ESFERA_A': 'ESFERAA_ID', 'ATIVIDAD': 'ATIVIDAD_ID',
+                                          'RETENCAO': 'RETENCAO_ID', 'NATUREZA': 'NATUREZA_ID',
+                                          'CLIENTEL':'CLIENTEL_ID', 'TP_UNID': 'TPUNID_ID',
+                                          'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',
                                           'CARACTER': 'CARACTER_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo SR{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo SR{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
+        ###########################################################################################################################
         elif self.base == 'EP':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela epbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'IDEQUIPE', 'TIPO_EQP', 'NOME_EQP', 'ID_AREA', 'NOMEAREA', 'ID_SEGM',
-                                      'DESCSEGM', 'TIPOSEGM', 'DT_ATIVA', 'DT_DESAT', 'QUILOMBO', 'ASSENTAD', 'POPGERAL', 'ESCOLA',
-                                      'INDIGENA', 'PRONASCI', 'MOTDESAT', 'TP_DESAT'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'IDEQUIPE', 'TIPO_EQP', 'NOME_EQP', 'ID_AREA',
+                                      'NOMEAREA', 'ID_SEGM', 'DESCSEGM', 'TIPOSEGM', 'DT_ATIVA', 'DT_DESAT',
+                                      'QUILOMBO', 'ASSENTAD', 'POPGERAL', 'ESCOLA', 'INDIGENA', 'PRONASCI',
+                                      'MOTDESAT', 'TP_DESAT'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
             # Simplifica/corrige a apresentação dos dados das colunas especificadas
+
             for col in np.array(['MOTDESAT', 'TP_DESAT']):
                 df[col] = df[col].apply(lambda x: str(tryconvert(x, '', int)))
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TIPO_EQP'].replace(['58', '59', '60'], '', inplace=True)
 
-            df['ID_AREA'].replace(regex=['^1[1-7][09]{8}$', '^2[1-9][09]{8}$','^3[1235][09]{8}$', '^4[1-3][09]{8}$', '^5[0-3][09]{8}$'], value='', inplace=True)
+            df['ID_AREA'].replace(regex=['^1[1-7][09]{8}$', '^2[1-9][09]{8}$','^3[1235][09]{8}$',
+                                  '^4[1-3][09]{8}$', '^5[0-3][09]{8}$'], value='', inplace=True)
 
-            df['ID_SEGM'].replace(regex=['^1[1-7][09]{6}$', '^2[1-9][09]{6}$','^3[1235][09]{6}$', '^4[1-3][09]{6}$', '^5[0-3][09]{6}$'], value='', inplace=True)
+            df['ID_SEGM'].replace(regex=['^1[1-7][09]{6}$', '^2[1-9][09]{6}$','^3[1235][09]{6}$',
+                                         '^4[1-3][09]{6}$', '^5[0-3][09]{6}$'], value='', inplace=True)
 
             df['TIPOSEGM'].replace(['0', '3', '4', '5', '6', '7', '8', '9'], '', inplace=True)
 
@@ -663,63 +735,70 @@ class DataCnesMain:
             df['TP_DESAT'].replace(regex='[3-9]', value='', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
-            for col in np.array(['CNES', 'CODUFMUN', 'IDEQUIPE', 'TIPO_EQP', 'ID_AREA', 'ID_SEGM', 'TIPOSEGM', 'MOTDESAT', 'TP_DESAT']):
+            for col in np.array(['CNES', 'CODUFMUN', 'IDEQUIPE', 'TIPO_EQP', 'ID_AREA',
+                                 'ID_SEGM', 'TIPOSEGM', 'MOTDESAT', 'TP_DESAT']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
             for col in np.array(['NOME_EQP', 'NOMEAREA', 'DESCSEGM']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['DT_ATIVA', 'DT_DESAT']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela...
+            # data futura "2099-01-01"
             for col in np.array(['DT_ATIVA', 'DT_DESAT']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['QUILOMBO', 'ASSENTAD', 'POPGERAL', 'ESCOLA', 'INDIGENA', 'PRONASCI']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'IDEQUIPE': 'IDEQUIPE_ID', 'TIPO_EQP': 'TIPOEQP_ID',
-                                          'ID_AREA': 'IDAREA_ID', 'ID_SEGM': 'IDSEGM_ID', 'TIPOSEGM': 'TIPOSEGM_ID',
-                                          'MOTDESAT': 'MOTDESAT_ID', 'TP_DESAT': 'TPDESAT_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'IDEQUIPE': 'IDEQUIPE_ID', 'TIPO_EQP': 'TIPOEQP_ID',
+                                          'ID_AREA': 'IDAREA_ID', 'ID_SEGM': 'IDSEGM_ID',
+                                          'TIPOSEGM': 'TIPOSEGM_ID', 'MOTDESAT': 'MOTDESAT_ID',
+                                          'TP_DESAT': 'TPDESAT_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo EP{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo EP{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
+        ###########################################################################################################################
         elif self.base == 'HB':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela hbbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'PORTARIA',
-                                      'MAPORTAR', 'NULEITOS'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI',
+                                      'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR', 'NULEITOS'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -730,16 +809,20 @@ class DataCnesMain:
             df['SGRUPHAB'] = df['SGRUPHAB'].apply(lambda x: x if len(x) == 4 else '')
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto...
+                                                           # string "0" do domínio binário
 
             df['SGRUPHAB'].replace(['0637', '0914', '2430', '9101'], '', inplace=True)
 
@@ -755,60 +838,67 @@ class DataCnesMain:
             for col in np.array(['PORTARIA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
-            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
+            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
+            # pela data futura "2099-01-01"
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['TERCEIRO']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
-            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de quantidades
-            # ou para o valor None caso a coluna esteja com a string vazia
+            # Converte do tipo object para float sem casas decimais as colunas de atributos de valores representativos de...
+            # quantidades ou para o valor None caso a coluna esteja com a string vazia
             for col in np.array(['NULEITOS']):
                 df[col] = df[col].apply(lambda x: round(float(x),0) if x != '' else None)
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'SGRUPHAB': 'SGRUPHAB_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'SGRUPHAB': 'SGRUPHAB_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo HB{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo HB{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
 
-        ###################################################################################################################################################################
-        # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
+        ###########################################################################################################################
         elif self.base == 'RC':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela rcbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI',
+                                      'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -819,16 +909,20 @@ class DataCnesMain:
             df['SGRUPHAB'] = df['SGRUPHAB'].apply(lambda x: x if len(x) == 4 else '')
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto...
+                                                           # string "0" do domínio binário
 
             df['SGRUPHAB'].replace(['0914', '2430', '9101'], '', inplace=True)
 
@@ -844,54 +938,61 @@ class DataCnesMain:
             for col in np.array(['PORTARIA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
-            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
+            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
+            # pela data futura "2099-01-01"
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['TERCEIRO']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'SGRUPHAB': 'SGRUPHAB_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'SGRUPHAB': 'SGRUPHAB_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo RC{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo RC{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ####################################################################################################################################################################
-        # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM  #
-        ####################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
+        ###########################################################################################################################
         elif self.base == 'GM':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela gmbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI',
+                                      'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -902,16 +1003,20 @@ class DataCnesMain:
             df['SGRUPHAB'] = df['SGRUPHAB'].apply(lambda x: x if len(x) == 4 else '')
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto
+                                                           # string "0" do domínio binário
 
             #df['SGRUPHAB'].replace(['0914', '2430', '9101'], '', inplace=True)
 
@@ -927,57 +1032,64 @@ class DataCnesMain:
             for col in np.array(['PORTARIA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
-            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
+            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
+            # pela data futura "2099-01-01"
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['TERCEIRO']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'SGRUPHAB': 'SGRUPHAB_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'SGRUPHAB': 'SGRUPHAB_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo GM{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo GM{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
+        ###########################################################################################################################
         elif self.base == 'EE':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela eebr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP', 'CNPJ_MAN', 'ESFERA_A',
-                                      'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
-                                      'COD_CEP', 'VINC_SUS', 'TP_PREST', 'SGRUPHAB', 'CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'PORTARIA',
-                                      'MAPORTAR', 'NAT_JUR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
+                                      'CNPJ_MAN', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA',
+                                      'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
+                                      'COD_CEP', 'VINC_SUS', 'TP_PREST', 'SGRUPHAB', 'CMPT_INI',
+                                      'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR', 'NAT_JUR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -988,13 +1100,16 @@ class DataCnesMain:
                     df[col].replace(i, str(int(i)), inplace=True)
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TPGESTAO'].replace('S', 'Z', inplace=True)
 
@@ -1010,7 +1125,8 @@ class DataCnesMain:
             df['NIV_HIER'].replace(['0', '99'], '', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto
+                                                           # string "0" do domínio binário
 
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
                 df[col] = df[col].apply(lambda x: x if len(x) == 6 else '')
@@ -1021,7 +1137,8 @@ class DataCnesMain:
             df['NAT_JUR'].replace('3301', '3000', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
-            for col in np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'NIV_DEP', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID',
+            for col in np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'NIV_DEP', 'ESFERA_A',
+                                 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID',
                                  'TURNO_AT', 'NIV_HIER', 'TP_PREST', 'SGRUPHAB', 'NAT_JUR']):
                 df[col].replace('', 'NA', inplace=True)
 
@@ -1029,61 +1146,71 @@ class DataCnesMain:
             for col in np.array(['CPF_CNPJ', 'CNPJ_MAN', 'COD_CEP', 'PORTARIA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
-            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
+            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
+            # pela data futura "2099-01-01"
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['TERCEIRO', 'VINC_SUS']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID', 'NIV_DEP': 'NIVDEP_ID',
-                                          'ESFERA_A': 'ESFERAA_ID', 'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID', 'NATUREZA': 'NATUREZA_ID',
-                                          'CLIENTEL': 'CLIENTEL_ID', 'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',
-                                          'TP_PREST': 'TPPREST_ID', 'SGRUPHAB': 'SGRUPHAB_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID',
+                                          'NIV_DEP': 'NIVDEP_ID', 'ESFERA_A': 'ESFERAA_ID',
+                                          'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID',
+                                          'NATUREZA': 'NATUREZA_ID', 'CLIENTEL': 'CLIENTEL_ID',
+                                          'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID',
+                                          'NIV_HIER': 'NIVHIER_ID', 'TP_PREST': 'TPPREST_ID',
+                                          'SGRUPHAB': 'SGRUPHAB_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo EE{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo EE{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
 
-        ###################################################################################################################################################################
-        # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
+        ###########################################################################################################################
         elif self.base == 'EF':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela efbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP', 'CNPJ_MAN', 'ESFERA_A',
-                                      'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
-                                      'COD_CEP', 'VINC_SUS', 'TP_PREST', 'SGRUPHAB', 'CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'PORTARIA',
-                                      'MAPORTAR', 'NAT_JUR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
+                                      'CNPJ_MAN', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA',
+                                      'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
+                                      'COD_CEP', 'VINC_SUS', 'TP_PREST', 'SGRUPHAB', 'CMPT_INI',
+                                      'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR', 'NAT_JUR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -1094,13 +1221,16 @@ class DataCnesMain:
                     df[col].replace(i, str(int(i)), inplace=True)
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TPGESTAO'].replace('S', 'Z', inplace=True)
 
@@ -1116,7 +1246,8 @@ class DataCnesMain:
             df['NIV_HIER'].replace(['0', '99'], '', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto
+                                                           # string "0" do domínio binário
 
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
                 df[col] = df[col].apply(lambda x: x if len(x) == 6 else '')
@@ -1127,7 +1258,8 @@ class DataCnesMain:
             df['NAT_JUR'].replace('3301', '3000', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
-            for col in np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'NIV_DEP', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID',
+            for col in np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'NIV_DEP', 'ESFERA_A',
+                                 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID',
                                  'TURNO_AT', 'NIV_HIER', 'TP_PREST', 'SGRUPHAB', 'NAT_JUR']):
                 df[col].replace('', 'NA', inplace=True)
 
@@ -1135,60 +1267,70 @@ class DataCnesMain:
             for col in np.array(['CPF_CNPJ', 'CNPJ_MAN', 'COD_CEP', 'PORTARIA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
-            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
+            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela...
+            # data futura "2099-01-01"
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['TERCEIRO', 'VINC_SUS']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID', 'NIV_DEP': 'NIVDEP_ID',
-                                          'ESFERA_A': 'ESFERAA_ID', 'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID', 'NATUREZA': 'NATUREZA_ID',
-                                          'CLIENTEL': 'CLIENTEL_ID', 'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',
-                                          'TP_PREST': 'TPPREST_ID', 'SGRUPHAB': 'SGRUPHAB_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID',
+                                          'NIV_DEP': 'NIVDEP_ID', 'ESFERA_A': 'ESFERAA_ID',
+                                          'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID',
+                                          'NATUREZA': 'NATUREZA_ID', 'CLIENTEL': 'CLIENTEL_ID',
+                                          'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID',
+                                          'NIV_HIER': 'NIVHIER_ID', 'TP_PREST': 'TPPREST_ID',
+                                          'SGRUPHAB': 'SGRUPHAB_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo EF{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo EF{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
-        ###################################################################################################################################################################
-        # CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN #
-        ###################################################################################################################################################################
+        ###########################################################################################################################
+        # CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN #
+        ###########################################################################################################################
         elif self.base == 'IN':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela inbr
-            lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP', 'CNPJ_MAN', 'ESFERA_A',
-                                      'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
-                                      'COD_CEP', 'VINC_SUS', 'TP_PREST', 'SGRUPHAB', 'CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'PORTARIA',
-                                      'MAPORTAR', 'NAT_JUR'])
+            lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
+                                      'CNPJ_MAN', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA',
+                                      'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TERCEIRO',
+                                      'COD_CEP', 'VINC_SUS', 'TP_PREST', 'SGRUPHAB', 'CMPT_INI',
+                                      'CMPT_FIM', 'DTPORTAR', 'PORTARIA', 'MAPORTAR', 'NAT_JUR'])
 
             # Criação de um objeto pandas DataFrame vazio com as colunas especificadas acima
             df = pd.DataFrame(columns=lista_columns)
 
-            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo automaticamente com o float NaN...
-            # as colunas da variável "df" não presentes na variável dataframe
+            # Colocação dos dados da variável "dataframe" na variável "df" nas colunas de mesmo nome preenchendo...
+            # automaticamente com o float NaN as colunas da variável "df" não presentes na variável dataframe
             for col in df.columns.values:
                 for coluna in dataframe.columns.values:
                     if coluna == col:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
+            # variável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código do município
-            # Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
+            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -1199,13 +1341,16 @@ class DataCnesMain:
                     df[col].replace(i, str(int(i)), inplace=True)
 
             # Atualiza/corrige os labels das colunas especificadas
+
             df['CODUFMUN'] = df['CODUFMUN'].apply(lambda x: x if len(x) == 6 else '')
             df['CODUFMUN'].replace([str(i) for i in range(334501, 334531)], '330455', inplace=True)
             df['CODUFMUN'].replace([str(i) for i in range(358001, 358059)], '355030', inplace=True)
-            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454', '500627', '510445', '999999'], '', inplace=True)
-            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080', '530090',
-                                    '530100', '530110',  '530120', '530130', '530135', '530140', '530150', '530160',
-                                    '530170', '530180'] + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
+            df['CODUFMUN'].replace(['000000', '150475', '421265', '422000', '431454',
+                                    '500627', '510445', '999999'], '', inplace=True)
+            df['CODUFMUN'].replace(['530020', '530030', '530040', '530050', '530060', '530070', '530080',
+                                    '530090', '530100', '530110',  '530120', '530130', '530135', '530140',
+                                    '530150', '530160', '530170', '530180'] \
+                                     + [str(i) for i in range(539900, 540000)], '530010', inplace=True)
 
             df['TPGESTAO'].replace('S', 'Z', inplace=True)
 
@@ -1221,7 +1366,8 @@ class DataCnesMain:
             df['NIV_HIER'].replace(['0', '99'], '', inplace=True)
 
             df['TERCEIRO'].replace('9', '', inplace=True)
-            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto string "0" do domínio binário
+            df['TERCEIRO'].replace('2', '0', inplace=True) # "2", representativo de "Não", é convertido para o objeto
+                                                           # string "0" do domínio binário
 
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
                 df[col] = df[col].apply(lambda x: x if len(x) == 6 else '')
@@ -1232,7 +1378,8 @@ class DataCnesMain:
             df['NAT_JUR'].replace('3301', '3000', inplace=True)
 
             # Substitui uma string vazia pela string "NA" nas colunas de foreign keys
-            for col in np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'NIV_DEP', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL',
+            for col in np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'NIV_DEP', 'ESFERA_A',
+                                 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL',
                                  'TP_UNID', 'TURNO_AT', 'NIV_HIER', 'TP_PREST', 'NAT_JUR']):
                 df[col].replace('', 'NA', inplace=True)
 
@@ -1240,27 +1387,35 @@ class DataCnesMain:
             for col in np.array(['CPF_CNPJ', 'CNPJ_MAN', 'COD_CEP', 'SGRUPHAB', 'PORTARIA']):
                 df[col].replace('', None, inplace=True)
 
-            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes ("NaT") pela data...
-            # futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
+            # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
+            # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
-            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
+            df['DTPORTAR'] = df['DTPORTAR'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date() \
+                                                  if x != '' else datetime(2099, 1, 1).date())
 
-            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
+            # pela data futura "2099-01-01"
             for col in np.array(['CMPT_INI', 'CMPT_FIM', 'DTPORTAR', 'MAPORTAR']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários (0 ou 1)
             for col in np.array(['TERCEIRO', 'VINC_SUS']):
                 df[col] = df[col].apply(lambda x: tryconvert(x, None, int))
 
             # Renomeia colunas que são foreign keys
-            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID', 'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID', 'NIV_DEP': 'NIVDEP_ID',
-                                          'ESFERA_A': 'ESFERAA_ID', 'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID', 'NATUREZA': 'NATUREZA_ID',
-                                          'CLIENTEL': 'CLIENTEL_ID', 'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID', 'NIV_HIER': 'NIVHIER_ID',
-                                          'TP_PREST': 'TPPREST_ID', 'NAT_JUR': 'NATJUR_ID'}, inplace=True)
+            df.rename(index=str, columns={'CNES': 'CNES_ID', 'CODUFMUN': 'CODUFMUN_ID',
+                                          'TPGESTAO': 'TPGESTAO_ID', 'PF_PJ': 'PFPJ_ID',
+                                          'NIV_DEP': 'NIVDEP_ID', 'ESFERA_A': 'ESFERAA_ID',
+                                          'RETENCAO': 'RETENCAO_ID', 'ATIVIDAD': 'ATIVIDAD_ID',
+                                          'NATUREZA': 'NATUREZA_ID', 'CLIENTEL': 'CLIENTEL_ID',
+                                          'TP_UNID': 'TPUNID_ID', 'TURNO_AT': 'TURNOAT_ID',
+                                          'NIV_HIER': 'NIVHIER_ID', 'TP_PREST': 'TPPREST_ID',
+                                          'NAT_JUR': 'NATJUR_ID'}, inplace=True)
 
-            print(f'Terminou de tratar o arquivo IN{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
+            print(f'Tratou o arquivo IN{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
             return df
 
@@ -1273,9 +1428,9 @@ class DataCnesAuxiliary:
         self.path = path
 
 
-    ###########################################################################################################################################################################
-    #  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES   #
-    ###########################################################################################################################################################################
+    #################################################################################################################################
+    #  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
+    #################################################################################################################################
     # Método para adequar e formatar as colunas e valores das 27 Tabelas CADGERXX (arquivos CADGERXX.dbf),...
     # sendo uma para cada estado do Brasil
     def get_CADGERBR_treated(self):
@@ -1312,18 +1467,22 @@ class DataCnesAuxiliary:
         # Substitui o objeto datetime.date "9999-12-31" das duas colunas de "datas" pelo objeto datetime.date "2099-01-01"
         for col in np.array(['DATAINCL', 'DATAEXCL']):
             df[col].replace(datetime(9999, 12, 31).date(), datetime(2099, 1, 1).date(), inplace=True)
-        # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela data futura "2099-01-01"
+        # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
+        # pela data futura "2099-01-01"
         for col in np.array(['DATAINCL', 'DATAEXCL']):
-            df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+            df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                    datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
-        # Upload do arquivo "xlsx" que contém os CNES presentes nos arquivos STXXaamm (dos anos de 2008 a 2019) e não presentes...
-        # nas 27 Tabelas CADGERXX. Ou seja, isso parece ser uma falha dos dados do Datasus
+        # Upload do arquivo "xlsx" que contém os CNES presentes nos arquivos STXXaamm (dos anos de 2008 a 2019) e...
+        # pela data futura "2099-01-01" nas 27 Tabelas CADGERXX. Ou seja, isso parece ser uma falha dos dados do Datasus
         dataframe = pd.read_excel(self.path + 'CNES_OUT_CADGER_XX_ANOS_2008_2019' + '.xlsx')
         # Converte a coluna "ID" do objeto "dataframe" de "int" para "string"
         dataframe['ID'] = dataframe['ID'].astype('str')
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "dataframe" até formar uma "string" de tamanho = 7
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "dataframe" até formar...
+        # uma "string" de tamanho = 7
         dataframe['ID'] = dataframe['ID'].apply(lambda x: x.zfill(7))
-        # Adiciona as colunas DESCESTAB, RSOC_MAN, CPF_CNPJ, EXCLUIDO, DATAINCL e DATAEXCL e respectivos valores ao objeto "dataframe"
+        # Adiciona as colunas DESCESTAB, RSOC_MAN, CPF_CNPJ, EXCLUIDO, DATAINCL e DATAEXCL e respectivos valores...
+        # ao objeto "dataframe"
         dataframe['DESCESTAB'] = 'NAO PROVIDO EM 27 ARQUIVOS DBF DE CNES'
         dataframe['RSOC_MAN'] = '?'
         dataframe['CPF_CNPJ'] = '?'
@@ -1370,9 +1529,11 @@ class DataCnesAuxiliary:
         # Drop a linha inteira em que a coluna "ID" tem o valor especificado por não representar nenhum município
         df = df.drop(df[df['ID']=='000000'].index)
         # Remove colunas indesejáveis do objeto pandas DataFrame
-        df = df.drop(['MUNSINON', 'MUNSINONDV', 'MESOCOD', 'MICROCOD', 'MSAUDCOD', 'RSAUDCOD', 'CSAUDCOD', 'RMETRCOD', 'AGLCOD'], axis=1)
+        df = df.drop(['MUNSINON', 'MUNSINONDV', 'MESOCOD', 'MICROCOD', 'MSAUDCOD',
+                      'RSAUDCOD', 'CSAUDCOD', 'RMETRCOD', 'AGLCOD'], axis=1)
         # Substitui uma string vazia pela string "?" nas colunas especificadas
-        for col in ['SITUACAO', 'MUNSINP', 'MUNSIAFI', 'MUNNOME', 'MUNNOMEX', 'OBSERV', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'ANOINST', 'ANOEXT', 'SUCESSOR']:
+        for col in ['SITUACAO', 'MUNSINP', 'MUNSIAFI', 'MUNNOME', 'MUNNOMEX', 'OBSERV',
+                    'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'ANOINST', 'ANOEXT', 'SUCESSOR']:
             df[col].replace('', '?', inplace=True)
         # Substitui uma string vazia pela string "NA" nas colunas especificadas
         df['UFCOD_ID'].replace('', 'NA', inplace=True)
@@ -1380,21 +1541,25 @@ class DataCnesAuxiliary:
         for col in ['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']:
             df[col].replace('', np.nan, inplace=True)
         # Converte do tipo object para float as colunas especificadas
-        df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']] = df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']].astype('float')
+        df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']] = \
+        df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']].astype('float')
         # Reordena as colunas priorizando as "mais" relevantes
-        df = df[['ID', 'MUNNOME', 'MUNNOMEX', 'MUNCODDV', 'OBSERV', 'SITUACAO', 'MUNSINP', 'MUNSIAFI', 'UFCOD_ID', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'LATITUDE',
+        df = df[['ID', 'MUNNOME', 'MUNNOMEX', 'MUNCODDV', 'OBSERV', 'SITUACAO', 'MUNSINP',
+                 'MUNSIAFI', 'UFCOD_ID', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'LATITUDE',
                  'LONGITUDE', 'ALTITUDE', 'AREA', 'ANOINST', 'ANOEXT', 'SUCESSOR']]
         # Coloca todas as string das colunas especificadas como UPPER CASE
         df['MUNNOME'] = df['MUNNOME'].apply(lambda x: x.upper())
         df['MUNNOMEX'] = df['MUNNOMEX'].apply(lambda x: x.upper())
         # Insere uma linha referente ao Município de Nazária/PI não constante originalmente da
-        df.loc[df.shape[0]] = ['220672', 'NAZÁRIA', 'NAZARIA', '2206720', '?', '?', '?', '?', '22', '?', '?', '?', np.nan, np.nan, np.nan, 363.589, '?', '?', '?']
+        df.loc[df.shape[0]] = ['220672', 'NAZÁRIA', 'NAZARIA', '2206720', '?', '?', '?', '?',
+                               '22', '?', '?', '?', np.nan, np.nan, np.nan, 363.589, '?', '?', '?']
         # Ordena as linhas de "df" por ordem crescente dos valores da coluna ID
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?', '?', '?', '?', '?', 'NA', '?', '?', '?', np.nan, np.nan, np.nan, np.nan, '?', '?', '?']
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?', '?', '?', '?', '?', 'NA',
+                               '?', '?', '?', np.nan, np.nan, np.nan, np.nan, '?', '?', '?']
         return df
 
 
@@ -1570,9 +1735,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC RETENMAN (arquivo RETENMAN.cnv)
     def get_RETENMAN_treated(self):
         # Conversão da TCC RETENMAN para um objeto pandas DataFrame
@@ -1613,9 +1778,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores das Tabelas MEDIC_02, NV_SUP_02, TECNIC_02 e CBO_02 (arquivos...
     # MEDIC_02.dbf, NV_SUP_02.dbf, TECNIC_02.dbf e CBO_02.dbf)
     def get_CBO_treated(self):
@@ -1630,7 +1795,8 @@ class DataCnesAuxiliary:
         df1.drop_duplicates(subset='ID', keep='first', inplace=True)
         # Reset o index devido ao sorting prévio
         df1.reset_index(drop=True, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df1" até formar uma "string" de tamanho = 6
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df1" até formar uma...
+        # "string" de tamanho = 6
         df1['ID'] = df1['ID'].apply(lambda x: x.zfill(6))
         # Conversão da Tabela NV_SUP_02 para um objeto pandas DataFrame
         file_name = 'NV_SUP_02'
@@ -1643,7 +1809,8 @@ class DataCnesAuxiliary:
         df2.drop_duplicates(subset='ID', keep='first', inplace=True)
         # Reset o index devido ao sorting prévio
         df2.reset_index(drop=True, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df2" até formar uma "string" de tamanho = 6
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df2" até formar uma...
+        # "string" de tamanho = 6
         df2['ID'] = df2['ID'].apply(lambda x: x.zfill(6))
         # Conversão da Tabela TECNIC_02 para um objeto pandas DataFrame
         file_name = 'TECNIC_02'
@@ -1656,7 +1823,8 @@ class DataCnesAuxiliary:
         df3.drop_duplicates(subset='ID', keep='first', inplace=True)
         # Reset o index devido ao sorting prévio
         df3.reset_index(drop=True, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df3" até formar uma "string" de tamanho = 6
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df3" até formar uma...
+        # "string" de tamanho = 6
         df3['ID'] = df3['ID'].apply(lambda x: x.zfill(6))
         # Conversão da Tabela CBO_02 para um objeto pandas DataFrame
         file_name = 'CBO_02'
@@ -1671,7 +1839,8 @@ class DataCnesAuxiliary:
         df4.drop_duplicates(subset='ID', keep='first', inplace=True)
         # Reset o index devido ao sorting prévio
         df4.reset_index(drop=True, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df4" até formar uma "string" de tamanho = 6
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "df4" até formar uma...
+        # "string" de tamanho = 6
         df4['ID'] = df4['ID'].apply(lambda x: x.zfill(6))
         # Concatena os quatro objetos pandas DataFrame
         frames = []
@@ -1686,12 +1855,14 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à eventual eliminação de duplicates
         df.reset_index(drop=True, inplace=True)
-        # Upload do arquivo "xlsx" que contém os CBO presentes nos arquivos PFXXaamm (dos anos de 2006 a 2019) e não presentes...
-        # nas Tabelas MEDIC_02, NV_SUP_02, TECNIC_02 e CBO_02. Ou seja, isso parece ser uma falha dos dados do Datasus
+        # Upload do arquivo "xlsx" que contém os CBO presentes nos arquivos PFXXaamm (dos anos de 2006 a...
+        # 2019) e não presentes nas Tabelas MEDIC_02, NV_SUP_02, TECNIC_02 e CBO_02. Ou seja, isso parece...
+        # ser uma falha dos dados do Datasus
         dataframe = pd.read_excel(self.path + 'CBO_OUT_4_DBF_ANOS_2006_2019' + '.xlsx')
         # Converte a coluna "ID" do objeto "dataframe" de "int" para "string"
         dataframe['ID'] = dataframe['ID'].astype('str')
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "dataframe" até formar uma "string" de tamanho = 6
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" do objeto "dataframe" até...
+        # formar uma "string" de tamanho = 6
         dataframe['ID'] = dataframe['ID'].apply(lambda x: x.zfill(6))
         # Adiciona a coluna "OCUPACAO" e respectivos valores ao objeto "dataframe"
         dataframe['OCUPACAO'] = ['NAO PROVIDO EM 4 ARQUIVOS DBF DE CBO'] * (dataframe.shape[0])
@@ -1706,7 +1877,7 @@ class DataCnesAuxiliary:
         dfinal.sort_values(by=['ID'], inplace=True)
         # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
         dfinal.reset_index(drop=True, inplace=True)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" das colunas CBO_ID e CBOUNICO_ID
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
         return dfinal
 
@@ -1741,7 +1912,8 @@ class DataCnesAuxiliary:
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
         df.rename(index=str, columns={'CO_VINC': 'ID', 'DS_VINC': 'DESCRICAO'}, inplace=True)
-        # Drop a linha inteira em que a coluna "ID" tem o valor especificado por não representar nenhum tipo de vínculo
+        # Drop a linha inteira em que a coluna "ID" tem o valor especificado por não representar nenhum...
+        # tipo de vínculo
         df = df.drop(df[df['ID']=='000000'].index)
 
         # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
@@ -1756,16 +1928,17 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" até formar uma "string" de tamanho = 6
+        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" até formar uma...
+        # "string" de tamanho = 6
         df['ID'] = df['ID'].apply(lambda x: x.zfill(6))
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC tip1leit (arquivo tip1leit.cnv)
     def get_tip1leit_treated(self):
         # Conversão da TCC tip1leit para um objeto pandas DataFrame
@@ -1790,9 +1963,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela TP_EQUIPAM (arquivo TP_EQUIPAM.dbf)
     def get_TP_EQUIPAM_treated(self):
         # Conversão da Tabela TP_EQUIPAM para um objeto pandas DataFrame
@@ -1821,9 +1994,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores das tabelas S_CLASSEN e SRA_ORD_N (arquivos S_CLASSEN.dbf e SRA_ORD_N.dbf)
     def get_SERVICO_treated(self):
         # Conversão da Tabela S_CLASSEN para um objeto pandas DataFrame
@@ -1859,7 +2032,7 @@ class DataCnesAuxiliary:
         dfinal.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à eventual eliminação de duplicates
         dfinal.reset_index(drop=True, inplace=True)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da tabela SRBR
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
         return dfinal
 
@@ -1919,9 +2092,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores das Tabelas EQP_XX (arquivos EQP_XX.dbf, sendo XX a sigla do Estado da RFB)
     def get_EQP_XX_treated(self):
         # Lista de Estados da RFB
@@ -1950,8 +2123,8 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index de "df" devido ao sorting prévio e à exclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
-        # Upload do arquivo "xlsx" que contém os IDEQUIPE presentes nos arquivos EPXXaamm (dos anos de 2008 a 2019) e não presentes...
-        # nas 27 Tabelas EQP_XX. Ou seja, isso parece ser uma falha dos dados do Datasus
+        # Upload do arquivo "xlsx" que contém os IDEQUIPE presentes nos arquivos EPXXaamm (dos anos de 2008 a...
+        # 2019) e não presentes nas 27 Tabelas EQP_XX. Ou seja, isso parece ser uma falha dos dados do Datasus
         dataframe = pd.read_excel(self.path + 'IDEQUIPE_OUT_27_EQP_XX_ANOS_2008_2019' + '.xlsx')
         # Converte a coluna "ID" do objeto "dataframe" de "int" para "string"
         dataframe['ID'] = dataframe['ID'].astype('str')
@@ -1989,7 +2162,8 @@ class DataCnesAuxiliary:
         return df
 
 
-    # Método para adequar e formatar as colunas e valores das Tabelas AREA_XX (arquivos AREA_XX.dbf, sendo XX a sigla do Estado da RFB)
+    # Método para adequar e formatar as colunas e valores das Tabelas AREA_XX (arquivos AREA_XX.dbf, sendo XX...
+    # a sigla do Estado da RFB)
     def get_AREA_XX_treated(self):
         # Lista de Estados da RFB
         estados = np.array(['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
@@ -2019,8 +2193,8 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index de "df" devido ao sorting prévio e à exclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
-        # Upload do arquivo "xlsx" que contém os ID_AREA presentes nos arquivos EPXXaamm (dos anos de 2008 a 2019) e não presentes...
-        # nas 27 Tabelas AREA_XX. Ou seja, isso parece ser uma falha dos dados do Datasus
+        # Upload do arquivo "xlsx" que contém os ID_AREA presentes nos arquivos EPXXaamm (dos anos de 2008 a...
+        # 2019) e não presentes nas 27 Tabelas AREA_XX. Ou seja, isso parece ser uma falha dos dados do Datasus
         dataframe = pd.read_excel(self.path + 'ID_AREA_OUT_27_AREA_XX_ANOS_2008_2019' + '.xlsx')
         # Converte a coluna "ID" do objeto "dataframe" de "int" para "string"
         dataframe['ID'] = dataframe['ID'].astype('str')
@@ -2037,12 +2211,13 @@ class DataCnesAuxiliary:
         dfinal.sort_values(by=['ID'], inplace=True)
         # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
         dfinal.reset_index(drop=True, inplace=True)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da coluna IDAREA_ID
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
         return dfinal
 
 
-    # Método para adequar e formatar as colunas e valores das Tabelas SEGM_XX (arquivos SEGM_XX.dbf, sendo XX a sigla do Estado da RFB)
+    # Método para adequar e formatar as colunas e valores das Tabelas SEGM_XX (arquivos SEGM_XX.dbf, sendo XX...
+    # a sigla do Estado da RFB)
     def get_SEGM_XX_treated(self):
         # Lista de Estados da RFB
         estados = np.array(['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
@@ -2072,8 +2247,8 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index de "df" devido ao sorting prévio e à exclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
-        # Upload do arquivo "xlsx" que contém os ID_SEGM presentes nos arquivos EPXXaamm (dos anos de 2008 a 2019) e não presentes...
-        # nas 27 Tabelas SEGM_XX. Ou seja, isso parece ser uma falha dos dados do Datasus
+        # Upload do arquivo "xlsx" que contém os ID_SEGM presentes nos arquivos EPXXaamm (dos anos de 2008 a...
+        # 2019) e não presentes nas 27 Tabelas SEGM_XX. Ou seja, isso parece ser uma falha dos dados do Datasus
         dataframe = pd.read_excel(self.path + 'ID_SEGM_OUT_27_SEGM_XX_ANOS_2008_2019' + '.xlsx')
         # Converte a coluna "ID" do objeto "dataframe" de "int" para "string"
         dataframe['ID'] = dataframe['ID'].astype('str')
@@ -2090,7 +2265,7 @@ class DataCnesAuxiliary:
         dfinal.sort_values(by=['ID'], inplace=True)
         # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
         dfinal.reset_index(drop=True, inplace=True)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da coluna IDSEGM_ID
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
         return dfinal
 
@@ -2131,9 +2306,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela HABILITA (arquivo HABILITA.dbf)
     def get_HABILITA_treated(self):
         # Conversão da Tabela HABILITA para um objeto pandas DataFrame
@@ -2145,14 +2320,14 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value" da tabela HBBR
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
         return df
 
 
-    ###########################################################################################################################################################################
-    # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
-    ###########################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela REGRAS (arquivo REGRAS.dbf)
     def get_REGRAS_treated(self):
         # Conversão da Tabela REGRAS para um objeto pandas DataFrame
@@ -2173,9 +2348,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela GESTAO (arquivo GESTAO.dbf)
     def get_GESTAO_treated(self):
         # Conversão da Tabela GESTAO para um objeto pandas DataFrame
@@ -2199,9 +2374,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC ESTABENS (arquivo ESTABENS.cnv)
     def get_ESTABENS_treated(self):
         # Conversão da TCC ESTABENS para um objeto pandas DataFrame
@@ -2214,9 +2389,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################################################
-    # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
-    ###################################################################################################################################################################
+    ###################################################################################################################################
+    # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
+    ###################################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC ESTABFIL (arquivo ESTABFIL.cnv)
     def get_ESTABFIL_treated(self):
         # Conversão da TCC ESTABFIL para um objeto pandas DataFrame
