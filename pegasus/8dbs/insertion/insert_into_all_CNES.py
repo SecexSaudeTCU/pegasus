@@ -183,7 +183,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do CNES
+    # Tratamento de dados principais do cnes
     base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:6]
@@ -195,7 +195,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
 
     # Cria uma instância da classe "DataCnesMain" do módulo "prepare_CNES" do package "data_wrangling"
     data_cnes_main = DataCnesMain(base, state, year, month)
-    # Chama método da classe "DataCnesMain" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_xx
+    # Chama método da classe "DataCnesMain" do módulo "prepare_CNES" referentes ao banco de dados cnes
     df = data_cnes_main.get_CNESXXaamm_treated()
 
     # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
@@ -203,10 +203,10 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
     df.insert(3, 'MES_' + base, [month]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do CNES_XX armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do cnes armazenado no objeto
     # pandas DataFrame "df"
-    df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False)
-    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do CNES_XX
+    df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1')
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do cnes
     f = open(base + state + year + month + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],

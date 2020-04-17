@@ -76,7 +76,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
 
     # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do SIH_XX armazenado no objeto
     # pandas DataFrame "df"
-    df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False)
+    df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1')
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do SIH_XX
     f = open(base + state + year + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"

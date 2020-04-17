@@ -32,7 +32,7 @@ def create_tables(connection_data, child_db):
                                                                   "NOMEPROF"                VARCHAR(60),
                                                                   "CNS_PROF"                VARCHAR(15),
                                                                   "CONSELHO_ID"             VARCHAR(2),
-                                                                  "REGISTRO"                VARCHAR(20),
+                                                                  "REGISTRO"                VARCHAR(13),
                                                                   "VINCULAC_ID"             VARCHAR(6),
                                                                   "VINCUL_C"                NUMERIC,
                                                                   "VINCUL_A"                NUMERIC,

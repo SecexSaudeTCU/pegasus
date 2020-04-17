@@ -47,7 +47,7 @@ def create_tables(connection_data, child_db):
                                                                   "CO_BANCO"                VARCHAR(3),
                                                                   "CO_AGENC"                VARCHAR(5),
                                                                   "C_CORREN"                VARCHAR(14),
-                                                                  "ALVARA"                  VARCHAR(50),
+                                                                  "ALVARA"                  VARCHAR(25),
                                                                   "DT_EXPED"                DATE,
                                                                   "ORGEXPED_ID"             VARCHAR(2),
                                                                   "AV_ACRED"                NUMERIC,
