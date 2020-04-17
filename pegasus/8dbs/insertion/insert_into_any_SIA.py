@@ -119,7 +119,7 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
 #  MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE #
 ###########################################################################################################################################################################
 
-# Função que utiliza "copy_expert " para a inserção de dados principais e "pandas.to_sql" para a inserção
+# Função que utiliza "copy_expert" para a inserção de dados principais e "pandas.to_sql" para a inserção
 # dos respectivos metadados no banco de dados "child_db"
 def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, child_db, connection_data):
     start = time.time()
@@ -167,7 +167,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False)
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do SIA_XX
     f = open(base + state + year + month + '.csv', 'r')
-    # Conecta ao banco de dados mãe "DB_NAME" do SGBD PostgreSQL usando o módulo python "psycopg2"
+    # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],
                             host=connection_data[1],
                             port=connection_data[2],

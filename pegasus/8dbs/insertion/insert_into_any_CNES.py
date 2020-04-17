@@ -10,6 +10,8 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
+from .data_wrangling.prepare_CNES import DataCnesMain, DataCnesAuxiliary
+
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
 ############################################################################################################################################################################
@@ -23,64 +25,65 @@ def insert_into_most_CNES_ST_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_ST
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_ST" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_ST.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_st
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_ST.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_ST.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_PFPJ = prepare_CNES_ST.get_TP_PFPJ_treated()
+    df_TP_PFPJ = data_cnes_auxiliary.get_TP_PFPJ_treated()
     df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NIVELDEP = prepare_CNES_ST.get_NIVELDEP_treated()
+    df_NIVELDEP = data_cnes_auxiliary.get_NIVELDEP_treated()
     df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_RETENMAN = prepare_CNES_ST.get_RETENMAN_treated()
+    df_RETENMAN = data_cnes_auxiliary.get_RETENMAN_treated()
     df_RETENMAN.to_sql('codir', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPGESTAO = prepare_CNES_ST.get_TPGESTAO_treated()
+    df_TPGESTAO = data_cnes_auxiliary.get_TPGESTAO_treated()
     df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_EsferAdm = prepare_CNES_ST.get_EsferAdm_treated()
+    df_EsferAdm = data_cnes_auxiliary.get_EsferAdm_treated()
     df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_RETENCAO = prepare_CNES_ST.get_RETENCAO_treated()
+    df_RETENCAO = data_cnes_auxiliary.get_RETENCAO_treated()
     df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Ativ_Ens = prepare_CNES_ST.get_Ativ_Ens_treated()
+    df_Ativ_Ens = data_cnes_auxiliary.get_Ativ_Ens_treated()
     df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NATUREZA = prepare_CNES_ST.get_NATUREZA_treated()
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
     df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Flux_Cli = prepare_CNES_ST.get_Flux_Cli_treated()
+    df_Flux_Cli = data_cnes_auxiliary.get_Flux_Cli_treated()
     df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_ESTAB = prepare_CNES_ST.get_TP_ESTAB_treated()
+    df_TP_ESTAB = data_cnes_auxiliary.get_TP_ESTAB_treated()
     df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TurnosAt = prepare_CNES_ST.get_TurnosAt_treated()
+    df_TurnosAt = data_cnes_auxiliary.get_TurnosAt_treated()
     df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NIV_HIER = prepare_CNES_ST.get_NIV_HIER_treated()
+    df_NIV_HIER = data_cnes_auxiliary.get_NIV_HIER_treated()
     df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TIPOPRES = prepare_CNES_ST.get_TIPOPRES_treated()
+    df_TIPOPRES = data_cnes_auxiliary.get_TIPOPRES_treated()
     df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ORGEXPED = prepare_CNES_ST.get_ORGEXPED_treated()
+    df_ORGEXPED = data_cnes_auxiliary.get_ORGEXPED_treated()
     df_ORGEXPED.to_sql('orgexped', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CLASAVAL = prepare_CNES_ST.get_CLASAVAL_treated()
+    df_CLASAVAL = data_cnes_auxiliary.get_CLASAVAL_treated()
     df_CLASAVAL.to_sql('clasaval', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NATJUR = prepare_CNES_ST.get_NATJUR_treated()
+    df_NATJUR = data_cnes_auxiliary.get_NATJUR_treated()
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
@@ -90,16 +93,17 @@ def insert_into_most_CNES_DC_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_DC
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_DC" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_DC.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_dc
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_DC.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_DC.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
@@ -108,27 +112,28 @@ def insert_into_most_CNES_PF_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_PF
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_PF" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_PF.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_pf
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_PF.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_PF.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CBO = prepare_CNES_PF.get_CBO_treated(path)
+    df_CBO = data_cnes_auxiliary.get_CBO_treated()
     df_CBO.to_sql('cbo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CBO.to_sql('cbounico', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CR_CONSEL = prepare_CNES_PF.get_CR_CONSEL_treated()
+    df_CR_CONSEL = data_cnes_auxiliary.get_CR_CONSEL_treated()
     df_CR_CONSEL.to_sql('conselho', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_VINCULO = prepare_CNES_PF.get_VINCULO_treated()
+    df_VINCULO = data_cnes_auxiliary.get_VINCULO_treated()
     df_VINCULO.to_sql('vinculac', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
@@ -137,22 +142,23 @@ def insert_into_most_CNES_LT_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_LT
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_LT" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_LT.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_lt
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_LT.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_LT.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_tip1leit = prepare_CNES_LT.get_tip1leit_treated()
+    df_tip1leit = data_cnes_auxiliary.get_tip1leit_treated()
     df_tip1leit.to_sql('tpleito', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Esp_leit = prepare_CNES_LT.get_Esp_leit_treated()
+    df_Esp_leit = data_cnes_auxiliary.get_Esp_leit_treated()
     df_Esp_leit.to_sql('codleito', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
@@ -161,22 +167,23 @@ def insert_into_most_CNES_EQ_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_EQ
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_EQ" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_EQ.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_eq
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_EQ.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_EQ.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_EQUIPAM = prepare_CNES_EQ.get_TP_EQUIPAM_treated()
+    df_TP_EQUIPAM = data_cnes_auxiliary.get_TP_EQUIPAM_treated()
     df_TP_EQUIPAM.to_sql('tipequip', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Equip_Tp = prepare_CNES_EQ.get_Equip_Tp_treated()
+    df_Equip_Tp = data_cnes_auxiliary.get_Equip_Tp_treated()
     df_Equip_Tp.to_sql('codequip', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
@@ -185,64 +192,65 @@ def insert_into_most_CNES_SR_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_SR
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_SR" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_SR.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_sr
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_SR.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_SR.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_SERVICO = prepare_CNES_SR.get_SERVICO_treated()
+    df_SERVICO = data_cnes_auxiliary.get_SERVICO_treated()
     df_SERVICO.to_sql('servesp', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CLASSSR = prepare_CNES_SR.get_CLASSSR_treated()
+    df_CLASSSR = data_cnes_auxiliary.get_CLASSSR_treated()
     df_CLASSSR.to_sql('classsr', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_SERVICO = prepare_CNES_SR.get_SERVICO_treated()
+    df_SERVICO = data_cnes_auxiliary.get_SERVICO_treated()
     df_SERVICO.to_sql('srvunico', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TPGESTAO = prepare_CNES_SR.get_TPGESTAO_treated()
+    df_TPGESTAO = data_cnes_auxiliary.get_TPGESTAO_treated()
     df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_PFPJ = prepare_CNES_SR.get_TP_PFPJ_treated()
+    df_TP_PFPJ = data_cnes_auxiliary.get_TP_PFPJ_treated()
     df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NIVELDEP = prepare_CNES_SR.get_NIVELDEP_treated()
+    df_NIVELDEP = data_cnes_auxiliary.get_NIVELDEP_treated()
     df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_EsferAdm = prepare_CNES_SR.get_EsferAdm_treated()
+    df_EsferAdm = data_cnes_auxiliary.get_EsferAdm_treated()
     df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Ativ_Ens = prepare_CNES_SR.get_Ativ_Ens_treated()
+    df_Ativ_Ens = data_cnes_auxiliary.get_Ativ_Ens_treated()
     df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_RETENCAO = prepare_CNES_SR.get_RETENCAO_treated()
+    df_RETENCAO = data_cnes_auxiliary.get_RETENCAO_treated()
     df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NATUREZA = prepare_CNES_SR.get_NATUREZA_treated()
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
     df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Flux_Cli = prepare_CNES_SR.get_Flux_Cli_treated()
+    df_Flux_Cli = data_cnes_auxiliary.get_Flux_Cli_treated()
     df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_ESTAB = prepare_CNES_SR.get_TP_ESTAB_treated()
+    df_TP_ESTAB = data_cnes_auxiliary.get_TP_ESTAB_treated()
     df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TurnosAt = prepare_CNES_SR.get_TurnosAt_treated()
+    df_TurnosAt = data_cnes_auxiliary.get_TurnosAt_treated()
     df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NIV_HIER = prepare_CNES_SR.get_NIV_HIER_treated()
+    df_NIV_HIER = data_cnes_auxiliary.get_NIV_HIER_treated()
     df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_Srv_Caract = prepare_CNES_SR.get_Srv_Caract_treated()
+    df_Srv_Caract = data_cnes_auxiliary.get_Srv_Caract_treated()
     df_Srv_Caract.to_sql('caracter', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NATJUR = prepare_CNES_SR.get_NATJUR_treated()
+    df_NATJUR = data_cnes_auxiliary.get_NATJUR_treated()
     df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
@@ -251,38 +259,40 @@ def insert_into_most_CNES_EP_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_EP
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_HB" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_EP.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_ep
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_EP.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_EP.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_EQP_XX = prepare_CNES_EP.get_EQP_XX_treated(path)
+    df_EQP_XX = data_cnes_auxiliary.get_EQP_XX_treated()
     df_EQP_XX.to_sql('idequipe', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_EQUIPE = prepare_CNES_EP.get_EQUIPE_treated()
+    df_EQUIPE = data_cnes_auxiliary.get_EQUIPE_treated()
     df_EQUIPE.to_sql('tipoeqp', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_AREA_XX = prepare_CNES_EP.get_AREA_XX_treated(path)
+    df_AREA_XX = data_cnes_auxiliary.get_AREA_XX_treated()
     df_AREA_XX.to_sql('idarea', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_SEGM_XX = prepare_CNES_EP.get_SEGM_XX_treated(path)
+    df_SEGM_XX = data_cnes_auxiliary.get_SEGM_XX_treated()
     df_SEGM_XX.to_sql('idsegm', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_tiposegm = prepare_CNES_EP.get_tiposegm_treated()
+    df_tiposegm = data_cnes_auxiliary.get_tiposegm_treated()
     df_tiposegm.to_sql('tiposegm', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_motdesat = prepare_CNES_EP.get_motdesat_treated()
+    df_motdesat = data_cnes_auxiliary.get_motdesat_treated()
     df_motdesat.to_sql('motdesat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_DESAT = prepare_CNES_EP.get_TP_DESAT_treated()
+    df_TP_DESAT = data_cnes_auxiliary.get_TP_DESAT_treated()
     df_TP_DESAT.to_sql('tpdesat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
 def insert_into_most_CNES_HB_tables(path, device, child_db):
@@ -290,218 +300,22 @@ def insert_into_most_CNES_HB_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_HB
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_HB" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_HB.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_hb
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_HB.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_HB.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_HABILITA = prepare_CNES_HB.get_HABILITA_treated()
+    df_HABILITA = data_cnes_auxiliary.get_HABILITA_treated()
     df_HABILITA.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
-def insert_into_most_CNES_GM_tables(path, device, child_db):
-
-    label1 = 'append'
-    label2 = 'ID'
-
-    from .data_wrangling import prepare_CNES_GM
-
-    # Chama funções definidas no módulo "prepare_CNES_GM" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_GM.get_CADGERBR_treated(path)
-    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TABUF = prepare_CNES_GM.get_TABUF_treated()
-    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_CADMUN = prepare_CNES_GM.get_CADMUN_treated()
-    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_GESTAO = prepare_CNES_GM.get_GESTAO_treated()
-    df_GESTAO.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
-def insert_into_most_CNES_EE_tables(path, device, child_db):
-
-    label1 = 'append'
-    label2 = 'ID'
-
-    from .data_wrangling import prepare_CNES_EE
-
-    # Chama funções definidas no módulo "prepare_CNES_EE" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_EE.get_CADGERBR_treated(path)
-    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TABUF = prepare_CNES_EE.get_TABUF_treated()
-    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_CADMUN = prepare_CNES_EE.get_CADMUN_treated()
-    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TPGESTAO = prepare_CNES_EE.get_TPGESTAO_treated()
-    df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TP_PFPJ = prepare_CNES_EE.get_TP_PFPJ_treated()
-    df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NIVELDEP = prepare_CNES_EE.get_NIVELDEP_treated()
-    df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_EsferAdm = prepare_CNES_EE.get_EsferAdm_treated()
-    df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_RETENCAO = prepare_CNES_EE.get_RETENCAO_treated()
-    df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_Ativ_Ens = prepare_CNES_EE.get_Ativ_Ens_treated()
-    df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NATUREZA = prepare_CNES_EE.get_NATUREZA_treated()
-    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_Flux_Cli = prepare_CNES_EE.get_Flux_Cli_treated()
-    df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TP_ESTAB = prepare_CNES_EE.get_TP_ESTAB_treated()
-    df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TurnosAt = prepare_CNES_EE.get_TurnosAt_treated()
-    df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NIV_HIER = prepare_CNES_EE.get_NIV_HIER_treated()
-    df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TIPOPRES = prepare_CNES_EE.get_TIPOPRES_treated()
-    df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_ESTABENS = prepare_CNES_EE.get_ESTABENS_treated()
-    df_ESTABENS.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NATJUR = prepare_CNES_EE.get_NATJUR_treated()
-    df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
-def insert_into_most_CNES_EF_tables(path, device, child_db):
-
-    label1 = 'append'
-    label2 = 'ID'
-
-    from .data_wrangling import prepare_CNES_EF
-
-    # Chama funções definidas no módulo "prepare_CNES_EF" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_EF.get_CADGERBR_treated(path)
-    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TABUF = prepare_CNES_EF.get_TABUF_treated()
-    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_CADMUN = prepare_CNES_EF.get_CADMUN_treated()
-    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TPGESTAO = prepare_CNES_EF.get_TPGESTAO_treated()
-    df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TP_PFPJ = prepare_CNES_EF.get_TP_PFPJ_treated()
-    df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NIVELDEP = prepare_CNES_EF.get_NIVELDEP_treated()
-    df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_EsferAdm = prepare_CNES_EF.get_EsferAdm_treated()
-    df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_RETENCAO = prepare_CNES_EF.get_RETENCAO_treated()
-    df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_Ativ_Ens = prepare_CNES_EF.get_Ativ_Ens_treated()
-    df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NATUREZA = prepare_CNES_EF.get_NATUREZA_treated()
-    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_Flux_Cli = prepare_CNES_EF.get_Flux_Cli_treated()
-    df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TP_ESTAB = prepare_CNES_EF.get_TP_ESTAB_treated()
-    df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TurnosAt = prepare_CNES_EF.get_TurnosAt_treated()
-    df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NIV_HIER = prepare_CNES_EF.get_NIV_HIER_treated()
-    df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TIPOPRES = prepare_CNES_EF.get_TIPOPRES_treated()
-    df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_ESTABFIL = prepare_CNES_EF.get_ESTABFIL_treated()
-    df_ESTABFIL.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NATJUR = prepare_CNES_EF.get_NATJUR_treated()
-    df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
-def insert_into_most_CNES_IN_tables(path, device, child_db):
-
-    label1 = 'append'
-    label2 = 'ID'
-
-    from .data_wrangling import prepare_CNES_IN
-
-    # Chama funções definidas no módulo "prepare_CNES_IN" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_IN.get_CADGERBR_treated(path)
-    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TABUF = prepare_CNES_IN.get_TABUF_treated()
-    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_CADMUN = prepare_CNES_IN.get_CADMUN_treated()
-    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TPGESTAO = prepare_CNES_IN.get_TPGESTAO_treated()
-    df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TP_PFPJ = prepare_CNES_IN.get_TP_PFPJ_treated()
-    df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NIVELDEP = prepare_CNES_IN.get_NIVELDEP_treated()
-    df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_EsferAdm = prepare_CNES_IN.get_EsferAdm_treated()
-    df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_RETENCAO = prepare_CNES_IN.get_RETENCAO_treated()
-    df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_Ativ_Ens = prepare_CNES_IN.get_Ativ_Ens_treated()
-    df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NATUREZA = prepare_CNES_IN.get_NATUREZA_treated()
-    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_Flux_Cli = prepare_CNES_IN.get_Flux_Cli_treated()
-    df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TP_ESTAB = prepare_CNES_IN.get_TP_ESTAB_treated()
-    df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TurnosAt = prepare_CNES_IN.get_TurnosAt_treated()
-    df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NIV_HIER = prepare_CNES_IN.get_NIV_HIER_treated()
-    df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_TIPOPRES = prepare_CNES_IN.get_TIPOPRES_treated()
-    df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_NATJUR = prepare_CNES_IN.get_NATJUR_treated()
-    df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
 def insert_into_most_CNES_RC_tables(path, device, child_db):
@@ -509,20 +323,227 @@ def insert_into_most_CNES_RC_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_CNES_RC
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_CNES_RC" do package "data_wrangling"
-    df_CADGERBR = prepare_CNES_RC.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_rc
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_CNES_RC.get_TABUF_treated()
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_CNES_RC.get_CADMUN_treated()
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_REGRAS = prepare_CNES_RC.get_REGRAS_treated()
+    df_REGRAS = data_cnes_auxiliary.get_REGRAS_treated()
     df_REGRAS.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_GM_tables(path, device, child_db):
+
+    label1 = 'append'
+    label2 = 'ID'
+
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
+
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_gm
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
+    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
+    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
+    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_GESTAO = data_cnes_auxiliary.get_GESTAO_treated()
+    df_GESTAO.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_EE_tables(path, device, child_db):
+
+    label1 = 'append'
+    label2 = 'ID'
+
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
+
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_ee
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
+    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
+    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
+    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TPGESTAO = data_cnes_auxiliary.get_TPGESTAO_treated()
+    df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TP_PFPJ = data_cnes_auxiliary.get_TP_PFPJ_treated()
+    df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NIVELDEP = data_cnes_auxiliary.get_NIVELDEP_treated()
+    df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_EsferAdm = data_cnes_auxiliary.get_EsferAdm_treated()
+    df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RETENCAO = data_cnes_auxiliary.get_RETENCAO_treated()
+    df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_Ativ_Ens = data_cnes_auxiliary.get_Ativ_Ens_treated()
+    df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
+    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_Flux_Cli = data_cnes_auxiliary.get_Flux_Cli_treated()
+    df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TP_ESTAB = data_cnes_auxiliary.get_TP_ESTAB_treated()
+    df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TurnosAt = data_cnes_auxiliary.get_TurnosAt_treated()
+    df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NIV_HIER = data_cnes_auxiliary.get_NIV_HIER_treated()
+    df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TIPOPRES = data_cnes_auxiliary.get_TIPOPRES_treated()
+    df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_ESTABENS = data_cnes_auxiliary.get_ESTABENS_treated()
+    df_ESTABENS.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NATJUR = data_cnes_auxiliary.get_NATJUR_treated()
+    df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_EF_tables(path, device, child_db):
+
+    label1 = 'append'
+    label2 = 'ID'
+
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
+
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_ef
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
+    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
+    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
+    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TPGESTAO = data_cnes_auxiliary.get_TPGESTAO_treated()
+    df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TP_PFPJ = data_cnes_auxiliary.get_TP_PFPJ_treated()
+    df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NIVELDEP = data_cnes_auxiliary.get_NIVELDEP_treated()
+    df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_EsferAdm = data_cnes_auxiliary.get_EsferAdm_treated()
+    df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RETENCAO = data_cnes_auxiliary.get_RETENCAO_treated()
+    df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_Ativ_Ens = data_cnes_auxiliary.get_Ativ_Ens_treated()
+    df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
+    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_Flux_Cli = data_cnes_auxiliary.get_Flux_Cli_treated()
+    df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TP_ESTAB = data_cnes_auxiliary.get_TP_ESTAB_treated()
+    df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TurnosAt = data_cnes_auxiliary.get_TurnosAt_treated()
+    df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NIV_HIER = data_cnes_auxiliary.get_NIV_HIER_treated()
+    df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TIPOPRES = data_cnes_auxiliary.get_TIPOPRES_treated()
+    df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_ESTABFIL = data_cnes_auxiliary.get_ESTABFIL_treated()
+    df_ESTABFIL.to_sql('sgruphab', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NATJUR = data_cnes_auxiliary.get_NATJUR_treated()
+    df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+
+# Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
+def insert_into_most_CNES_IN_tables(path, device, child_db):
+
+    label1 = 'append'
+    label2 = 'ID'
+
+    # Cria uma instância da classe "DataCnesAuxiliary" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_auxiliary = DataCnesAuxiliary(path)
+
+    # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_in
+    df_CADGERBR = data_cnes_auxiliary.get_CADGERBR_treated()
+    df_CADGERBR.to_sql('cnes', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
+    df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
+    df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TPGESTAO = data_cnes_auxiliary.get_TPGESTAO_treated()
+    df_TPGESTAO.to_sql('tpgestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TP_PFPJ = data_cnes_auxiliary.get_TP_PFPJ_treated()
+    df_TP_PFPJ.to_sql('pfpj', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NIVELDEP = data_cnes_auxiliary.get_NIVELDEP_treated()
+    df_NIVELDEP.to_sql('nivdep', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_EsferAdm = data_cnes_auxiliary.get_EsferAdm_treated()
+    df_EsferAdm.to_sql('esferaa', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RETENCAO = data_cnes_auxiliary.get_RETENCAO_treated()
+    df_RETENCAO.to_sql('retencao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_Ativ_Ens = data_cnes_auxiliary.get_Ativ_Ens_treated()
+    df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
+    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_Flux_Cli = data_cnes_auxiliary.get_Flux_Cli_treated()
+    df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TP_ESTAB = data_cnes_auxiliary.get_TP_ESTAB_treated()
+    df_TP_ESTAB.to_sql('tpunid', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TurnosAt = data_cnes_auxiliary.get_TurnosAt_treated()
+    df_TurnosAt.to_sql('turnoat', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NIV_HIER = data_cnes_auxiliary.get_NIV_HIER_treated()
+    df_NIV_HIER.to_sql('nivhier', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TIPOPRES = data_cnes_auxiliary.get_TIPOPRES_treated()
+    df_TIPOPRES.to_sql('tpprest', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_NATJUR = data_cnes_auxiliary.get_NATJUR_treated()
+    df_NATJUR.to_sql('natjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
 ###########################################################################################################################################################################
@@ -532,7 +553,7 @@ def insert_into_most_CNES_RC_tables(path, device, child_db):
 #  MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE #
 ###########################################################################################################################################################################
 
-# Função que utiliza "copy_expert " para a inserção de dados principais e "pandas.to_sql" para a inserção
+# Função que utiliza "copy_expert" para a inserção de dados principais e "pandas.to_sql" para a inserção
 # dos respectivos metadados no banco de dados "child_db"
 def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, child_db, connection_data):
     start = time.time()
@@ -540,7 +561,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do CNES
+    # Tratamento de dados principais do cnes_xx
     base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:6]
@@ -550,27 +571,22 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}.')
 
-    # Criação de objeto string do nome de uma função de tratamento de dados da tabela principal "main_table"...
-    # do "child_db" contida no respectivo módulo do package "data_wrangling"
-    func_string = 'get_' + base + 'XXaamm_treated'
+    # Cria uma instância da classe "DataCnesMain" do módulo "prepare_CNES" do package "data_wrangling"
+    data_cnes_main = DataCnesMain(base, state, year, month)
+    # Chama método da classe "DataCnesMain" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_xx
+    df = data_cnes_main.get_CNESXXaamm_treated()
 
-    # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
-    module = __import__('insertion.data_wrangling.prepare_CNES_' + base, fromlist=[func_string], level=0)
-    func_treat_main_table = getattr(module, func_string)
-
-    # Chama a função "func_treat_main_table" do módulo "prepare_CNES_XX" do package "data_wrangling"
-    df = func_treat_main_table(state, year, month)
     # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
     df.insert(3, 'MES_' + base, [month]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do CNES_XX armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do cnes_xx armazenado no objeto
     # pandas DataFrame "df"
     df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False)
-    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do CNES_XX
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do cnes_xx
     f = open(base + state + year + month + '.csv', 'r')
-    # Conecta ao banco de dados mãe "DB_NAME" do SGBD PostgreSQL usando o módulo python "psycopg2"
+    # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],
                             host=connection_data[1],
                             port=connection_data[2],
