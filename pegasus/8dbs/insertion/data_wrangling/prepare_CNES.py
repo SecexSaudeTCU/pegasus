@@ -1,6 +1,6 @@
-#################################################################################################################################
-#  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
-#################################################################################################################################
+############################################################################################################################
+#  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
+############################################################################################################################
 
 import os
 from datetime import datetime
@@ -38,13 +38,13 @@ class DataCnesMain:
     # Método para ler como um objeto pandas DataFrame um arquivo principal de dados do CNES e adequar e formatar suas colunas...
     # e valores
     def get_CNESXXaamm_treated(self):
-        # Lê o arquivo "dbc" como um objeto pandas DataFrame e ainda o salva no formato "parquet"
+        # Lê o arquivo "dbc" ou "parquet", se já tiver sido baixado, como um objeto pandas DataFrame
         dataframe = download_CNESXXaamm(self.base, self.state, self.year, self.month)
         print(f'O número de linhas do arquivo {self.base}{self.state}{self.year}{self.month} é {dataframe.shape[0]}.')
 
-        ###########################################################################################################################
-        # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
+        ###################################################################################################################
         if self.base == 'ST':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela stbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'COD_CEP', 'CPF_CNPJ', 'PF_PJ', 'NIV_DEP', 'CNPJ_MAN', 'COD_IR',
@@ -222,9 +222,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC CNES_DC #
+        ###################################################################################################################
         elif self.base == 'DC':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela dcbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'S_HBSAGP', 'S_HBSAGN', 'S_DPI', 'S_DPAC', 'S_REAGP',
@@ -316,9 +316,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
+        ###################################################################################################################
         elif self.base == 'PF':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela pfbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'CBO', 'CBOUNICO', 'NOMEPROF', 'CNS_PROF',
@@ -406,9 +406,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
+        ###################################################################################################################
         elif self.base == 'LT':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela ltbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TP_LEITO', 'CODLEITO',
@@ -471,9 +471,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
+        ###################################################################################################################
         elif self.base == 'EQ':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela eqbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TIPEQUIP', 'CODEQUIP',
@@ -543,9 +543,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
+        ###################################################################################################################
         elif self.base == 'SR':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela srbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'SERV_ESP', 'CLASS_SR', 'SRVUNICO', 'TPGESTAO',
@@ -565,16 +565,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -667,9 +667,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
+        ###################################################################################################################
         elif self.base == 'EP':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela epbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'IDEQUIPE', 'TIPO_EQP', 'NOME_EQP', 'ID_AREA',
@@ -688,16 +688,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -770,9 +770,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
+        ###################################################################################################################
         elif self.base == 'HB':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela hbbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI',
@@ -789,16 +789,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -870,9 +870,9 @@ class DataCnesMain:
             return df
 
 
-        ###########################################################################################################################
-        # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
+        ###################################################################################################################
         elif self.base == 'RC':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela rcbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI',
@@ -889,16 +889,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -964,9 +964,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
+        ###################################################################################################################
         elif self.base == 'GM':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela gmbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TERCEIRO', 'SGRUPHAB', 'CMPT_INI',
@@ -983,16 +983,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -1058,9 +1058,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
+        ###################################################################################################################
         elif self.base == 'EE':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela eebr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
@@ -1080,16 +1080,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -1179,9 +1179,9 @@ class DataCnesMain:
             return df
 
 
-        ###########################################################################################################################
-        # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
+        ###################################################################################################################
         elif self.base == 'EF':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela efbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
@@ -1201,16 +1201,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -1299,9 +1299,9 @@ class DataCnesMain:
 
             return df
 
-        ###########################################################################################################################
-        # CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN #
-        ###########################################################################################################################
+        ###################################################################################################################
+        # CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN CNES_IN #
+        ###################################################################################################################
         elif self.base == 'IN':
             # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela inbr
             lista_columns = np.array(['CNES', 'CODUFMUN', 'TPGESTAO', 'PF_PJ', 'CPF_CNPJ', 'NIV_DEP',
@@ -1321,16 +1321,16 @@ class DataCnesMain:
                         df[col] = dataframe[coluna].tolist()
                         break
 
-            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão presentes na...
-            # variável "dataframe"
+            # Coloca na variável "dif_set" o objeto array dos nomes das colunas da variável "df" que não estão...
+            # presentes navariável "dataframe"
             dif_set = np.setdiff1d(df.columns.values, dataframe.columns.values)
 
             # Substitui o float NaN pela string vazia as colunas da variável "df" não presentes na variável "dataframe"
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
-            # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+            # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do...
+            # código do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 
@@ -1428,9 +1428,9 @@ class DataCnesAuxiliary:
         self.path = path
 
 
-    #################################################################################################################################
-    #  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
-    #################################################################################################################################
+    #######################################################################################################################
+    #  CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
+    #######################################################################################################################
     # Método para adequar e formatar as colunas e valores das 27 Tabelas CADGERXX (arquivos CADGERXX.dbf),...
     # sendo uma para cada estado do Brasil
     def get_CADGERBR_treated(self):
@@ -1444,8 +1444,9 @@ class DataCnesAuxiliary:
             # Renomeia as colunas especificadas
             dfi.rename(index=str, columns={'CNES': 'ID', 'FANTASIA': 'DESCESTAB'}, inplace=True)
             # Remove colunas indesejáveis do objeto pandas DataFrame
-            dfi = dfi.drop(['RAZ_SOCI', 'LOGRADOU', 'NUM_END', 'COMPLEME', 'BAIRRO', 'COD_CEP', 'TELEFONE',
-                            'FAX', 'EMAIL', 'REGSAUDE', 'MICR_REG', 'DISTRSAN', 'DISTRADM', 'CODUFMUN', 'NATUREZA'], axis=1)
+            dfi = dfi.drop(['RAZ_SOCI', 'LOGRADOU', 'NUM_END', 'COMPLEME', 'BAIRRO',
+                            'COD_CEP', 'TELEFONE', 'FAX', 'EMAIL', 'REGSAUDE', 'MICR_REG',
+                            'DISTRSAN', 'DISTRADM', 'CODUFMUN', 'NATUREZA'], axis=1)
             # Reordena as colunas
             dfi = dfi[['ID', 'DESCESTAB', 'RSOC_MAN', 'CPF_CNPJ', 'EXCLUIDO', 'DATAINCL', 'DATAEXCL']]
             # Elimina linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
@@ -1735,9 +1736,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST CNES_ST #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC RETENMAN (arquivo RETENMAN.cnv)
     def get_RETENMAN_treated(self):
         # Conversão da TCC RETENMAN para um objeto pandas DataFrame
@@ -1778,11 +1779,11 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
-    ###################################################################################################################################
-    # Método para adequar e formatar as colunas e valores das Tabelas MEDIC_02, NV_SUP_02, TECNIC_02 e CBO_02 (arquivos...
-    # MEDIC_02.dbf, NV_SUP_02.dbf, TECNIC_02.dbf e CBO_02.dbf)
+    ###################################################################################################################
+    # CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF CNES_PF #
+    ###################################################################################################################
+    # Método para adequar e formatar as colunas e valores das Tabelas MEDIC_02, NV_SUP_02, TECNIC_02 e CBO_02...
+    # (arquivos MEDIC_02.dbf, NV_SUP_02.dbf, TECNIC_02.dbf e CBO_02.dbf)
     def get_CBO_treated(self):
         # Conversão da Tabela MEDIC_02 para um objeto pandas DataFrame
         file_name = 'MEDIC_02'
@@ -1936,9 +1937,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT CNES_LT #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC tip1leit (arquivo tip1leit.cnv)
     def get_tip1leit_treated(self):
         # Conversão da TCC tip1leit para um objeto pandas DataFrame
@@ -1963,9 +1964,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ CNES_EQ #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela TP_EQUIPAM (arquivo TP_EQUIPAM.dbf)
     def get_TP_EQUIPAM_treated(self):
         # Conversão da Tabela TP_EQUIPAM para um objeto pandas DataFrame
@@ -1994,10 +1995,11 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
-    ###################################################################################################################################
-    # Método para adequar e formatar as colunas e valores das tabelas S_CLASSEN e SRA_ORD_N (arquivos S_CLASSEN.dbf e SRA_ORD_N.dbf)
+    ###################################################################################################################
+    # CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR CNES_SR #
+    ###################################################################################################################
+    # Método para adequar e formatar as colunas e valores das tabelas S_CLASSEN e SRA_ORD_N (arquivos S_CLASSEN.dbf...
+    # e SRA_ORD_N.dbf)
     def get_SERVICO_treated(self):
         # Conversão da Tabela S_CLASSEN para um objeto pandas DataFrame
         file_name = 'S_CLASSEN'
@@ -2010,7 +2012,8 @@ class DataCnesAuxiliary:
         df2 = df['DESCRICAO'].str.extract('^\d{3} (.*) /', expand=True).rename(columns={0:'DESCRICAO'})
         # Concatena lado a lado os objetos pandas DataFrame "df1" e "df2"
         df3 = pd.concat([df1, df2], axis=1)
-        # Elimina as linhas duplicadas do objeto pandas DataFrame "df3" tendo por base a coluna ID e mantém a primeira ocorrência
+        # Elimina as linhas duplicadas do objeto pandas DataFrame "df3" tendo por base a coluna ID e mantém a...
+        # primeira ocorrência
         df3.drop_duplicates(subset='ID', keep='first', inplace=True)
         # Reset o index devido à exclusão das linhas efetuada no passo anterior
         df3.reset_index(drop=True, inplace=True)
@@ -2037,7 +2040,8 @@ class DataCnesAuxiliary:
         return dfinal
 
 
-    # Método para adequar e formatar as colunas e valores das tabelas S_CLASSEN e S_CLASSEA (arquivos S_CLASSEN.dbf e S_CLASSEA.dbf)
+    # Método para adequar e formatar as colunas e valores das tabelas S_CLASSEN e S_CLASSEA (arquivos...
+    # S_CLASSEN.dbf e S_CLASSEA.dbf)
     def get_CLASSSR_treated(self):
         # Conversão da Tabela S_CLASSEN para um objeto pandas DataFrame
         file_name = 'S_CLASSEN'
@@ -2059,7 +2063,8 @@ class DataCnesAuxiliary:
         # Reset o index devido à eliminação de linhas efetuadas nos passos anteriores
         df3.reset_index(drop=True, inplace=True)
         # Coleta da coluna DESCRICAO apenas a substring depois do "("
-        df4 = df3['DESCRICAO'].str.extract('^Servico - \d{3} / \d{3} - (.*)', expand=True).rename(columns={0:'DESCRICAO'})
+        df4 = df3['DESCRICAO'].str.extract('^Servico - \d{3} / \d{3} - (.*)', \
+                                           expand=True).rename(columns={0:'DESCRICAO'})
         # Concatena lado a lado os objetos pandas DataFrame "df3[['ID']]" e "df4"
         df5 = pd.concat([df3[['ID']], df4], axis=1)
         # Torna UPPER CASE todos os valores da coluna DESCRICAO do objeto pandas DataFrame "df5"
@@ -2092,10 +2097,11 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
-    ###################################################################################################################################
-    # Método para adequar e formatar as colunas e valores das Tabelas EQP_XX (arquivos EQP_XX.dbf, sendo XX a sigla do Estado da RFB)
+    ###################################################################################################################
+    # CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP CNES_EP #
+    ###################################################################################################################
+    # Método para adequar e formatar as colunas e valores das Tabelas EQP_XX (arquivos EQP_XX.dbf, sendo XX a...
+    # sigla do Estado da RFB)
     def get_EQP_XX_treated(self):
         # Lista de Estados da RFB
         estados = np.array(['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT',
@@ -2306,9 +2312,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB CNES_HB #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela HABILITA (arquivo HABILITA.dbf)
     def get_HABILITA_treated(self):
         # Conversão da Tabela HABILITA para um objeto pandas DataFrame
@@ -2325,9 +2331,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC CNES_RC #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela REGRAS (arquivo REGRAS.dbf)
     def get_REGRAS_treated(self):
         # Conversão da Tabela REGRAS para um objeto pandas DataFrame
@@ -2348,9 +2354,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM CNES_GM #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da Tabela GESTAO (arquivo GESTAO.dbf)
     def get_GESTAO_treated(self):
         # Conversão da Tabela GESTAO para um objeto pandas DataFrame
@@ -2374,9 +2380,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE CNES_EE #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC ESTABENS (arquivo ESTABENS.cnv)
     def get_ESTABENS_treated(self):
         # Conversão da TCC ESTABENS para um objeto pandas DataFrame
@@ -2389,9 +2395,9 @@ class DataCnesAuxiliary:
         return df
 
 
-    ###################################################################################################################################
-    # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
-    ###################################################################################################################################
+    ###################################################################################################################
+    # CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF CNES_EF #
+    ###################################################################################################################
     # Método para adequar e formatar as colunas e valores da TCC ESTABFIL (arquivo ESTABFIL.cnv)
     def get_ESTABFIL_treated(self):
         # Conversão da TCC ESTABFIL para um objeto pandas DataFrame
