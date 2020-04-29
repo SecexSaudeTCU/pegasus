@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ed934fd-b8f4-41ff-8dec-641c1611abb2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../analise/data_adapter/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../analise/data_adapter/repositorio_util.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sia-data-adapter/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sia-data-adapter/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sia-data-adapter/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sia-data-adapter/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sia-data-adapter/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sia-data-adapter/repositorio.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sih-data-adapter/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sih-data-adapter/repositorio.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sih-data-adapter/sih.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../analise/data_adapter/repositorio_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/../analise/data_adapter/repositorio_util.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

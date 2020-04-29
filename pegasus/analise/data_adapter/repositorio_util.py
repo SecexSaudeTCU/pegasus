@@ -4,9 +4,9 @@ import yaml
 
 class RepositorioPostgresSQL:
     def __init__(self, arquivo_configuracao="config.yml"):
-        self.get_conexao_banco(arquivo_configuracao)
+        self.__get_conexao_banco(arquivo_configuracao)
 
-    def get_conexao_banco(self, arquivo_configuracao):
+    def __get_conexao_banco(self, arquivo_configuracao):
         with open(arquivo_configuracao, "r") as ymlfile:
             cfg = yaml.load(ymlfile)
         config_banco = cfg['postgres_sql']
