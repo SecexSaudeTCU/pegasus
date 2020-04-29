@@ -12,7 +12,7 @@ AP_S_BOXCOX = 'NORMAL APÓS BOXCOX'
 
 #TODO: Implemenar também CompositeSIADetector e checar o que existe em comum em termos de lógica
 
-class CompositeSIHDetector(DetectorOutlier):
+class SIHCompositeDetectorOutlier(DetectorOutlier):
     def __init__(self, df, nome_coluna, distribuicao):
         super().__init__(self, df, nome_coluna)
         self.distribuicao = distribuicao
