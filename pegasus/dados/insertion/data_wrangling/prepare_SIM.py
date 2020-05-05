@@ -1,6 +1,6 @@
-###########################################################################################################################################################################
-# SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM #
-###########################################################################################################################################################################
+###########################################################################################################################
+# SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM #
+###########################################################################################################################
 
 import os
 from datetime import datetime
@@ -43,7 +43,7 @@ class DataSimMain:
         for coluna in dataframe.columns.values:
             dataframe[coluna] = dataframe[coluna].apply(lambda x: x if '\x00' not in x else '')
 
-        # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela DOBR base de dados
+        # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela dobr
         lista_columns = np.array(['NUMERODO', 'CODINST', 'TIPOBITO', 'DTOBITO', 'HORAOBITO', 'NUMSUS',
                                   'NATURAL',  'CODMUNNATU', 'DTNASC', 'IDADE', 'SEXO', 'RACACOR', 'ESTCIV',
                                   'ESC', 'ESC2010', 'OCUP', 'CODMUNRES', 'LOCOCOR', 'CODESTAB', 'CODMUNOCOR',
@@ -234,7 +234,7 @@ class DataSimMain:
         # data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
         for col in np.array(['DTOBITO', 'DTNASC', 'DTATESTADO', 'DTINVESTIG',
                              'DTCADASTRO', 'DTRECEBIM', 'DTCADINV', 'DTCONINV']):
-            df[col] = df[col].apply(lambda x: datetime.strptime(x, '%d%m%Y').date()\
+            df[col] = df[col].apply(lambda x: datetime.strptime(x, '%d%m%Y').date() \
                                     if x != '' else datetime(2099, 1, 1).date())
 
         # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela...
@@ -295,7 +295,9 @@ class DataSimMain:
                                       'CAUSABAS_O': 'CAUSABAS_O_ID', 'ATESTANTE': 'ATESTANTE_ID',
                                       'FONTEINV': 'FONTEINV_ID', 'ESCMAEAGR1': 'ESCMAEAGR1_ID',
                                       'ESCFALAGR1': 'ESCFALAGR1_ID', 'TPOBITOCOR': 'TPOBITOCOR_ID'}, inplace=True)
+
         print(f'Tratou o arquivo DO{self.state}{self.year} (shape final: {df.shape[0]} x {df.shape[1]}).')
+        
         return df
 
 
