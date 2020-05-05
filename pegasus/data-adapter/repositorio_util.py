@@ -3,7 +3,7 @@ import yaml
 
 
 class RepositorioPostgresSQL:
-    def __init__(self, arquivo_configuracao="config.yml"):
+    def __init__(self, arquivo_configuracao="../config.yml"):
         self.__get_conexao_banco(arquivo_configuracao)
 
     def __get_conexao_banco(self, arquivo_configuracao):
