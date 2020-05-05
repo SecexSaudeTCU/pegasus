@@ -4,7 +4,7 @@ import pandas as pd
 # - Onde recuperar a informação sobre regiões de saúde?
 # - Onde recuperar a informação sobre forma/grupo/subgrupo?
 # - Temos script de carga da base do IBGE?
-from data_adapter.repositorio_util import RepositorioPostgresSQL
+from repositorio_util import RepositorioPostgresSQL
 
 
 class RepositorioSIH(RepositorioPostgresSQL):

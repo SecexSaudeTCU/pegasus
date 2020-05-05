@@ -1,4 +1,4 @@
-from repositorio import RepositorioSIH
+from repositorio_sih import RepositorioSIH
 
 
 def get_df_estabelecimento_regiao_saude(repositorio):
