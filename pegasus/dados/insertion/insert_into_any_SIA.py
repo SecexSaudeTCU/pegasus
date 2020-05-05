@@ -1,5 +1,5 @@
 ############################################################################################################################################################################
-#  SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA SIA_PA #
+#  SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY #
 ############################################################################################################################################################################
 
 import os
@@ -9,6 +9,8 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import psycopg2
+
+from .data_wrangling.prepare_SIA import DataSiaMain, DataSiaAuxiliary
 
 
 ############################################################################################################################################################################
@@ -24,52 +26,53 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_SIA_PA
+    # Cria uma instância da classe "DataSiaAuxiliary" do módulo "prepare_SIA" do package "data_wrangling"
+    data_sia_auxiliary = DataSiaAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_SIA_PA" do package "data_wrangling"
-    df_CADGERBR = prepare_SIA_PA.get_CADGERBR_treated(path)
+    # Chama métodos da classe "DataSiaAuxiliary" do módulo "prepare_SIA" referentes ao sub-banco de dados sia_pa
+    df_CADGERBR = data_sia_auxiliary.get_CADGERBR_treated()
     df_CADGERBR.to_sql('pacoduni', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_SIA_PA.get_TABUF_treated()
+    df_TABUF = data_sia_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_SIA_PA.get_CADMUN_treated()
+    df_CADMUN = data_sia_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('pagestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_GESTAO = prepare_SIA_PA.get_TP_GESTAO_treated()
+    df_TP_GESTAO = data_sia_auxiliary.get_TP_GESTAO_treated()
     df_TP_GESTAO.to_sql('pacondic', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "pagestao"
     df_CADMUN.to_sql('paufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_REGRA_C = prepare_SIA_PA.get_REGRA_C_treated()
+    df_REGRA_C = data_sia_auxiliary.get_REGRA_C_treated()
     df_REGRA_C.to_sql('paregct', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TP_ESTAB = prepare_SIA_PA.get_TP_ESTAB_treated()
+    df_TP_ESTAB = data_sia_auxiliary.get_TP_ESTAB_treated()
     df_TP_ESTAB.to_sql('patpups', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_ESFERA = prepare_SIA_PA.get_ESFERA_treated()
+    df_ESFERA = data_sia_auxiliary.get_ESFERA_treated()
     df_ESFERA.to_sql('patippre', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TB_SIGTAP = prepare_SIA_PA.get_TB_SIGTAP_treated(path)
+    df_TB_SIGTAP = data_sia_auxiliary.get_TB_SIGTAP_treated()
     df_TB_SIGTAP.to_sql('paproc', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_FINANC = prepare_SIA_PA.get_FINANC_treated()
+    df_FINANC = data_sia_auxiliary.get_FINANC_treated()
     df_FINANC.to_sql('patpfin', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_COMPLEX = prepare_SIA_PA.get_COMPLEX_treated()
+    df_COMPLEX = data_sia_auxiliary.get_COMPLEX_treated()
     df_COMPLEX.to_sql('panivcpl', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_DOCORIG = prepare_SIA_PA.get_DOCORIG_treated()
+    df_DOCORIG = data_sia_auxiliary.get_DOCORIG_treated()
     df_DOCORIG.to_sql('padocorig', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CBO = prepare_SIA_PA.get_CBO_treated()
+    df_CBO = data_sia_auxiliary.get_CBO_treated()
     df_CBO.to_sql('pacbocod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_MOTSAIPE = prepare_SIA_PA.get_MOTSAIPE_treated()
+    df_MOTSAIPE = data_sia_auxiliary.get_MOTSAIPE_treated()
     df_MOTSAIPE.to_sql('pamotsai', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_S_CID = prepare_SIA_PA.get_S_CID_treated()
+    df_S_CID = data_sia_auxiliary.get_S_CID_treated()
     df_S_CID.to_sql('pacidpri', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "pacidpri"
@@ -78,37 +81,37 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
     # Mesmo objeto pandas DataFrame da tabela "pacidpri"
     df_S_CID.to_sql('pacidcas', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CARAT_AT = prepare_SIA_PA.get_CARAT_AT_treated()
+    df_CARAT_AT = data_sia_auxiliary.get_CARAT_AT_treated()
     df_CARAT_AT.to_sql('pacatend', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_FL_IDADE = prepare_SIA_PA.get_FL_IDADE_treated()
+    df_FL_IDADE = data_sia_auxiliary.get_FL_IDADE_treated()
     df_FL_IDADE.to_sql('paflidade', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_SEXO = prepare_SIA_PA.get_SEXO_treated()
+    df_SEXO = data_sia_auxiliary.get_SEXO_treated()
     df_SEXO.to_sql('pasexo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_RACA_COR = prepare_SIA_PA.get_RACA_COR_treated()
+    df_RACA_COR = data_sia_auxiliary.get_RACA_COR_treated()
     df_RACA_COR.to_sql('paracacor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "pagestao"
     df_CADMUN.to_sql('pamunpcn', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_INDICA = prepare_SIA_PA.get_INDICA_treated()
+    df_INDICA = data_sia_auxiliary.get_INDICA_treated()
     df_INDICA.to_sql('paindica', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CODOCO = prepare_SIA_PA.get_CODOCO_treated()
+    df_CODOCO = data_sia_auxiliary.get_CODOCO_treated()
     df_CODOCO.to_sql('pacodoco', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_etnia = prepare_SIA_PA.get_etnia_treated()
+    df_etnia = data_sia_auxiliary.get_etnia_treated()
     df_etnia.to_sql('paetnia', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Mesmo objeto pandas DataFrame da tabela "pacbocod"
     df_CBO.to_sql('pasrcc', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_INE_EQUIPE_BR = prepare_SIA_PA.get_INE_EQUIPE_BR_treated()
+    df_INE_EQUIPE_BR = data_sia_auxiliary.get_INE_EQUIPE_BR_treated()
     df_INE_EQUIPE_BR.to_sql('paine', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_natjur = prepare_SIA_PA.get_natjur_treated()
+    df_natjur = data_sia_auxiliary.get_natjur_treated()
     df_natjur.to_sql('panatjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
@@ -127,7 +130,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do SIA_XX
+    # Tratamento de dados principais do sia_xx
     base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:6]
@@ -141,16 +144,10 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}...')
 
-    # Criação de objeto string do nome de uma função de tratamento de dados da tabela principal "main_table"...
-    # do "child_db" contida no respectivo módulo do package "data_wrangling"
-    func_string = 'get_' + base + 'XXaamm_treated'
-
-    # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
-    module = __import__('insertion.data_wrangling.prepare_SIA_' + base, fromlist=[func_string], level=0)
-    func_treat_main_table = getattr(module, func_string)
-
-    # Chama a função "func_treat_main_table" do módulo "prepare_SIA_XX" do package "data_wrangling"
-    df = func_treat_main_table(state, year, month)
+    # Cria uma instância da classe "DataSiaMain" do módulo "prepare_SIA" do package "data_wrangling"
+    data_sia_main = DataSiaMain(base, state, year, month)
+    # Chama método da classe "DataSiaMain" do módulo "prepare_SIA" referentes ao sub-banco de dados sia_xx
+    df = data_sia_main.get_SIAXXaamm_treated()
 
     # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
     df.insert(0, 'UF_' + base, [state]*df.shape[0])
@@ -162,10 +159,10 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     else:
         df.insert(2, 'MES_PA', [month]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do SIA_XX armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sia_xx armazenado no objeto
     # pandas DataFrame "df"
     df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1')
-    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do SIA_XX
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sia_xx
     f = open(base + state + year + month + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],
