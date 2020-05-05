@@ -207,7 +207,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
 
     # Cria uma instância da classe "DataSihMain" do módulo "prepare_SIH" do package "data_wrangling"
     data_sih_main = DataSihMain(base, state, year, month)
-    # Chama método da classe "DataSihMain" do módulo "prepare_SIH" referentes ao sub-banco de dados sih-xx
+    # Chama método da classe "DataSihMain" do módulo "prepare_SIH" referentes ao sub-banco de dados sih_xx
     df = data_sih_main.get_SIHXXaamm_treated()
 
     # Inserção das colunas UF_XX, ANO_XX, MES_XX e CONTAGEM no objeto pandas DataFrame "df"
@@ -215,10 +215,10 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
     df.insert(3, 'MES_' + base, [month]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sih-xx armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sih_xx armazenado no objeto
     # pandas DataFrame "df"
     df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1')
-    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sih-xx
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sih_xx
     f = open(base + state + year + month + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],

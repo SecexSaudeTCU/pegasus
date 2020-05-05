@@ -29,7 +29,6 @@ def insert_into_most_SIM_tables(path, device, child_db):
     data_sim_auxiliary = DataSimAuxiliary(path)
 
     # Chama métodos da classe "DataSimAuxiliary" do módulo "prepare_SIM" do banco de dados SIM
-
     df_TIPOBITO = data_sim_auxiliary.get_TIPOBITO_treated()
     df_TIPOBITO.to_sql('tipobito', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -115,7 +114,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do SIM
+    # Tratamento de dados principais do sim
     base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:8]
@@ -133,10 +132,10 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int(year)]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do SIM armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sim armazenado no objeto
     # pandas DataFrame "df"
     df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1')
-    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do SIM_XX
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sim
     f = open(base + state + year + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],
@@ -190,7 +189,7 @@ def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, d
     base = file_name[0:2]
     state = file_name[2:4]
     year = file_name[4:8]
-    main_table = 'dobr'
+    main_table = base.lower() + 'br'
     counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}...')
