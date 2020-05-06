@@ -379,11 +379,11 @@ class DataSinascAuxiliary:
         # Drop a linha inteira em que a coluna "ID" tem o valor especificado por não representar nenhum município
         df = df.drop(df[df['ID']=='000000'].index)
         # Remove colunas indesejáveis do objeto pandas DataFrame
-        df = df.drop(['MUNSINON', 'MUNSINONDV', 'MESOCOD', 'MICROCOD', 'MSAUDCOD',
-                      'RSAUDCOD', 'CSAUDCOD', 'RMETRCOD', 'AGLCOD'], axis=1)
+        df = df.drop(['MUNSINON', 'MUNSINONDV', 'MESOCOD', 'MICROCOD',
+                      'MSAUDCOD', 'CSAUDCOD', 'RMETRCOD', 'AGLCOD'], axis=1)
         # Substitui uma string vazia pela string "?" nas colunas especificadas
         for col in ['SITUACAO', 'MUNSINP', 'MUNSIAFI', 'MUNNOME', 'MUNNOMEX', 'OBSERV',
-                    'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'ANOINST', 'ANOEXT', 'SUCESSOR']:
+                    'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'RSAUDCOD', 'ANOINST', 'ANOEXT', 'SUCESSOR']:
             df[col].replace('', '?', inplace=True)
         # Substitui uma string vazia pela string "NA" nas colunas especificadas
         df['UFCOD_ID'].replace('', 'NA', inplace=True)
@@ -395,20 +395,20 @@ class DataSinascAuxiliary:
         df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']].astype('float')
         # Reordena as colunas priorizando as "mais" relevantes
         df = df[['ID', 'MUNNOME', 'MUNNOMEX', 'MUNCODDV', 'OBSERV', 'SITUACAO', 'MUNSINP',
-                 'MUNSIAFI', 'UFCOD_ID', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'LATITUDE',
-                 'LONGITUDE', 'ALTITUDE', 'AREA', 'ANOINST', 'ANOEXT', 'SUCESSOR']]
+                 'MUNSIAFI', 'UFCOD_ID', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'RSAUDCOD',
+                 'LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA', 'ANOINST', 'ANOEXT', 'SUCESSOR']]
         # Coloca todas as string das colunas especificadas como UPPER CASE
         df['MUNNOME'] = df['MUNNOME'].apply(lambda x: x.upper())
         df['MUNNOMEX'] = df['MUNNOMEX'].apply(lambda x: x.upper())
         # Insere uma linha referente ao Município de Nazária/PI não constante originalmente da
-        df.loc[df.shape[0]] = ['220672', 'NAZÁRIA', 'NAZARIA', '2206720', '?', '?', '?', '?',
-                               '22', '?', '?', '?', np.nan, np.nan, np.nan, 363.589, '?', '?', '?']
+        df.loc[df.shape[0]] = ['220672', 'NAZÁRIA', 'NAZARIA', '2206720', '?', '?', '?', '?', '22',
+                               '?', '?', '?', '?', np.nan, np.nan, np.nan, 363.589, '?', '?', '?']
         # Ordena as linhas de "df" por ordem crescente dos valores da coluna ID
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?', '?', '?', '?', '?', 'NA',
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?', '?', '?', '?', '?', 'NA', '?',
                                '?', '?', '?', np.nan, np.nan, np.nan, np.nan, '?', '?', '?']
         return df
 
