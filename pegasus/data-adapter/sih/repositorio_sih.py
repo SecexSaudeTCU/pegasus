@@ -10,6 +10,7 @@ from repositorio_util import RepositorioPostgresSQL
 class RepositorioSIH(RepositorioPostgresSQL):
 
     def get_df_estabelecimento_regiao_saude(self):
+        # TODO
         pass
 
     def get_df_descricao_procedimento(self):
