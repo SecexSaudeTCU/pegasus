@@ -58,6 +58,7 @@ def create_tables(connection_data, child_db):
                                                                       "AMAZONIA"            VARCHAR(66),
                                                                       "FRONTEIRA"           VARCHAR(66),
                                                                       "CAPITAL"             VARCHAR(66),
+                                                                      "RSAUDCOD"            VARCHAR(4),
                                                                       "LATITUDE"            FLOAT,
                                                                       "LONGITUDE"           FLOAT,
                                                                       "ALTITUDE"            FLOAT,
