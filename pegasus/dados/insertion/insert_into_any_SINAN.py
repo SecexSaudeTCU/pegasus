@@ -10,6 +10,9 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
+from .data_wrangling.prepare_SINAN import DataSinanMain, DataSinanAuxiliary
+
+
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
 ############################################################################################################################################################################
@@ -23,16 +26,17 @@ def insert_into_most_SINAN_DENG_tables(path, device, child_db):
     label1 = 'append'
     label2 = 'ID'
 
-    from .data_wrangling import prepare_SINAN_DENG
+    # Cria uma instância da classe "DataSiaAuxiliary" do módulo "prepare_SINAN" do package "data_wrangling"
+    data_sinan_auxiliary = DataSinanAuxiliary(path)
 
-    # Chama funções definidas no módulo "prepare_SINAN_DENG" do package "data_wrangling"
-    df_Classdeng = prepare_SINAN_DENG.get_Classdeng_treated()
+    # Chama métodos da classe "DataSiaAuxiliary" do módulo "prepare_SINAN" referentes ao sub-banco de dados sinan_deng
+    df_Classdeng = data_sinan_auxiliary.get_Classdeng_treated()
     df_Classdeng.to_sql('classifin', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_TABUF = prepare_SINAN_DENG.get_TABUF_treated()
+    df_TABUF = data_sinan_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_CADMUN = prepare_SINAN_DENG.get_CADMUN_treated()
+    df_CADMUN = data_sinan_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('municip', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
@@ -51,7 +55,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
-    # Tratamento de dados principais do SINAN_XXXX
+    # Tratamento de dados principais do sinan_xxxx
     base = file_name[0:4]
     state = file_name[4:6]
     year = file_name[6:8]
@@ -60,24 +64,19 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}...')
 
-    # Criação de objeto string do nome de uma função de tratamento de dados da tabela principal "main_table"...
-    # do "child_db" contida no respectivo módulo do package "data_wrangling"
-    func_string = 'get_' + base + 'XXaa_treated'
+    # Cria uma instância da classe "DataSinanMain" do módulo "prepare_SINAN" do package "data_wrangling"
+    data_sinan_main = DataSinanMain(base, state, year)
+    # Chama método da classe "DataSinanMain" do módulo "prepare_SINAN" referentes ao sub-banco de dados sinan_xxxx
+    df = data_sinan_main.get_SINANXXaamm_treated()
 
-    # Importação da função de tratamento de dados de uma tabela principal do "child_db" usando a função python "__import__"
-    module = __import__('insertion.data_wrangling.prepare_SINAN_' + base, fromlist=[func_string], level=0)
-    func_treat_main_table = getattr(module, func_string)
-
-    # Chama a função "func_treat_main_table" do módulo "prepare_SINAN_XXXX" do package "data_wrangling"
-    df = func_treat_main_table(state, year)
     # Inserção das colunas UF_XXXX e ANO_XXXX no objeto pandas DataFrame "df"
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do SIH_XX armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sinan_xxxx armazenado no objeto
     # pandas DataFrame "df"
     df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1')
-    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do SIH_XX
+    # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sinan_xxxx
     f = open(base + state + year + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
     conn = psycopg2.connect(dbname=connection_data[0],

@@ -194,12 +194,14 @@ class DataSiaMain:
             # Converte do tipo string para datetime as colunas especificadas substituindo as datas faltantes...
             # ("NaT") pela data futura "2099-01-01" para permitir a inserção das referidas colunas no SGBD postgreSQL
             for col in np.array(['PA_MVM', 'PA_CMP']):
-                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() if x != '' else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: datetime.strptime(x, '%Y%m').date() \
+                                        if x != '' else datetime(2099, 1, 1).date())
 
             # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui...
             # pela data futura "2099-01-01"
             for col in np.array(['PA_MVM', 'PA_CMP']):
-                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+                df[col] = df[col].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                        datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
 
             # Converte do tipo object para int ou para None as colunas de atributos de valores binários...
             # (0 ou 1) ou quando simplesmente se deseja inteiros
