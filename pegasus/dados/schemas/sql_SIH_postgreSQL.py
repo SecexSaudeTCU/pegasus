@@ -56,8 +56,8 @@ def create_tables(connection_data, child_db):
                                                                        "PROCEDIMENTO"       VARCHAR(100));
 
                        /*Tabela dos tipos de diagnóstico principal*/
-                       CREATE TABLE IF NOT EXISTS {child_db}.diagprinc("ID"                  VARCHAR(4),
-                                                                       "DIAGNOSTICO"         VARCHAR(66));
+                       CREATE TABLE IF NOT EXISTS {child_db}.diagprinc("ID"                 VARCHAR(4),
+                                                                       "DIAGNOSTICO"        VARCHAR(66));
 
                        /*Tabela das ocupações dos pacientes*/
                        CREATE TABLE IF NOT EXISTS {child_db}.cbor("ID"                      VARCHAR(6),
@@ -68,8 +68,8 @@ def create_tables(connection_data, child_db):
                                                                   "DESCESTAB"               VARCHAR(66));
 
                         /*Tabela dos níveis de complexidade de atendimento*/
-                        CREATE TABLE IF NOT EXISTS {child_db}.complex("ID"                   VARCHAR(2),
-                                                                      "COMPLEXIDADE"         VARCHAR(66));
+                        CREATE TABLE IF NOT EXISTS {child_db}.complex("ID"                  VARCHAR(2),
+                                                                      "COMPLEXIDADE"        VARCHAR(66));
 
                        /*Tabela dos tipos de recursos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.financ("ID"                    VARCHAR(2),
@@ -78,6 +78,14 @@ def create_tables(connection_data, child_db):
                        /*Tabela dos tipos de recursos FAEC*/
                        CREATE TABLE IF NOT EXISTS {child_db}.faectp("ID"                    VARCHAR(6),
                                                                     "SUBFONTE"              VARCHAR(66));
+
+                       /*Tabela dos grupos de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.grupo("ID"                     VARCHAR(2),
+                                                                   "GRUPO"                  VARCHAR(50));
+
+                       /*Tabela dos subgrupos de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
+                                                                      "SUBGRUPO"            VARCHAR(100));
 
                        /*Tabela de Arquivos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),
@@ -158,7 +166,9 @@ def create_tables(connection_data, child_db):
                                                                   "VAL_SH_FED"              FLOAT,
                                                                   "VAL_SP_FED"              FLOAT,
                                                                   "VAL_SH_GES"              FLOAT,
-                                                                  "VAL_SP_GES"              FLOAT);
+                                                                  "VAL_SP_GES"              FLOAT,
+                                                                  "GRUPO"                   VARCHAR(2),
+                                                                  "SUBGRUPO"                VARCHAR(4));
 
                        /*Tabela dos tipos de AIH*/
                        CREATE TABLE IF NOT EXISTS {child_db}.ident("ID"                     VARCHAR(2),
@@ -256,7 +266,9 @@ def create_tables(connection_data, child_db):
                                                                   "SPCIDPRI_ID"             VARCHAR(4),
                                                                   "SPCIDSEC_ID"             VARCHAR(4),
                                                                   "SP_QT_PROC"              FLOAT,
-                                                                  "SP_U_AIH"                NUMERIC);
+                                                                  "SP_U_AIH"                NUMERIC,
+                                                                  "GRUPO"                   VARCHAR(2),
+                                                                  "SUBGRUPO"                VARCHAR(4));
 
                        /*Tabela dos tipos de recursos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.intpval("ID"                   VARCHAR(2),

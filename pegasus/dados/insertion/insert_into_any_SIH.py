@@ -118,6 +118,11 @@ def insert_into_most_SIH_RD_tables(path, device, child_db):
     df_etnia = data_sih_auxiliary.get_etnia_treated()
     df_etnia.to_sql('etnia', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_TB_GRUPO = data_sih_auxiliary.get_TB_GRUPO_treated()
+    df_TB_GRUPO.to_sql('grupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_SUBGR = data_sih_auxiliary.get_TB_SUBGR_treated()
+    df_TB_SUBGR.to_sql('subgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -180,6 +185,12 @@ def insert_into_most_SIH_SP_tables(path, device, child_db):
 
     # Mesmo objeto pandas DataFrame da tabela "spcidpri"
     df_CID10.to_sql('spcidsec', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_GRUPO = data_sih_auxiliary.get_TB_GRUPO_treated()
+    df_TB_GRUPO.to_sql('grupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_SUBGR = data_sih_auxiliary.get_TB_SUBGR_treated()
+    df_TB_SUBGR.to_sql('subgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
 ###########################################################################################################################################################################

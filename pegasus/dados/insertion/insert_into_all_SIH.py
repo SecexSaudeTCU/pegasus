@@ -1,6 +1,6 @@
-############################################################################################################################################################################
-# SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL  #
-############################################################################################################################################################################
+###########################################################################################################################
+# SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL SIH_ALL #
+###########################################################################################################################
 
 import sys
 import os
@@ -14,9 +14,9 @@ import psycopg2
 sys.path.append('.')
 from transform.prepare_SIH import DataSihMain, DataSihAuxiliary
 
-############################################################################################################################################################################
-#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
-############################################################################################################################################################################
+###########################################################################################################################
+#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+###########################################################################################################################
 ############################################################################################################################################################################
 # AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES #
 ############################################################################################################################################################################
@@ -30,7 +30,7 @@ def insert_into_most_SIH_tables(path, device, child_db):
     # Cria uma instância da classe "DataSihAuxiliary" do módulo "prepare_SIH" do package "data_wrangling"
     data_sih_auxiliary = DataSihAuxiliary(path)
 
-    # Chama métodos da classe "DataSihAuxiliary" do módulo "prepare_Sih" comuns aos dois sub-bancos de dados do SIH
+    # Chama métodos da classe "DataSihAuxiliary" do módulo "prepare_SIH" comuns aos dois sub-bancos de dados do SIH
     df_TABUF = data_sih_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -57,6 +57,12 @@ def insert_into_most_SIH_tables(path, device, child_db):
 
     df_FAECTP = data_sih_auxiliary.get_FAECTP_treated()
     df_FAECTP.to_sql('faectp', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_GRUPO = data_sih_auxiliary.get_TB_GRUPO_treated()
+    df_TB_GRUPO.to_sql('grupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_SUBGR = data_sih_auxiliary.get_TB_SUBGR_treated()
+    df_TB_SUBGR.to_sql('subgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Chama métodos da classe "DataSihAuxiliary" do módulo "prepare_SIH" referentes ao sub-banco de dados sih_rd
     df_IDENT = data_sih_auxiliary.get_IDENT_treated()

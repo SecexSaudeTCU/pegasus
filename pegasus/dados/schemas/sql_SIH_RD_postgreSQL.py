@@ -91,7 +91,9 @@ def create_tables(connection_data, child_db):
                                                                   "VAL_SH_FED"              FLOAT,
                                                                   "VAL_SP_FED"              FLOAT,
                                                                   "VAL_SH_GES"              FLOAT,
-                                                                  "VAL_SP_GES"              FLOAT);
+                                                                  "VAL_SP_GES"              FLOAT,
+                                                                  "GRUPO"                   VARCHAR(2),
+                                                                  "SUBGRUPO"                VARCHAR(4));
 
                        /*Tabela dos tipos de AIH*/
                        CREATE TABLE IF NOT EXISTS {child_db}.ident("ID"                     VARCHAR(2),
@@ -263,6 +265,14 @@ def create_tables(connection_data, child_db):
                        CREATE TABLE IF NOT EXISTS {child_db}.ufcod("ID"                     VARCHAR(2),
                                                                    "ESTADO"                 VARCHAR(66),
                                                                    "SIGLA_UF"               VARCHAR(66));
+
+                       /*Tabela dos grupos de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.grupo("ID"                     VARCHAR(2),
+                                                                   "GRUPO"                  VARCHAR(50));
+
+                       /*Tabela dos subgrupos de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
+                                                                      "SUBGRUPO"            VARCHAR(100));
 
                        /*Tabela de Arquivos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),

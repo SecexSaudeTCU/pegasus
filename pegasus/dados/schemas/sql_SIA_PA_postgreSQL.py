@@ -83,7 +83,9 @@ def create_tables(connection_data, child_db):
                                                                   "PA_VL_INC"              FLOAT,
                                                                   "PASRCC_ID"              VARCHAR(6),
                                                                   "PAINE_ID"               VARCHAR(10),
-                                                                  "PANATJUR_ID"            VARCHAR(4));
+                                                                  "PANATJUR_ID"            VARCHAR(4),
+                                                                  "GRUPO"                  VARCHAR(2),
+                                                                  "SUBGRUPO"               VARCHAR(4));
 
                        /*Tabela dos estabelecimentos de saúde*/
                        CREATE TABLE IF NOT EXISTS {child_db}.pacoduni("ID"                 VARCHAR(7),
@@ -256,6 +258,14 @@ def create_tables(connection_data, child_db):
                       CREATE TABLE IF NOT EXISTS {child_db}.ufcod("ID"                     VARCHAR(2),
                                                                   "ESTADO"                 VARCHAR(66),
                                                                   "SIGLA_UF"               VARCHAR(66));
+
+                      /*Tabela dos grupos de procedimentos*/
+                      CREATE TABLE IF NOT EXISTS {child_db}.grupo("ID"                     VARCHAR(2),
+                                                                  "GRUPO"                  VARCHAR(50));
+
+                      /*Tabela dos subgrupos de procedimentos*/
+                      CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
+                                                                     "SUBGRUPO"            VARCHAR(100));
 
                       /*Tabela de Arquivos*/
                       CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),
