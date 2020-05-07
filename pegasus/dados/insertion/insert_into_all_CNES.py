@@ -2,6 +2,7 @@
 #    CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL CNES_ALL     #
 ############################################################################################################################################################################
 
+import sys
 import os
 import time
 from datetime import datetime
@@ -10,7 +11,8 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from .data_wrangling.prepare_CNES import DataCnesMain, DataCnesAuxiliary
+sys.path.append('.')
+from transform.prepare_CNES import DataCnesMain, DataCnesAuxiliary
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

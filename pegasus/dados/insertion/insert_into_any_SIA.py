@@ -2,6 +2,7 @@
 #  SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY SIA_ANY #
 ############################################################################################################################################################################
 
+import sys
 import os
 import time
 from datetime import datetime
@@ -10,8 +11,8 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from .data_wrangling.prepare_SIA import DataSiaMain, DataSiaAuxiliary
-
+sys.path.append('.')
+from transform.prepare_SIA import DataSiaMain, DataSiaAuxiliary
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

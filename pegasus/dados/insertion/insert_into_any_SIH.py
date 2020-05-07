@@ -2,6 +2,7 @@
 #  SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY #
 ############################################################################################################################################################################
 
+import sys
 import os
 import time
 from datetime import datetime
@@ -10,7 +11,8 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from .data_wrangling.prepare_SIH import DataSihMain, DataSihAuxiliary
+sys.path.append('.')
+from transform.prepare_SIH import DataSihMain, DataSihAuxiliary
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

@@ -8,7 +8,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from .online.download_SINAN import download_SINANXXaa, download_table_dbf, download_table_cnv
+from .extract.download_SINAN import download_SINANXXaa, download_table_dbf, download_table_cnv
 
 
 """
