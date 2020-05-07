@@ -115,6 +115,12 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
     df_natjur = data_sia_auxiliary.get_natjur_treated()
     df_natjur.to_sql('panatjur', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_TB_GRUPO = data_sia_auxiliary.get_TB_GRUPO_treated()
+    df_TB_GRUPO.to_sql('pagrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_SUBGR = data_sia_auxiliary.get_TB_SUBGR_treated()
+    df_TB_SUBGR.to_sql('pasubgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
 
 ###########################################################################################################################################################################
 #         copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas         #

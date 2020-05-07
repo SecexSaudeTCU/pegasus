@@ -51,7 +51,9 @@ def create_tables(connection_data, child_db):
                                                                   "SPCIDPRI_ID"             VARCHAR(4),
                                                                   "SPCIDSEC_ID"             VARCHAR(4),
                                                                   "SP_QT_PROC"              FLOAT,
-                                                                  "SP_U_AIH"                NUMERIC);
+                                                                  "SP_U_AIH"                NUMERIC,
+                                                                  "GRUPO"                   VARCHAR(2),
+                                                                  "SUBGRUPO"                VARCHAR(4));
 
                        /*Tabela dos tipos de procedimento realizado*/
                        CREATE TABLE IF NOT EXISTS {child_db}.spprocrea("ID"                 VARCHAR(10),
@@ -167,6 +169,14 @@ def create_tables(connection_data, child_db):
                        CREATE TABLE IF NOT EXISTS {child_db}.ufcod("ID"                     VARCHAR(2),
                                                                    "ESTADO"                 VARCHAR(66),
                                                                    "SIGLA_UF"               VARCHAR(66));
+
+                       /*Tabela dos grupos de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.grupo("ID"                     VARCHAR(2),
+                                                                   "GRUPO"                  VARCHAR(50));
+
+                       /*Tabela dos subgrupos de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
+                                                                      "SUBGRUPO"            VARCHAR(100));
 
                        /*Tabela de Arquivos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),
