@@ -3,7 +3,7 @@ import pandas as pd
 # Dúvidas:
 # - Onde recuperar a informação sobre forma/grupo/subgrupo?
 # - Temos script de carga da base do IBGE?
-from repositorio_util import RepositorioPostgresSQL
+from util.postgres.repositorio_util import RepositorioPostgresSQL
 
 
 class RepositorioSIH(RepositorioPostgresSQL):

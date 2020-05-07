@@ -1,4 +1,4 @@
-from repositorio_util import RepositorioPostgresSQL
+from util.postgres.repositorio_util import RepositorioPostgresSQL
 
 # Dúvidas:
 # - Onde recuperar a informação sobre forma/grupo/subgrupo?
