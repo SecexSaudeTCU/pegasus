@@ -32,7 +32,12 @@ def get_df_procedimentos_realizados_por_municipio_mes(repositorio):
 
 if __name__ == '__main__':
     repositorio = RepositorioSIH()
+
     df = repositorio.get_df_coordenadas()
     print(df.head())
+
     df = repositorio.get_df_procedimentos_realizados_por_municipio(2018)
+    print(df.head())
+
+    df = repositorio.get_df_estabelecimento_regiao_saude()
     print(df.head())
