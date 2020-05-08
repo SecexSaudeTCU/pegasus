@@ -85,7 +85,8 @@ def create_tables(connection_data, child_db):
                                                                   "PAINE_ID"               VARCHAR(10),
                                                                   "PANATJUR_ID"            VARCHAR(4),
                                                                   "GRUPO"                  VARCHAR(2),
-                                                                  "SUBGRUPO"               VARCHAR(4));
+                                                                  "SUBGRUPO"               VARCHAR(4),
+                                                                  "FORMA"                  VARCHAR(6));
 
                        /*Tabela dos estabelecimentos de saúde*/
                        CREATE TABLE IF NOT EXISTS {child_db}.pacoduni("ID"                 VARCHAR(7),
@@ -266,6 +267,10 @@ def create_tables(connection_data, child_db):
                       /*Tabela dos subgrupos de procedimentos*/
                       CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
                                                                      "SUBGRUPO"            VARCHAR(100));
+
+                     /*Tabela das formas de procedimentos*/
+                     CREATE TABLE IF NOT EXISTS {child_db}.forma("ID"                      VARCHAR(6),
+                                                                 "FORMA"                   VARCHAR(100));
 
                       /*Tabela de Arquivos*/
                       CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),

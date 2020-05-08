@@ -121,6 +121,9 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
     df_TB_SUBGR = data_sia_auxiliary.get_TB_SUBGR_treated()
     df_TB_SUBGR.to_sql('subgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_TB_FORMA = data_sia_auxiliary.get_TB_FORMA_treated()
+    df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
 
 ###########################################################################################################################################################################
 #         copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas         #

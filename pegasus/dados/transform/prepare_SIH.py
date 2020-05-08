@@ -97,9 +97,10 @@ class DataSihMain:
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Inserção de coluna de grupo e subgrupo do procedimento realizado
+            # Inserção de coluna de grupo, subgrupo e forma do procedimento realizado
             df['GRUPO'] = df['PROC_REA'].apply(lambda x: x[:2])
             df['SUBGRUPO'] = df['PROC_REA'].apply(lambda x: x[:4])
+            df['FORMA'] = df['PROC_REA'].apply(lambda x: x[:6])
 
             # Simplifica/corrige a apresentação dos dados das colunas especificadas
 
@@ -216,7 +217,7 @@ class DataSihMain:
                                  'PROC_REA', 'DIAG_PRINC', 'COBRANCA', 'NATUREZA', 'NAT_JUR', 'GESTAO',
                                  'MUNIC_MOV', 'NACIONAL', 'CAR_INT', 'INSTRU', 'CONTRACEP1', 'CONTRACEP2',
                                  'CBOR', 'CNAER', 'VINCPREV', 'CNES', 'COMPLEX', 'FINANC', 'FAEC_TP',
-                                 'REGCT', 'RACA_COR', 'ETNIA', 'GRUPO', 'SUBGRUPO']):
+                                 'REGCT', 'RACA_COR', 'ETNIA', 'GRUPO', 'SUBGRUPO', 'FORMA']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
@@ -268,7 +269,8 @@ class DataSihMain:
                                           'COMPLEX': 'COMPLEX_ID', 'FINANC': 'FINANC_ID',
                                           'FAEC_TP': 'FAECTP_ID', 'REGCT': 'REGCT_ID',
                                           'RACA_COR': 'RACACOR_ID', 'ETNIA': 'ETNIA_ID',
-                                          'GRUPO': 'GRUPO_ID', 'SUBGRUPO': 'SUBGRUPO_ID'}, inplace=True)
+                                          'GRUPO': 'GRUPO_ID', 'SUBGRUPO': 'SUBGRUPO_ID',
+                                          'FORMA': 'FORMA_ID'}, inplace=True)
 
             print(f'Tratou o arquivo RD{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
@@ -304,9 +306,10 @@ class DataSihMain:
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Inserção de coluna de grupo e subgrupo do procedimento realizado
+            # Inserção de coluna de grupo, subgrupo e forma do procedimento realizado
             df['GRUPO'] = df['SP_PROCREA'].apply(lambda x: x[:2])
             df['SUBGRUPO'] = df['SP_PROCREA'].apply(lambda x: x[:4])
+            df['FORMA'] = df['SP_PROCREA'].apply(lambda x: x[:6])
 
             # Simplifica/corrige a apresentação dos dados das colunas especificadas
 
@@ -380,7 +383,7 @@ class DataSihMain:
             for col in np.array(['SP_PROCREA', 'SP_GESTOR', 'SP_CNES', 'SP_ATOPROF', 'SP_M_HOSP',
                                  'SP_M_PAC', 'SP_COMPLEX', 'SP_FINANC', 'SP_CO_FAEC', 'SP_PF_CBO',
                                  'IN_TP_VAL', 'SERV_CLA', 'SP_CIDPRI', 'SP_CIDSEC', 'GRUPO',
-                                 'SUBGRUPO']):
+                                 'SUBGRUPO', 'FORMA']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
@@ -422,7 +425,8 @@ class DataSihMain:
                                           'SP_CO_FAEC': 'SPCOFAEC_ID', 'SP_PF_CBO': 'SPPFCBO_ID',
                                           'IN_TP_VAL': 'INTPVAL_ID', 'SERV_CLA': 'SERVCLA_ID',
                                           'SP_CIDPRI': 'SPCIDPRI_ID', 'SP_CIDSEC': 'SPCIDSEC_ID',
-                                          'GRUPO': 'GRUPO_ID', 'SUBGRUPO': 'SUBGRUPO_ID'}, inplace=True)
+                                          'GRUPO': 'GRUPO_ID', 'SUBGRUPO': 'SUBGRUPO_ID',
+                                          'FORMA': 'FORMA_ID'}, inplace=True)
 
             print(f'Tratou o arquivo SP{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
@@ -722,6 +726,22 @@ class DataSihAuxiliary:
         df = df.drop(['DT_COMPET'], axis=1)
         # Torna UPPERCASE os valores da coluna SUBGRUPO
         df['SUBGRUPO'] = df['SUBGRUPO'].str.upper()
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+        return df
+
+
+    # Função para adequar e formatar as colunas e valores da Tabela TB_FORMA (arquivo TB_FORMA.dbf)
+    def get_TB_FORMA_treated(self):
+        # Conversão da Tabela TB_FORMA para um objeto pandas DataFrame
+        file_name = 'TB_FORMA'
+        df = download_table_dbf(file_name)
+        # Renomeia colunas especificadas
+        df.rename(index=str, columns={'CO_FORMA': 'ID', 'NO_FORMA': 'FORMA'}, inplace=True)
+        # Remove coluna indesejáveL do objeto pandas DataFrame
+        df = df.drop(['DT_COMPET'], axis=1)
+        # Torna UPPERCASE os valores da coluna FORMA
+        df['FORMA'] = df['FORMA'].str.upper()
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
         return df

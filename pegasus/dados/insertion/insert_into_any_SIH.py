@@ -124,6 +124,9 @@ def insert_into_most_SIH_RD_tables(path, device, child_db):
     df_TB_SUBGR = data_sih_auxiliary.get_TB_SUBGR_treated()
     df_TB_SUBGR.to_sql('subgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_TB_FORMA = data_sih_auxiliary.get_TB_FORMA_treated()
+    df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
 ############################################################################################################################################################################
@@ -191,6 +194,9 @@ def insert_into_most_SIH_SP_tables(path, device, child_db):
 
     df_TB_SUBGR = data_sih_auxiliary.get_TB_SUBGR_treated()
     df_TB_SUBGR.to_sql('subgrupo', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_TB_FORMA = data_sih_auxiliary.get_TB_FORMA_treated()
+    df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
 ###########################################################################################################################################################################

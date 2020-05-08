@@ -53,7 +53,8 @@ def create_tables(connection_data, child_db):
                                                                   "SP_QT_PROC"              FLOAT,
                                                                   "SP_U_AIH"                NUMERIC,
                                                                   "GRUPO"                   VARCHAR(2),
-                                                                  "SUBGRUPO"                VARCHAR(4));
+                                                                  "SUBGRUPO"                VARCHAR(4),
+                                                                  "FORMA"                   VARCHAR(6));
 
                        /*Tabela dos tipos de procedimento realizado*/
                        CREATE TABLE IF NOT EXISTS {child_db}.spprocrea("ID"                 VARCHAR(10),
@@ -177,6 +178,10 @@ def create_tables(connection_data, child_db):
                        /*Tabela dos subgrupos de procedimentos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
                                                                       "SUBGRUPO"            VARCHAR(100));
+
+                       /*Tabela das formas de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.forma("ID"                     VARCHAR(6),
+                                                                   "FORMA"                  VARCHAR(100));
 
                        /*Tabela de Arquivos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),

@@ -93,7 +93,8 @@ def create_tables(connection_data, child_db):
                                                                   "VAL_SH_GES"              FLOAT,
                                                                   "VAL_SP_GES"              FLOAT,
                                                                   "GRUPO"                   VARCHAR(2),
-                                                                  "SUBGRUPO"                VARCHAR(4));
+                                                                  "SUBGRUPO"                VARCHAR(4),
+                                                                  "FORMA"                   VARCHAR(6));
 
                        /*Tabela dos tipos de AIH*/
                        CREATE TABLE IF NOT EXISTS {child_db}.ident("ID"                     VARCHAR(2),
@@ -273,6 +274,10 @@ def create_tables(connection_data, child_db):
                        /*Tabela dos subgrupos de procedimentos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),
                                                                       "SUBGRUPO"            VARCHAR(100));
+
+                       /*Tabela das formas de procedimentos*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.forma("ID"                     VARCHAR(6),
+                                                                   "FORMA"                  VARCHAR(100));
 
                        /*Tabela de Arquivos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),

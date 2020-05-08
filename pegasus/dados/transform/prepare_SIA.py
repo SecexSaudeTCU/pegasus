@@ -76,9 +76,11 @@ class DataSiaMain:
             for col in dif_set:
                 df[col].replace(np.nan, '', inplace=True)
 
-            # Inserção de coluna de grupo e subgrupo do procedimento
+            # Inserção de coluna de grupo, subgrupo e forma do procedimento realizado
             df['GRUPO'] = df['PA_PROC_ID'].apply(lambda x: x[:2])
             df['SUBGRUPO'] = df['PA_PROC_ID'].apply(lambda x: x[:4])
+            df['FORMA'] = df['PA_PROC_ID'].apply(lambda x: x[:6])
+
 
             # Simplifica/corrige a apresentação dos dados das colunas especificadas
             df['PA_CODUNI'] = df['PA_CODUNI'].apply(lambda x: x.zfill(7))
@@ -186,7 +188,7 @@ class DataSiaMain:
                                  'PA_DOCORIG', 'PA_CBOCOD', 'PA_MOTSAI', 'PA_CIDPRI', 'PA_CIDSEC',
                                  'PA_CIDCAS', 'PA_CATEND', 'PA_FLIDADE', 'PA_SEXO', 'PA_RACACOR',
                                  'PA_MUNPCN', 'PA_INDICA', 'PA_CODOCO', 'PA_ETNIA', 'PA_SRC_C',
-                                 'PA_INE', 'PA_NAT_JUR', 'GRUPO', 'SUBGRUPO']):
+                                 'PA_INE', 'PA_NAT_JUR', 'GRUPO', 'SUBGRUPO', 'FORMA']):
                 df[col].replace('', 'NA', inplace=True)
 
             # Substitui uma string vazia por None nas colunas de atributos especificadas
@@ -233,7 +235,7 @@ class DataSiaMain:
                                           'PA_CODOCO': 'PACODOCO_ID', 'PA_ETNIA': 'PAETNIA_ID',
                                           'PA_SRC_C': 'PASRCC_ID', 'PA_INE': 'PAINE_ID',
                                           'PA_NAT_JUR': 'PANATJUR_ID', 'GRUPO': 'GRUPO_ID',
-                                          'SUBGRUPO': 'SUBGRUPO_ID'}, inplace=True)
+                                          'SUBGRUPO': 'SUBGRUPO_ID', 'FORMA': 'FORMA_ID'}, inplace=True)
 
             print(f'Tratou o arquivo PA{self.state}{self.year}{self.month} (shape final: {df.shape[0]} x {df.shape[1]}).')
 
@@ -768,6 +770,22 @@ class DataSiaAuxiliary:
         df = df.drop(['DT_COMPET'], axis=1)
         # Torna UPPERCASE os valores da coluna SUBGRUPO
         df['SUBGRUPO'] = df['SUBGRUPO'].str.upper()
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+        return df
+
+
+    # Função para adequar e formatar as colunas e valores da Tabela TB_FORMA (arquivo TB_FORMA.dbf)
+    def get_TB_FORMA_treated(self):
+        # Conversão da Tabela TB_FORMA para um objeto pandas DataFrame
+        file_name = 'TB_FORMA'
+        df = download_table_dbf(file_name)
+        # Renomeia colunas especificadas
+        df.rename(index=str, columns={'CO_FORMA': 'ID', 'NO_FORMA': 'FORMA'}, inplace=True)
+        # Remove coluna indesejáveL do objeto pandas DataFrame
+        df = df.drop(['DT_COMPET'], axis=1)
+        # Torna UPPERCASE os valores da coluna FORMA
+        df['FORMA'] = df['FORMA'].str.upper()
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
         return df
