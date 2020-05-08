@@ -2,13 +2,22 @@ import psycopg2
 import yaml
 
 
-def get_conexao_banco(arquivo_configuracao):
-    with open(arquivo_configuracao, "r") as ymlfile:
-        cfg = yaml.load(ymlfile)
-    config_banco = cfg['postgres_sql']
-    conexao = psycopg2.connect(user=config_banco['user'],
-                                    password=config_banco['password'],
-                                    host=config_banco['host'],
-                                    port=config_banco['port'],
-                                    database=config_banco['database'])
-    return conexao
+class ConfiguracoesConexaoPostgresSQL:
+
+    def __init__(self, arquivo_configuracao='config.yml'):
+        with open(arquivo_configuracao, "r") as ymlfile:
+            cfg = yaml.load(ymlfile)
+        self.config_banco = cfg['postgres_sql']
+
+    def get_conexao(self):
+        conexao = psycopg2.connect(user=self.config_banco['user'],
+                                   password=self.config_banco['password'],
+                                   host=self.config_banco['host'],
+                                   port=self.config_banco['port'],
+                                   database=self.config_banco['database'])
+        return conexao
+
+    def get_string_conexao(self):
+        return '%s+%s://%s:%s@%s:%s/%s' % (
+            'postgresql', 'psycopg2', self.config_banco['user'], self.config_banco['password'],
+            self.config_banco['host'], self.config_banco['port'], self.config_banco['database'])

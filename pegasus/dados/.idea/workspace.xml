@@ -2,23 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ed934fd-b8f4-41ff-8dec-641c1611abb2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/extract/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/extract/download.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/insertion/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/insertion/insert_dados_populacionais.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/util/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/util/postgres/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data-adapter/util/postgres/conexao.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_any.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_any.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transform/extract/folder.py" beforeDir="false" afterPath="$PROJECT_DIR$/transform/extract/folder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-adapter/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/util/postgres/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-adapter/repositorio_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/util/postgres/repositorio_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-adapter/sia/repositorio_sia.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/sia/repositorio_sia.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-adapter/sih/repositorio_sih.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/sih/repositorio_sih.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/insertion/insert_dados_populacionais.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/sih/util/cargas/ibge/insertion/insert_dados_populacionais.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data-adapter/util/postgres/conexao.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/util/postgres/conexao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data-adapter/util/postgres/repositorio_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/util/postgres/repositorio_util.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,11 +16,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main_any.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="259" selection-start-line="259" selection-end-line="259" />
+            <state relative-caret-position="132">
+              <caret line="235" column="58" lean-forward="true" selection-start-line="235" selection-start-column="58" selection-end-line="235" selection-end-column="58" />
+              <folding>
+                <element signature="e#508#517#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/sqlalchemy/engine/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="84" column="4" selection-start-line="84" selection-start-column="4" selection-end-line="84" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -40,8 +40,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/schemas/sql_CNES_DC_postgreSQL.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="132" column="79" selection-start-line="132" selection-start-column="71" selection-end-line="132" selection-end-column="79" />
+            <state relative-caret-position="-1891">
+              <caret line="24" column="60" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="60" />
             </state>
           </provider>
         </entry>
@@ -49,17 +49,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/transform/extract/folder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
+            <state relative-caret-position="170">
               <caret line="10" column="49" selection-start-line="10" selection-start-column="49" selection-end-line="10" selection-end-column="49" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/transform/prepare_CNES.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="82" selection-start-line="82" selection-end-line="82" />
+            <state relative-caret-position="622">
+              <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/insertion/insert_into_any_SIH.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="510">
+              <caret line="151" lean-forward="true" selection-start-line="151" selection-end-line="151" />
             </state>
           </provider>
         </entry>
@@ -110,6 +119,11 @@
             <path>
               <item name="dados" type="b2602c69:ProjectViewProjectNode" />
               <item name="dados" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dados" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dados" type="462c0819:PsiDirectoryNode" />
+              <item name="insertion" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dados" type="b2602c69:ProjectViewProjectNode" />
@@ -196,10 +210,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48945147" visible="true" weight="0.24438573" />
-      <window_info id="Structure" order="1" sideWeight="0.51054853" side_tool="true" visible="true" weight="0.24438573" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48797736" visible="true" weight="0.24438573" />
+      <window_info id="Structure" order="1" sideWeight="0.5120226" side_tool="true" visible="true" weight="0.24438573" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32956153" />
@@ -283,17 +296,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/insertion/data_wrangling/online/download_SIA.py" />
     <entry file="file://$PROJECT_DIR$/insertion/data_wrangling/prepare_SIA.py" />
-    <entry file="file://$PROJECT_DIR$/main_any.py">
+    <entry file="file://$PROJECT_DIR$/transform/extract/folder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="259" selection-start-line="259" selection-end-line="259" />
+        <state relative-caret-position="170">
+          <caret line="10" column="49" selection-start-line="10" selection-start-column="49" selection-end-line="10" selection-end-column="49" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/transform/extract/folder.py">
+    <entry file="file://$PROJECT_DIR$/transform/prepare_CNES.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="10" column="49" selection-start-line="10" selection-start-column="49" selection-end-line="10" selection-end-column="49" />
+        <state relative-caret-position="622">
+          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/sqlalchemy/engine/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="84" column="4" selection-start-line="84" selection-start-column="4" selection-end-line="84" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -306,15 +326,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/schemas/sql_CNES_DC_postgreSQL.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="132" column="79" selection-start-line="132" selection-start-column="71" selection-end-line="132" selection-end-column="79" />
+        <state relative-caret-position="-1891">
+          <caret line="24" column="60" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="60" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/transform/prepare_CNES.py">
+    <entry file="file://$PROJECT_DIR$/insertion/insert_into_any_SIH.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="82" selection-start-line="82" selection-end-line="82" />
+        <state relative-caret-position="510">
+          <caret line="151" lean-forward="true" selection-start-line="151" selection-end-line="151" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_any.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="235" column="58" lean-forward="true" selection-start-line="235" selection-start-column="58" selection-end-line="235" selection-end-column="58" />
+          <folding>
+            <element signature="e#508#517#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
