@@ -1,12 +1,11 @@
 import pandas as pd
 
-# Dúvidas:
-# - Onde recuperar a informação sobre forma/grupo/subgrupo?
-# - Temos script de carga da base do IBGE?
 from util.postgres.repositorio_util import RepositorioPostgresSQL
 
-
 class RepositorioSIH(RepositorioPostgresSQL):
+
+    def __init__(self):
+        super(RepositorioSIH, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
 
     def get_df_estabelecimento_regiao_saude(self):
         """
@@ -21,8 +20,19 @@ class RepositorioSIH(RepositorioPostgresSQL):
         return df
 
     def get_df_descricao_procedimento(self):
-        # TODO
-        pass
+        """
+        Retorna as descrições dos procedimentos, bem como dos seus grupos, subgrupos e formas.
+        :return:
+        """
+        sql = 'select p."PROCREA_ID", p."GRUPO", g."GRUPO" as DSC_GRUPO, p."SUBGRUPO", s."SUBGRUPO" as DSC_SUBGRUPO, ' \
+              'p."FORMA" as COD_FORMA, f."FORMA" as DSC_FORMA, pr."PROCEDIMENTO" as DSC_PROC ' \
+              'from sih_rd.rdbr p ' \
+              'join sih_rd.grupo g on p."GRUPO" = g."ID" ' \
+              'join sih_rd.subgrupo s on p."SUBGRUPO" = s."ID" ' \
+              'join sih_rd.forma f on p."FORMA" = f."ID" ' \
+              'join sih_rd.procrea pr on p."PROCREA_ID" = pr."ID"'
+        df = pd.read_sql(sql, self.conexao)
+        return df
 
     def get_df_populacao(self):
         # TODO

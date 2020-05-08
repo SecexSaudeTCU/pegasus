@@ -1,5 +1,5 @@
 from util.postgres.conexao import ConfiguracoesConexaoPostgresSQL
-from sih.util.cargas.ibge.extract.download import get_dados_populacionais
+from ibge.extract.download import get_dados_populacionais
 from sqlalchemy import create_engine
 
 def criar_esquema(config, child_db):
@@ -42,6 +42,7 @@ def inserir_dados(config, child_db):
     # Cria um "engine" para o banco de dados mãe "DB_NAME" usando a função "create_engine" do SQLAlchemy
     engine = create_engine(DATABASE_URI)
 
+    #Remove em particular a última linha, que possui ID textual.
     df = df[df.ID.apply(lambda x: x.isnumeric())]
 
     df.to_sql('populacao', con=engine, schema=child_db, if_exists='append', index=False, index_label='ID')
