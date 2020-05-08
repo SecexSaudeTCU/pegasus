@@ -91,8 +91,7 @@ def files_in_ftp_db(child_db):
         # Concatena todos os objetos pandas DataFrame que são elem de "frames" como o objeto pandas DataFrame "df_ftp"
         df_ftp = pd.concat(frames, ignore_index=True)
         # Considera apenas as linhas de "df_ftp" cuja coluna "NOME" começa pelas string "DC" ou "EE" ... ou "ST"
-        #df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^DC)|(^EE)|(^EF)|(^EP)|(^EQ)|(^GM)|(^HB)|(^IN)|(^LT)|(^PF)|(^RC)|(^SR)|(^ST)')]
-        df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^DC)|(^EF)|(^EQ)|(^LT)|(^PF)|(^SR)|(^ST)')]
+        df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^DC)|(^EE)|(^EF)|(^EP)|(^EQ)|(^GM)|(^HB)|(^IN)|(^LT)|(^PF)|(^RC)|(^SR)|(^ST)')]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" se refira aos anos de 2007
         df_ftp = df_ftp[~df_ftp['NOME'].str.match(pat='(^EE.{2}07)|(^EF.{2}07)|(^EP.{2}07)|(^HB.{2}07)|(^IN.{2}07)|(^RC.{2}07)')]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" inicie por "GM" e se refira aos anos de 2007 a 2014
