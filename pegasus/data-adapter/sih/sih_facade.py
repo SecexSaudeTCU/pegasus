@@ -1,4 +1,4 @@
-from sih.repositorio_sih import RepositorioSIH
+from sih.dao_sih import DaoSIH
 
 
 def get_df_descricao_procedimento(repositorio):
@@ -26,7 +26,7 @@ def get_df_procedimentos_realizados_por_municipio_mes(repositorio):
 
 
 if __name__ == '__main__':
-    repositorio = RepositorioSIH()
+    repositorio = DaoSIH()
 
     df = repositorio.get_df_coordenadas()
     print(df.head())

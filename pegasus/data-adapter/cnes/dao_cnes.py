@@ -1,10 +1,10 @@
-from util.postgres.repositorio_util import RepositorioPostgresSQL
+from util.postgres.dao_util import DaoPostgresSQL
 import pandas as pd
 
 
-class RepositorioCNES(RepositorioPostgresSQL):
+class DaoCNES(DaoPostgresSQL):
     def __init__(self):
-        super(RepositorioCNES, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
+        super(DaoCNES, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
 
     def get_df_estabelecimento_regiao_saude(self):
         """
@@ -19,6 +19,6 @@ class RepositorioCNES(RepositorioPostgresSQL):
         return df
 
 if __name__ == '__main__':
-    repositorio = RepositorioCNES()
+    repositorio = DaoCNES()
     df = repositorio.get_df_estabelecimento_regiao_saude()
     print(df.head())

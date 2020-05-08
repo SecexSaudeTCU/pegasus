@@ -1,12 +1,12 @@
 import pandas as pd
 
-from util.postgres.repositorio_util import RepositorioPostgresSQL
+from util.postgres.dao_util import DaoPostgresSQL
 
 
-class RepositorioSIH(RepositorioPostgresSQL):
+class DaoSIH(DaoPostgresSQL):
 
     def __init__(self):
-        super(RepositorioSIH, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
+        super(DaoSIH, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
 
     def get_df_descricao_procedimento(self):
         """
