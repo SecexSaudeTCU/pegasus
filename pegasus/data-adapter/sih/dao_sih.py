@@ -8,7 +8,7 @@ class DaoSIH(DaoPostgresSQL):
     def __init__(self):
         super(DaoSIH, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
 
-    def get_df_descricao_procedimento(self):
+    def get_df_descricao_procedimentos(self):
         """
         Retorna as descrições dos procedimentos, bem como dos seus grupos, subgrupos e formas.
         :return:
@@ -20,14 +20,6 @@ class DaoSIH(DaoPostgresSQL):
               'join sih_rd.subgrupo s on p."SUBGRUPO" = s."ID" ' \
               'join sih_rd.forma f on p."FORMA" = f."ID" ' \
               'join sih_rd.procrea pr on p."PROCREA_ID" = pr."ID"'
-        df = pd.read_sql(sql, self.conexao)
-        return df
-
-    def get_df_populacao(self):
-        sql = 'SELECT m."ID" as COD_MUNICIPIO, m."MUNNOME" NM_MUNICIPIO, uf."SIGLA_UF", pop."POPULACAO", m."RSAUDCOD" ' \
-              'from ibge.POPULACAO pop ' \
-              'join sih_rd.ufzi m on m."ID" = pop."ID" ' \
-              'join sih_rd.ufcod uf on uf."ID" = m."UFCOD_ID"'
         df = pd.read_sql(sql, self.conexao)
         return df
 
@@ -52,3 +44,15 @@ class DaoSIH(DaoPostgresSQL):
                                                'group by "ANO_RD", "PROCREA_ID", "UFZI_ID"'
         df = pd.read_sql(sql, self.conexao)
         return df
+
+if __name__ == '__main__':
+    dao = DaoSIH()
+
+    df = dao.get_df_coordenadas()
+    print(df.head())
+
+    df = dao.get_df_procedimentos_realizados_por_municipio(2018)
+    print(df.head())
+
+    df = dao.get_df_descricao_procedimentos()
+    print(df.head())
