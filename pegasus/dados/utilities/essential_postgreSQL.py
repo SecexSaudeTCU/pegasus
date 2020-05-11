@@ -66,7 +66,8 @@ def get_dbc_info(ftp_path):
     # cada fatia como um objeto string de um objeto list e pega apenas o primeiro e o último elemento desse...
     # objeto list colocando como um elemento da list "list_file_names"
     for elem in list_ftp_files:
-        list_file_dates.append(datetime.strptime(elem.split()[0], '%m-%d-%y').date()) # Já converte o objeto string para date
+        list_file_dates.append(datetime.strptime(elem.split()[0], '%m-%d-%y').date()) # Já converte o objeto string
+                                                                                      # para date
         list_file_names.append(elem.split()[-1])
 
     # Cria um objeto pandas DataFrame para armazenar o nome dos arquivos de dados "dbc", o diretório onde o...
@@ -127,9 +128,11 @@ def files_in_ftp_base(name_base):
         # Concatena todos os objetos pandas DataFrame que são elem de "frames" como o objeto pandas DataFrame "df_ftp"
         df_ftp = pd.concat(frames, ignore_index=True)
         # Considera apenas as linhas de "df_ftp" cuja coluna "NOME" começa pelas string "DC" ou "EE" ... ou "ST"
-        df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^DC)|(^EE)|(^EF)|(^EP)|(^EQ)|(^GM)|(^HB)|(^IN)|(^LT)|(^PF)|(^RC)|(^SR)|(^ST)')]
+        df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^DC)|(^EE)|(^EF)|(^EP)|(^EQ)|(^GM)|(^HB)|\
+                                                      (^IN)|(^LT)|(^PF)|(^RC)|(^SR)|(^ST)')]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" se refira aos anos de 2007
-        df_ftp = df_ftp[~df_ftp['NOME'].str.match(pat='(^EE.{2}07)|(^EF.{2}07)|(^EP.{2}07)|(^HB.{2}07)|(^IN.{2}07)|(^RC.{2}07)')]
+        df_ftp = df_ftp[~df_ftp['NOME'].str.match(pat='(^EE.{2}07)|(^EF.{2}07)|(^EP.{2}07)|\
+                                                       (^HB.{2}07)|(^IN.{2}07)|(^RC.{2}07)')]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" inicie por "GM" e se refira aos anos de 2007 a 2014
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^GM.{2}0[7-9].{2}', regex=True)]
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^GM.{2}1[0-4].{2}', regex=True)]
@@ -221,25 +224,25 @@ def files_in_ftp_subbase(name_subbase):
     # CNES
     if name_subbase.startswith('cnes'):
         # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do CNES) do Datasus
-        folder = child_db[-2:].upper() + '/'
+        folder = name_subbase[-2:].upper() + '/'
         datasus_path = '/dissemin/publicos/CNES/200508_/Dados/' + folder
 
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
 
-        if name_bd[-2:] in np.array(['ep', 'hb', 'rc', 'ee', 'ef', 'in']):
-            # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de dados do
-            # cnes_ep, cnes_hb, cnes_rc, cnes_ee, cnes_ef, cnes_in do ano de 2007
+        if name_subbase[-2:] in np.array(['ep', 'hb', 'rc', 'ee', 'ef', 'in']):
+            # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de...
+            # dados do cnes_ep, cnes_hb, cnes_rc, cnes_ee, cnes_ef, cnes_in do ano de 2007
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}07.{2}', regex=True)]
-        elif name_bd[-2:] in np.array(['gm']):
-            # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de dados do
-            # cnes_gm dos anos de 2007 a 2014
+        elif name_subbase[-2:] in np.array(['gm']):
+            # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de...
+            # dados do cnes_gm dos anos de 2007 a 2014
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}0[7-9].{2}', regex=True)]
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}1[0-4].{2}', regex=True)]
         else:
-            # Desconsideração das linhas de "ddf_ftp" representativa de quaisquer tipos de arquivos principais de dados do
-            # CNES do ano de 2005, exceto do cnes_ep, cnes_hb, cnes_rc, cnes_gm, cnes_ee, cnes_ef, cnes_in
+            # Desconsideração das linhas de "ddf_ftp" representativa de quaisquer tipos de arquivos principais de...
+            # dados do CNES do ano de 2005, exceto do cnes_ep, cnes_hb, cnes_rc, cnes_gm, cnes_ee, cnes_ef, cnes_in
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05.{2}', regex=True)]
 
         # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
@@ -254,13 +257,13 @@ def files_in_ftp_subbase(name_subbase):
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
 
-        if name_bd == 'sih_rd':
+        if name_subbase == 'sih_rd':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "RD" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('RD')]
             # Sem dados esse arquivo
             df_ftp = df_ftp[~df_ftp['NOME'].str.startswith('RDAC0909')]
-        elif name_bd == 'sih_sp':
+        elif name_subbase == 'sih_sp':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "SP" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('SP')]
@@ -277,7 +280,7 @@ def files_in_ftp_subbase(name_subbase):
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
 
-        if name_bd == 'sia_pa':
+        if name_subbase == 'sia_pa':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "PA" relativa ao banco de dados dos Procedimentos Ambulatoriais
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('PA')]
@@ -443,12 +446,14 @@ def get_tables_counts_subdb(pointer, name_subdb):
             print('%r' % (row,))
             if row[0] == name_subdb:
                 if row[1] not in dict_tables_pg:
-                    # Preenche o objeto dict tendo como key o nome da tabela "row[1]" e como value o nome da primeira coluna ("row[3]")
+                    # Preenche o objeto dict tendo como key o nome da tabela "row[1]" e como value o nome da...
+                    # primeira coluna ("row[3]")
                     dict_tables_pg.update({row[1]: row[3]})
 
         # Remove apenas a key da tabela principal do "name_subdb"
         dict_tables_pg.pop(main_table, None)
-        # Cria um objeto dict para alojar como key o nome de cada tabela contida em "dict_tables_pg" e como value a quantidade de registros da tabela
+        # Cria um objeto dict para alojar como key o nome de cada tabela contida em "dict_tables_pg" e como...
+        # value a quantidade de registros da tabela
         dict_tables_size_pg = {}
         # Iteração sobre cada nome de tabela contido em "dict_tables_pg"
         for table in dict_tables_pg:
@@ -457,7 +462,8 @@ def get_tables_counts_subdb(pointer, name_subdb):
             for row in pointer:
                 # Coleta o número de registros contidos em "table"
                 size = row[0]
-                # Preenche um objeto dict tendo como key o nome da tabela "table" e como value o número de registros "size"
+                # Preenche um objeto dict tendo como key o nome da tabela "table" e como value o número de...
+                # registros "size"
                 dict_tables_size_pg.update({table: size})
         return dict_tables_size_pg
 
