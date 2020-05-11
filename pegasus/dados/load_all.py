@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 
-from utilities.essential_postgreSQL import files_in_ftp_db, get_tables_e_count_db, files_loaded, files_to_load
+from utilities.essential_postgreSQL import files_in_ftp_base, get_tables_counts_db, files_loaded, files_to_load
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -106,9 +106,9 @@ if __name__ == '__main__':
     most_tables = getattr(module1, str_most)
     main_tables = getattr(module1, str_main)
 
-    # Chama a função "files_in_ftp_db" contida no módulo "essential_postgreSQL" do package "utilities" tendo como parâmetro...
-    # a variável "datasus_db"
-    df_arquivos_ftp = files_in_ftp_db(datasus_db)
+    # Chama a função "files_in_ftp_base" contida no módulo "essential_postgreSQL" do package "utilities" tendo como...
+    # parâmetro a variável "datasus_db"
+    df_arquivos_ftp = files_in_ftp_base(datasus_db)
     os.remove('stuff_ftp_files.txt')
 
     # Dados de conexão 1 (portanto o DB_NAME já deve ter sido previamente criado com esses dados)
@@ -129,8 +129,8 @@ if __name__ == '__main__':
         # Inicializa o schema denominado "datasus_db" no banco de dados mãe "DB_NAME"
         cursor.execute(f'CREATE SCHEMA IF NOT EXISTS {datasus_db};')
         conn.commit()
-        # Chama a função "get_tables_e_count_db" contida no módulo "essential_postgreSQL" do package "utilities"
-        dict_tabelas_e_counts_pg = get_tables_e_count_db(cursor, datasus_db)
+        # Chama a função "get_tables_counts_db" contida no módulo "essential_postgreSQL" do package "utilities"
+        dict_tabelas_e_counts_pg = get_tables_counts_db(cursor, datasus_db)
         # Encerra o cursor
         cursor.close()
         # Encerra a conexão

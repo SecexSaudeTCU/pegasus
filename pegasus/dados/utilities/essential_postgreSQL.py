@@ -7,20 +7,40 @@ from ftplib import FTP
 """
 Módulo com funções para obtenção de:
 
-1) lista de nomes (e outros metadados) dos arquivos principais de dados de base de dados constante de um ou
-mais diretórios do servidor FTP do Datasus [get_dbc_info, files_in_ftp_db/files_in_ftp_sub_db];
+1) lista de nomes (e outros metadados) dos arquivos principais de dados de base de dados constante de um
+diretório do servidor FTP do Datasus [get_dbc_info];
 
-2) dicionário das tabelas auxiliares e respectivo número de registros de um banco ou sub-banco de dados
-[get_tables_e_count_db/get_tables_e_count_sub_db];
+2) seleciona determinadas linhas da lista de nomes (e outros metadados) dos arquivos principais de dados de
+uma base ou uma sub-base de dados do Datasus [files_in_ftp_base/files_in_ftp_subbase];
 
-3) dataframe com os nomes (e outros metadados) dos arquivos principais de dados de base de dados já carregados
-no respectivo banco de dados local [files_in_postgreSQL];
+3) dicionário dos nomes das tabelas auxiliares e o respectivo número de registros constantes de um banco ou
+sub-banco de dados PostgreSQL [get_tables_counts_db/get_tables_counts_subdb];
 
-4) dataframe com os nomes (e outros metadados) dos arquivos principais de dados de base de dados que ainda
-faltam inserir no respectivo banco de dados local [difference_files];
+4) dataframe com os nomes (e outros metadados) dos arquivos principais de dados de base de dados do Datasus
+já carregados no respectivo banco de dados PostgreSQL [files_loaded];
+
+5) dataframe com os nomes (e outros metadados) dos arquivos principais de dados de base de dados do Datasus
+ que ainda faltam inserir no respectivo banco de dados PostgreSQL [files_to_load];
 """
 
+
 def get_dbc_info(ftp_path):
+    """
+    Criação de objeto pandas DataFrame contendo nomes (e outros metadados) dos arquivos principais de dados
+    de base de dados do Datasus constante do diretório FTP "ftp_path".
+
+    Parâmetros
+    ----------
+    ftp_path: objeto str
+        String do diretório FTP
+
+    Retorno
+    -------
+    df_files: objeto pandas dataframe
+        Dataframe tendo como colunas o nome, o diretório e a data de inserção de cada arquivo principal de
+        um diretório FTP do Datasus
+    """
+
     # Muda para o diretório "ftp_path" onde estão os arquivos principais de dados relativos ao "folder_name"
     ftp.cwd(ftp_path)
     # Coleta os "Nome", "Tamanho" e "Data da modificação" dos arquivos contidos no diretório "ftp_path"...
@@ -59,7 +79,23 @@ def get_dbc_info(ftp_path):
     return df_files
 
 
-def files_in_ftp_db(child_db):
+def files_in_ftp_base(name_base):
+    """
+    Seleciona determinadas linhas do objeto pandas DataFrame retornado pela função "get_dbc_info" e relativo
+    a uma base de dados do Datasus denominada "name_base" em lowercase.
+
+    Parâmetros
+    ----------
+    name_base: objeto str
+        String do nome (lowercase) de uma base de dados do Datasus
+
+    Retorno
+    -------
+    df_ftp: objeto pandas dataframe
+        Dataframe tendo como colunas o nome, o diretório e a data de inserção dos arquivos principais de dados
+        selecionados de uma base de dados do Datasus
+    """
+
     # Host domain
     host = 'ftp.datasus.gov.br'
     # Criação de objeto FTP como uma variável global
@@ -69,8 +105,8 @@ def files_in_ftp_db(child_db):
     ftp.login()
 
     # CNES
-    if child_db == 'cnes':
-        # Diretório do host onde estão os dados do banco de dados "child_db" (CNES) do Datasus
+    if name_base == 'cnes':
+        # Diretório do host onde estão os dados da base de dados "name_base" (CNES) do Datasus
         ftp_path = '/dissemin/publicos/CNES/200508_/Dados/'
         # Muda para o diretório "ftp_path" que contém 13 pastas com os arquivos principais de dados
         ftp.cwd(ftp_path)
@@ -103,8 +139,8 @@ def files_in_ftp_db(child_db):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIH
-    elif child_db == 'sih':
-        # Diretório do host onde estão os dados do banco de dados "child_db" (SIH) do Datasus
+    elif name_base == 'sih':
+        # Diretório do host onde estão os dados da base de dados "name_base" (SIH) do Datasus
         datasus_path = '/dissemin/publicos/SIHSUS/200801_/Dados/'
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
@@ -117,8 +153,8 @@ def files_in_ftp_db(child_db):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIM
-    elif child_db == 'sim':
-        # Diretório do host onde estão os dados do banco de dados "child_db" (SIM) do Datasus
+    elif name_base == 'sim':
+        # Diretório do host onde estão os dados da base de dados "name_base" (SIM) do Datasus
         datasus_path = '/dissemin/publicos/SIM/CID10/DORES/'
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
@@ -133,8 +169,8 @@ def files_in_ftp_db(child_db):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DO.{2}201[8-9]', regex=True)]
 
     # SINASC
-    elif child_db == 'sinasc':
-        # Diretório do host onde estão os dados do banco de dados "child_db" (SINASC) do Datasus
+    elif name_base == 'sinasc':
+        # Diretório do host onde estão os dados da base de dados "name_base" (SINASC) do Datasus
         datasus_path = '/dissemin/publicos/SINASC/NOV/DNRES/'
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
@@ -157,7 +193,23 @@ def files_in_ftp_db(child_db):
     return df_ftp
 
 
-def files_in_ftp_sub_db(child_db):
+def files_in_ftp_subbase(name_subbase):
+    """
+    Seleciona determinadas linhas do objeto pandas DataFrame retornado pela função "get_dbc_info" e relativo
+    a uma sub-base de dados do Datasus denominada "name_subbase" em lowercase.
+
+    Parâmetros
+    ----------
+    name_subbase: objeto str
+        String do nome (lowercase) de uma sub-base de dados do Datasus
+
+    Retorno
+    -------
+    df_ftp: objeto pandas dataframe
+        Dataframe tendo como colunas o nome, o diretório e a data de inserção dos arquivos principais de dados
+        selecionados de uma sub-base de dados do Datasus
+    """
+
     # Host domain
     host = 'ftp.datasus.gov.br'
     # Criação de objeto FTP como uma variável global
@@ -167,8 +219,8 @@ def files_in_ftp_sub_db(child_db):
     ftp.login()
 
     # CNES
-    if child_db.startswith('cnes'):
-        # Diretório do host onde estão os dados do banco de dados "child_db" (integrante do CNES) do Datasus
+    if name_subbase.startswith('cnes'):
+        # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do CNES) do Datasus
         folder = child_db[-2:].upper() + '/'
         datasus_path = '/dissemin/publicos/CNES/200508_/Dados/' + folder
 
@@ -176,11 +228,11 @@ def files_in_ftp_sub_db(child_db):
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
 
-        if child_db[-2:] in np.array(['ep', 'hb', 'rc', 'ee', 'ef', 'in']):
+        if name_bd[-2:] in np.array(['ep', 'hb', 'rc', 'ee', 'ef', 'in']):
             # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de dados do
             # cnes_ep, cnes_hb, cnes_rc, cnes_ee, cnes_ef, cnes_in do ano de 2007
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}07.{2}', regex=True)]
-        elif child_db[-2:] in np.array(['gm']):
+        elif name_bd[-2:] in np.array(['gm']):
             # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de dados do
             # cnes_gm dos anos de 2007 a 2014
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}0[7-9].{2}', regex=True)]
@@ -194,21 +246,21 @@ def files_in_ftp_sub_db(child_db):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIH
-    elif child_db.startswith('sih'):
-        # Diretório do host onde estão os dados do banco de dados "child_db" (integrante do SIH) do Datasus
+    elif name_subbase.startswith('sih'):
+        # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do SIH) do Datasus
         datasus_path = '/dissemin/publicos/SIHSUS/200801_/Dados/'
 
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
 
-        if child_db == 'sih_rd':
+        if name_bd == 'sih_rd':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "RD" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('RD')]
             # Sem dados esse arquivo
             df_ftp = df_ftp[~df_ftp['NOME'].str.startswith('RDAC0909')]
-        elif child_db == 'sih_sp':
+        elif name_bd == 'sih_sp':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "SP" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('SP')]
@@ -217,15 +269,15 @@ def files_in_ftp_sub_db(child_db):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIA
-    elif child_db.startswith('sia'):
-        # Diretório do host onde estão os dados do banco de dados "child_db" (integrante do SIA) do Datasus
+    elif name_subbase.startswith('sia'):
+        # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do SIA) do Datasus
         datasus_path = '/dissemin/publicos/SIASUS/200801_/Dados/'
 
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
 
-        if child_db == 'sia_pa':
+        if name_bd == 'sia_pa':
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "PA" relativa ao banco de dados dos Procedimentos Ambulatoriais
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('PA')]
@@ -241,8 +293,8 @@ def files_in_ftp_sub_db(child_db):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SINAN
-    elif child_db.startswith('sinan'):
-        # Diretório do host onde estão os dados do banco de dados "child_db" (SINAN) do Datasus
+    elif name_subbase.startswith('sinan'):
+        # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do SINAN) do Datasus
         datasus_path = '/dissemin/publicos/SINAN/DADOS/FINAIS/'
 
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
@@ -261,18 +313,35 @@ def files_in_ftp_sub_db(child_db):
     return df_ftp
 
 
-def get_tables_e_count_db(pointer, child_db):
+def get_tables_counts_db(pointer, name_db):
+    """
+    Cria dicionário dos nomes das tabelas auxiliares com o respectivo número de registros constantes de um
+    banco de dados PostgreSQL.
 
-    if child_db == 'cnes':
+    Parâmetros
+    ----------
+    pointer: objeto cursor
+        Cursor de uma conexão psycopg2 com um banco de dados PostgreSQL
+    name_db: objeto str
+        String do nome de um banco de dados PostgreSQL
+
+    Retorno
+    -------
+    dict_tables_size_pg: objeto dict
+        Dicionário Python tendo como keys os nomes de tabelas auxiliares de um banco de dados PostgreSQL
+        e tendo como values as respectivas quantidades de registros
+    """
+
+    if name_db == 'cnes':
         main_tables = ['dcbr', 'eebr', 'efbr', 'epbr', 'eqbr', 'gmbr', 'hbbr',
                        'inbr', 'ltbr', 'pfbr', 'rcbr', 'srbr', 'stbr']
-    elif child_db == 'sih':
+    elif name_db == 'sih':
         main_tables = ['rdbr', 'spbr']
-    elif child_db == 'sim':
+    elif name_db == 'sim':
         main_tables = ['dobr']
-    elif child_db == 'sinasc':
+    elif name_db == 'sinasc':
         main_tables = ['dnbr']
-    elif child_db == 'sinan':
+    elif name_db == 'sinan':
         main_tables = ['dengbr']
 
     # Solicita a estrutura de tabelas de um banco de dados no PostgreSQL
@@ -297,37 +366,57 @@ def get_tables_e_count_db(pointer, child_db):
         for row in pointer:
             # Impressão na tela de cada "row" do comando executado pelo "pointer"
             print('%r' % (row,))
-            if row[0] == child_db:
+            if row[0] == name_db:
                 if row[1] not in dict_tables_pg:
-                    # Preenche o objeto dict tendo como key o nome da tabela "row[1]" e como value o nome da primeira coluna ("row[3]")
+                    # Preenche o objeto dict tendo como key o nome da tabela "row[1]" e...
+                    # tendo como value o nome da primeira coluna ("row[3]")
                     dict_tables_pg.update({row[1]: row[3]})
 
-        # Remove apenas a key da tabela principal do "child_db"
+        # Remove apenas as keys das tabelas principais do "name_db"
         for main_table in main_tables:
             dict_tables_pg.pop(main_table, None)
-        # Cria um objeto dict para alojar como key o nome de cada tabela contida em "dict_tables_pg" e como value a quantidade de registros da tabela
+        # Cria um objeto dict para alojar como key o nome de cada tabela contida em "dict_tables_pg" e...
+        # como value a quantidade de registros da tabela
         dict_tables_size_pg = {}
         # Iteração sobre cada nome de tabela contido em "dict_tables_pg"
         for table in dict_tables_pg:
-            # Obtém a contagem de registros da tabela "table" do "child_db"
-            pointer.execute(f'''SELECT COUNT('{dict_tables_pg[table]}') FROM {child_db}.{table}''')
+            # Obtém a contagem de registros da tabela "table" do "name_db"
+            pointer.execute(f'''SELECT COUNT('{dict_tables_pg[table]}') FROM {name_db}.{table}''')
             for row in pointer:
                 # Coleta o número de registros contidos em "table"
                 size = row[0]
-                # Preenche um objeto dict tendo como key o nome da tabela "table" e como value o número de registros "size"
+                # Preenche um objeto dict tendo como key o nome da tabela "table" e...
+                # como value o número de registros "size"
                 dict_tables_size_pg.update({table: size})
         return dict_tables_size_pg
 
 
-def get_tables_e_count_sub_db(pointer, child_db):
+def get_tables_counts_subdb(pointer, name_subdb):
+    """
+    Cria dicionário dos nomes das tabelas auxiliares com o respectivo número de registros constantes de um
+    sub-banco de dados PostgreSQL.
 
-    if child_db.startswith('cnes') or child_db.startswith('sih') or child_db.startswith('sia'):
-        main_table = child_db[-2:] + 'br'
-    elif name_db_pg == 'sim':
+    Parâmetros
+    ----------
+    pointer: objeto cursor
+        Cursor de uma conexão psycopg2 com um sub-banco de dados PostgreSQL
+    name_subdb: objeto str
+        String do nome de um sub-banco de dados PostgreSQL
+
+    Retorno
+    -------
+    dict_tables_size_pg: objeto dict
+        Dicionário Python tendo como keys os nomes de tabelas auxiliares de um sub-banco de dados PostgreSQL
+        e tendo como values as respectivas quantidades de registros
+    """
+
+    if name_subdb.startswith('cnes') or name_subdb.startswith('sih') or name_subdb.startswith('sia'):
+        main_table = name_subdb[-2:] + 'br'
+    elif name_subdb == 'sim':
         main_table = 'dobr'
-    elif name_db_pg == 'sinasc':
+    elif name_subdb == 'sinasc':
         main_table = 'dnbr'
-    elif name_db_pg == 'sinan_deng':
+    elif name_subdb == 'sinan_deng':
         main_table = 'dengbr'
 
     # Solicita a estrutura de tabelas de um banco de dados no PostgreSQL
@@ -352,19 +441,19 @@ def get_tables_e_count_sub_db(pointer, child_db):
         for row in pointer:
             # Impressão na tela de cada "row" do comando executado pelo "pointer"
             print('%r' % (row,))
-            if row[0] == child_db:
+            if row[0] == name_subdb:
                 if row[1] not in dict_tables_pg:
                     # Preenche o objeto dict tendo como key o nome da tabela "row[1]" e como value o nome da primeira coluna ("row[3]")
                     dict_tables_pg.update({row[1]: row[3]})
 
-        # Remove apenas a key da tabela principal do "name_db_pg"
+        # Remove apenas a key da tabela principal do "name_subdb"
         dict_tables_pg.pop(main_table, None)
         # Cria um objeto dict para alojar como key o nome de cada tabela contida em "dict_tables_pg" e como value a quantidade de registros da tabela
         dict_tables_size_pg = {}
         # Iteração sobre cada nome de tabela contido em "dict_tables_pg"
         for table in dict_tables_pg:
-            # Obtém a contagem de registros da tabela "table" do "child_db"
-            pointer.execute(f'''SELECT COUNT('{dict_tables_pg[table]}') FROM {child_db}.{table}''')
+            # Obtém a contagem de registros da tabela "table" do "name_subdb"
+            pointer.execute(f'''SELECT COUNT('{dict_tables_pg[table]}') FROM {name_subdb}.{table}''')
             for row in pointer:
                 # Coleta o número de registros contidos em "table"
                 size = row[0]
@@ -373,8 +462,29 @@ def get_tables_e_count_sub_db(pointer, child_db):
         return dict_tables_size_pg
 
 
-def files_loaded(structure_pg, child_db, e):
-    # O schema do "name_db_pg" não foi inserido no PostgreSQL
+def files_loaded(structure_pg, name_db, e):
+    """
+    Obtém lista de nomes (e outros metadados) dos arquivos principais de dados eventualmente carregados num
+    banco ou sub-banco de dados PostgreSQL.
+
+    Parâmetros
+    ----------
+    structure_pg: objeto dict
+        Dicionário Python tendo como keys os nomes de tabelas auxiliares de um banco ou sub-banco de dados
+        PostgreSQL e tendo como values as respectivas quantidades de registros
+    name_db: objeto str
+        String do nome de um banco ou sub-banco de dados PostgreSQL
+    e: objeto engine
+        Engine de comunicação com um banco ou sub-banco de dados PostgreSQL através do driver psycopg2
+
+    Retorno
+    -------
+    df_files_pg: objeto pandas DataFrame
+        Dataframe contendo nomes (e outros metadados) dos arquivos principais de dados eventualmente carregados
+        num banco ou sub-banco de dados PostgreSQL
+    """
+
+    # O schema do "name_db" não foi inserido no PostgreSQL
     if structure_pg == dict():
         print('\nThe schema of the PostgreSQL database has no tables at all!')
         # Cria um objeto pandas DataFrame vazio com as colunas especificadas
@@ -382,7 +492,7 @@ def files_loaded(structure_pg, child_db, e):
         # Coloca a coluna NOME como index do objeto pandas DataFrame
         df_files_pg.set_index('NOME')
         return df_files_pg
-    # Tabela "arquivos" não constante ainda do "name_db_pg" do PostgreSQL
+    # Tabela "arquivos" não constante ainda do "name_db" do PostgreSQL
     elif 'arquivos' not in structure_pg:
         print('\nThe schema of the PostgreSQL database does not contain the table arquivos.')
         # Cria um objeto pandas DataFrame vazio com as colunas especificadas
@@ -390,12 +500,12 @@ def files_loaded(structure_pg, child_db, e):
         # Coloca a coluna NOME como index do objeto pandas DataFrame
         df_files_pg.set_index('NOME')
         return df_files_pg
-    # Tabela "arquivos" já constante do "name_db_pg" do PostgreSQL
+    # Tabela "arquivos" já constante do "name_db" do PostgreSQL
     elif 'arquivos' in structure_pg:
         print('\nThe schema of the PostgreSQL database contains the table arquivos.')
-        # Coleta os nomes dos arquivos de dados da "name_db_pg" constantes do PostgreSQL e suas informações...
+        # Coleta os nomes dos arquivos de dados da "name_db" constantes do PostgreSQL e suas informações...
         # como um objeto pandas DataFrame
-        df_files_pg = pd.read_sql(f'''SELECT * FROM {child_db}.arquivos''', con=e, index_col='NOME')
+        df_files_pg = pd.read_sql(f'''SELECT * FROM {name_db}.arquivos''', con=e, index_col='NOME')
         if df_files_pg.shape[0] == 0:
             print('\nThe PostgreSQL database doest not contain main data file loaded.')
         else:
@@ -404,6 +514,26 @@ def files_loaded(structure_pg, child_db, e):
 
 
 def files_to_load(df_files_ftp, df_files_pg):
+    """
+    Obtém lista de nomes (e outros metadados) dos arquivos principais de dados que faltam carregar num
+    banco ou sub-banco de dados PostgreSQL.
+
+    Parâmetros
+    ----------
+    df_files_ftp: objeto pandas DataFrame
+        Dataframe contendo nomes (e outros metadados) dos arquivos principais de dados selecionados de uma base
+        de dados do Datasus
+    df_files_pg: objeto pandas DataFrame
+        Dataframe contendo nomes (e outros metadados) dos arquivos principais de dados eventualmente carregados
+        num banco ou sub-banco de dados PostgreSQL
+
+    Retorno
+    -------
+    df_difference: objeto pandas DataFrame
+        Dataframe contendo nomes (e outros metadados) dos arquivos principais de dados que faltam carregar num
+        banco ou sub-banco de dados PostgreSQL
+    """
+
     # Objeto list de nomes de arquivos de dados "dbc" do banco de dados "datasus_db" do Datasus contidos no...
     # diretório do seu endereço ftp referenciado à variável "datasus_path" e não presentes no banco...
     # de dados "DB_NAME" do PostgreSQL
