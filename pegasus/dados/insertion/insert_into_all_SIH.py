@@ -67,6 +67,9 @@ def insert_into_most_SIH_tables(path, device, child_db):
     df_TB_FORMA = data_sih_auxiliary.get_TB_FORMA_treated()
     df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_REGIOESAUDE = data_sih_auxiliary.get_REGIOESAUDE_treated()
+    df_REGIOESAUDE.to_sql('regioesaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     # Chama métodos da classe "DataSihAuxiliary" do módulo "prepare_SIH" referentes ao sub-banco de dados sih_rd
     df_IDENT = data_sih_auxiliary.get_IDENT_treated()
     df_IDENT.to_sql('ident', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)

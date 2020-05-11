@@ -747,6 +747,19 @@ class DataSihAuxiliary:
         return df
 
 
+    # Função para adequar e formatar as colunas e valores da Tabela REGIOESAUDE (do IBGE)
+    def get_REGIOESAUDE_treated(self):
+        # Conversão da Tabela REGIOESAUDE (em formato "xlsx") para um objeto pandas DataFrame
+        df = pd.read_excel(self.path + 'REGIOESAUDE' + '.xlsx')
+        # Renomeia a coluna SIGNIFICACAO
+        df.rename(index=str, columns={'SIGNIFICACAO': 'REGIAO'}, inplace=True)
+        # Converte para string a coluna especificada
+        df['ID'] = df['ID'].astype('str')
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+        return df
+
+
     ###################################################################################################################
     # SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD SIH_RD #
     ###################################################################################################################

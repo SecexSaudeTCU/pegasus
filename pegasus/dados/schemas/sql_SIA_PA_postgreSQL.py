@@ -272,12 +272,16 @@ def create_tables(connection_data, child_db):
                      CREATE TABLE IF NOT EXISTS {child_db}.forma("ID"                      VARCHAR(6),
                                                                  "FORMA"                   VARCHAR(100));
 
-                      /*Tabela de Arquivos*/
-                      CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),
-                                                                     "DIRETORIO"           VARCHAR(66),
-                                                                     "DATA_INSERCAO_FTP"   DATE,
-                                                                     "DATA_HORA_CARGA"     TIMESTAMP,
-                                                                     "QTD_REGISTROS"       INTEGER);
+                     /*Tabela de regiões de saúde IBGE*/
+                     CREATE TABLE IF NOT EXISTS {child_db}.regioesaude("ID"                VARCHAR(5),
+                                                                       "REGIAO"            VARCHAR(25));
+
+                     /*Tabela de Arquivos*/
+                     CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                 VARCHAR(15),
+                                                                    "DIRETORIO"            VARCHAR(66),
+                                                                    "DATA_INSERCAO_FTP"    DATE,
+                                                                    "DATA_HORA_CARGA"      TIMESTAMP,
+                                                                    "QTD_REGISTROS"        INTEGER);
                     ''')
     conn.commit()
     # Encerra o cursor
