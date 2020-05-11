@@ -36,3 +36,6 @@ if __name__ == '__main__':
 
     df = repositorio.get_df_descricao_procedimento()
     print(df.head())
+
+    df = repositorio.get_df_populacao()
+    print(df.head())

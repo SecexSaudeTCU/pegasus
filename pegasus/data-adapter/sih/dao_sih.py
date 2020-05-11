@@ -24,8 +24,12 @@ class DaoSIH(DaoPostgresSQL):
         return df
 
     def get_df_populacao(self):
-        # TODO
-        pass
+        sql = 'SELECT m."ID" as COD_MUNICIPIO, m."MUNNOME" NM_MUNICIPIO, uf."SIGLA_UF", pop."POPULACAO", m."RSAUDCOD" ' \
+              'from ibge.POPULACAO pop ' \
+              'join sih_rd.ufzi m on m."ID" = pop."ID" ' \
+              'join sih_rd.ufcod uf on uf."ID" = m."UFCOD_ID"'
+        df = pd.read_sql(sql, self.conexao)
+        return df
 
     def get_df_coordenadas(self):
         """
