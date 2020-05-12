@@ -14,6 +14,7 @@ import psycopg2
 sys.path.append('.')
 from transform.prepare_SINAN import DataSinanMain, DataSinanAuxiliary
 
+
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
 ############################################################################################################################################################################
@@ -36,6 +37,9 @@ def insert_into_most_SINAN_DENG_tables(path, device, child_db):
 
     df_TABUF = data_sinan_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_sinan_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_sinan_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('municip', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)

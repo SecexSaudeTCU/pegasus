@@ -81,12 +81,23 @@ def download_table_dbf(file_name):
 
     """
 
-    if (file_name == 'CADMUN') or (file_name == 'TABUF'):
+    if ((file_name == 'CADMUN') or (file_name == 'TABUF')):
         fname = file_name + '.DBF'
         ftp = FTP('ftp.datasus.gov.br')
         ftp.login()
         ftp.cwd('/dissemin/publicos/SIM/CID10/TABELAS/')
         ftp.retrbinary(f'RETR {fname}', open(fname, 'wb').write)
+
+    elif file_name == 'rl_municip_regsaud':
+        folder = 'base_territorial.zip'
+        ftp = FTP('ftp.datasus.gov.br')
+        ftp.login()
+        ftp.cwd('/territorio/tabelas/')
+        ftp.retrbinary(f'RETR {folder}', open(folder, 'wb').write)
+        zip = ZipFile(folder, 'r')
+        fname = file_name + '.dbf'
+        zip.extract(fname)
+
     else:
         folder = 'TAB_CNES.zip'
         if not os.path.isfile(folder):
@@ -105,14 +116,21 @@ def download_table_dbf(file_name):
             except:
                 raise Exception(f'Could not access {file_name}.')
 
-    if (file_name == 'CADMUN') or (file_name == 'TABUF'):
+    if ((file_name == 'CADMUN')
+        or (file_name == 'TABUF')
+        or (file_name == 'rl_municip_regsaud')):
         dbf = DBF(fname)
+
     else:
         dbf = DBF('TAB_DBF/' + fname, encoding='iso-8859-1')
+
     df = pd.DataFrame(iter(dbf))
 
-    if (file_name == 'CADMUN') or (file_name == 'TABUF'):
+    if ((file_name == 'CADMUN')
+        or (file_name == 'TABUF')
+        or (file_name == 'rl_municip_regsaud')):
         os.unlink(fname)
+
     else:
         os.unlink('TAB_DBF/' + fname)
 

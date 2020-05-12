@@ -37,6 +37,9 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
     df_TABUF = data_sia_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_sia_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_sia_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('pagestao', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 

@@ -34,6 +34,9 @@ def insert_into_most_SIH_RD_tables(path, device, child_db):
     df_TABUF = data_sih_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_sih_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_sih_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('ufzi', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -127,9 +130,6 @@ def insert_into_most_SIH_RD_tables(path, device, child_db):
     df_TB_FORMA = data_sih_auxiliary.get_TB_FORMA_treated()
     df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_REGIOESAUDE = data_sih_auxiliary.get_REGIOESAUDE_treated()
-    df_REGIOESAUDE.to_sql('regioesaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -153,6 +153,9 @@ def insert_into_most_SIH_SP_tables(path, device, child_db):
 
     df_TABUF = data_sih_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_sih_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_sih_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('spgestor', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
@@ -201,9 +204,6 @@ def insert_into_most_SIH_SP_tables(path, device, child_db):
 
     df_TB_FORMA = data_sih_auxiliary.get_TB_FORMA_treated()
     df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_REGIOESAUDE = data_sih_auxiliary.get_REGIOESAUDE_treated()
-    df_REGIOESAUDE.to_sql('regioesaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
 ###########################################################################################################################################################################

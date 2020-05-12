@@ -68,7 +68,7 @@ def create_tables(connection_data, child_db):
                                                                       "AMAZONIA"            VARCHAR(66),
                                                                       "FRONTEIRA"           VARCHAR(66),
                                                                       "CAPITAL"             VARCHAR(66),
-                                                                      "RSAUDCOD"            VARCHAR(4),
+                                                                      "RSAUDE_ID"           VARCHAR(5),
                                                                       "LATITUDE"            FLOAT,
                                                                       "LONGITUDE"           FLOAT,
                                                                       "ALTITUDE"            FLOAT,
@@ -110,6 +110,10 @@ def create_tables(connection_data, child_db):
                                                                    "ESTADO"                 VARCHAR(66),
                                                                    "SIGLA_UF"               VARCHAR(66));
 
+                       /*Tabela de regiões de saúde IBGE*/
+                       CREATE TABLE IF NOT EXISTS {child_db}.rsaude("ID"                    VARCHAR(5),
+                                                                    "REGIAO"                VARCHAR(66));
+                                                                    
                        /*Tabela de Arquivos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.arquivos("NOME"                VARCHAR(15),
                                                                       "DIRETORIO"           VARCHAR(66),

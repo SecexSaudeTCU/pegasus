@@ -37,6 +37,9 @@ def insert_into_most_CNES_ST_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -105,6 +108,9 @@ def insert_into_most_CNES_DC_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -123,6 +129,9 @@ def insert_into_most_CNES_PF_tables(path, device, child_db):
 
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
@@ -154,6 +163,9 @@ def insert_into_most_CNES_LT_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -179,6 +191,9 @@ def insert_into_most_CNES_EQ_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -203,6 +218,9 @@ def insert_into_most_CNES_SR_tables(path, device, child_db):
 
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
@@ -271,6 +289,9 @@ def insert_into_most_CNES_EP_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -312,6 +333,9 @@ def insert_into_most_CNES_HB_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -334,6 +358,9 @@ def insert_into_most_CNES_RC_tables(path, device, child_db):
 
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
@@ -358,6 +385,9 @@ def insert_into_most_CNES_GM_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -380,6 +410,9 @@ def insert_into_most_CNES_EE_tables(path, device, child_db):
 
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
@@ -443,6 +476,9 @@ def insert_into_most_CNES_EF_tables(path, device, child_db):
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -504,6 +540,9 @@ def insert_into_most_CNES_IN_tables(path, device, child_db):
 
     df_TABUF = data_cnes_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
+    df_RSAUDE = data_cnes_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     df_CADMUN = data_cnes_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codufmun', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)

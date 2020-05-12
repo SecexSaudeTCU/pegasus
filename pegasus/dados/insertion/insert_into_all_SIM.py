@@ -40,6 +40,9 @@ def insert_into_most_SIM_tables(path, device, child_db):
     df_TABUF = data_sim_auxiliary.get_TABUF_treated()
     df_TABUF.to_sql('ufcod', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
+    df_RSAUDE = data_sim_auxiliary.get_RSAUDE_treated()
+    df_RSAUDE.to_sql('rsaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
+
     df_CADMUN = data_sim_auxiliary.get_CADMUN_treated()
     df_CADMUN.to_sql('codmunnatu', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -171,51 +174,3 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
     print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL!')
-
-
-###########################################################################################################################################################################
-# pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
-###########################################################################################################################################################################
-###########################################################################################################################################################################
-#  MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE #
-###########################################################################################################################################################################
-
-# Função que utiliza "pandas.to_sql" para a inserção de dados principais e dos respectivos metadados no banco de dados "child_db"
-def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, device, child_db, parent_db):
-    start = time.time()
-    counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
-    qtd_files_pg = counting_rows.iloc[0]['count']
-    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {parent_db}/PostgreSQL é {qtd_files_pg}.')
-
-    # Tratamento de dados principais do SIM
-    base = file_name[0:2]
-    state = file_name[2:4]
-    year = file_name[4:8]
-    main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
-    n_rows = counting_rows.iloc[0]['count']
-    print(f'\nIniciando a lida com o arquivo {base}{state}{year}...')
-
-    # Cria uma instância da classe "DataSimMain" do módulo "prepare_SIM" do package "data_wrangling"
-    data_sim_main = DataSimMain(state, year)
-    # Chama método da classe "DataSimMain" do módulo "prepare_SIM" referentes ao banco de dados sim
-    df = data_sim_main.get_DOXXaaaa_treated()
-
-    # Inserção das colunas UF_DO e ANO_DO no objeto pandas DataFrame "df"
-    df.insert(1, 'UF_' + base, [state]*df.shape[0])
-    df.insert(2, 'ANO_' + base, [int(year)]*df.shape[0])
-    df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
-    # Inserção dos dados da tabela principal no banco de dados "child_db"
-    df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os dados do arquivo {base}{state}{year} na tabela {main_table} do banco de dados {child_db}.')
-
-    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
-    file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
-                             columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
-                             index=None
-                             )
-    # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
-    file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os metadados do arquivo {base}{state}{year} na tabela arquivos do banco de dados {child_db}.')
-    end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {parent_db}/PostgreSQL pelo pandas!')
