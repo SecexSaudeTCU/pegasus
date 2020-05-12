@@ -30,7 +30,8 @@ class DaoSIH(DaoPostgresSQL):
         Retorna as coordenadas de cada municípios.
         :return:
         """
-        sql = 'select "ID", "LATITUDE", "LONGITUDE" from sih_rd.ufzi where "LATITUDE" <> 0 and "LONGITUDE" <> 0'
+        sql = 'select "ID" as COD_MUNICIPIO, "LATITUDE", "LONGITUDE" ' \
+              'from sih_rd.ufzi where "LATITUDE" <> 0 and "LONGITUDE" <> 0'
         conexao = self.get_conexao()
         df = pd.read_sql(sql, conexao)
         conexao.close()
@@ -42,7 +43,8 @@ class DaoSIH(DaoPostgresSQL):
         :param ano: O ano de realização.
         :return:
         """
-        sql = 'select "ANO_RD", "PROCREA_ID", "UFZI_ID", count(*) as "QTD_PROCEDIMENTO",  sum("VAL_TOT") as "VL_TOTAL" ' \
+        sql = 'select "ANO_RD" as ANO_CMPT, "PROCREA_ID" as PROC_REA, "UFZI_ID" as COD_MUNICIPIO, ' \
+              'count(*) as QTD_PROCEDIMENTO,  sum("VAL_TOT") as VL_TOTAL ' \
               'from sih_rd.rdbr ' \
               'where "ANO_RD" = ' + str(ano) + ' and "IDENT_ID" = \'1\' ' \
                                                'group by "ANO_RD", "PROCREA_ID", "UFZI_ID"'
