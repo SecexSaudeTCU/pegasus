@@ -10,6 +10,7 @@ class ConfiguracoesConexaoPostgresSQL:
         self.config_banco = cfg['postgres_sql']
 
     def get_conexao(self):
+        #TODO: Usar o parâmetro connection_factory
         conexao = psycopg2.connect(user=self.config_banco['user'],
                                    password=self.config_banco['password'],
                                    host=self.config_banco['host'],

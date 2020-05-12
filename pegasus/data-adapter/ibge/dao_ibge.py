@@ -15,7 +15,9 @@ class DaoIBGE(DaoPostgresSQL):
               'from ibge.populacao_municipio pop ' \
               'join sih_rd.ufzi m on m."ID" = pop."ID" ' \
               'join sih_rd.ufcod uf on uf."ID" = m."UFCOD_ID"'
-        df = pd.read_sql(sql, self.conexao)
+        conexao = self.get_conexao()
+        df = pd.read_sql(sql, conexao)
+        conexao.close()
         return df
 
     def get_df_populacao_ufs(self):
@@ -24,7 +26,9 @@ class DaoIBGE(DaoPostgresSQL):
         :return:
         """
         sql = 'SELECT * FROM ibge.populacao_uf'
-        df = pd.read_sql(sql, self.conexao)
+        conexao = self.get_conexao()
+        df = pd.read_sql(sql, conexao)
+        conexao.close()
         return df
 
 

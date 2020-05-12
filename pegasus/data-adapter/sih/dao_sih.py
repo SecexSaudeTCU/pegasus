@@ -20,7 +20,9 @@ class DaoSIH(DaoPostgresSQL):
               'join sih_rd.subgrupo s on p."SUBGRUPO" = s."ID" ' \
               'join sih_rd.forma f on p."FORMA" = f."ID" ' \
               'join sih_rd.procrea pr on p."PROCREA_ID" = pr."ID"'
-        df = pd.read_sql(sql, self.conexao)
+        conexao = self.get_conexao()
+        df = pd.read_sql(sql, conexao)
+        conexao.close()
         return df
 
     def get_df_coordenadas(self):
@@ -29,7 +31,9 @@ class DaoSIH(DaoPostgresSQL):
         :return:
         """
         sql = 'select "ID", "LATITUDE", "LONGITUDE" from sih_rd.ufzi where "LATITUDE" <> 0 and "LONGITUDE" <> 0'
-        df = pd.read_sql(sql, self.conexao)
+        conexao = self.get_conexao()
+        df = pd.read_sql(sql, conexao)
+        conexao.close()
         return df
 
     def get_df_procedimentos_realizados_por_municipio(self, ano):
@@ -42,7 +46,9 @@ class DaoSIH(DaoPostgresSQL):
               'from sih_rd.rdbr ' \
               'where "ANO_RD" = ' + str(ano) + ' and "IDENT_ID" = \'1\' ' \
                                                'group by "ANO_RD", "PROCREA_ID", "UFZI_ID"'
-        df = pd.read_sql(sql, self.conexao)
+        conexao = self.get_conexao()
+        df = pd.read_sql(sql, conexao)
+        conexao.close()
         return df
 
 if __name__ == '__main__':
