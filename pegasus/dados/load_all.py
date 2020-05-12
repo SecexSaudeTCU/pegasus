@@ -16,28 +16,28 @@ pd.set_option('display.max_rows', None)
 
 
 """
-Cria um schema do banco de dados (neste computador denominado) "dbsus" no SGBD PostgreSQL com integridade referencial
-(de "primary and foreign keys") e insere neles dados dos sistemas (do Datasus) CNES, SIH, SIM, SINASC ou XXX no SGBD
-PostgreSQL pelo método pandas.to_sql. Os dados são inseridos por sistema: CNES, SIH, SIM, SINASC ou XXX. Assim, para
-cada sistema do Datasus é criado um único schema.
+Cria um schema do banco de dados (aqui denominado) "dbsus" no SGBD PostgreSQL sem integridade referencial (de "primary
+and foreign keys") e insere nele dados principais das bases de dados (do Datasus) CNES, SIH, SIM, SINASC ou XXX no
+SGBD PostgreSQL pelo método copy_expert da classe cursor do pacote psycopg. Os dados são inseridos por base de dados:
+CNES, SIH, SIM, SINASC ou XXX. Assim, para cada base de dados do Datasus é criado um único schema.
 
-A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos secundários de dados em
-formato "dbf", "cnv" e "xlsx" dos sistemas CNES (STXXaamm + DCXXaamm + PFXXaamm + LTXXaamm + EQXXaamm + SRXXaamm +...
-EPXXaamm + HBXXaamm + RCXXaamm + GMXXaamm + EEXXaamm + EFXXaamm + INXXaamm), SIH (RDXXaamm + SPXXaamm), SIM (DOXXaaaa),
-SINASC (DNXXaaaa) e XXX. Destaca-se que alguns sistemas, como o CNES, se subdividem em várias tabelas principais de
-dados, que no caso são em número de 13, conforme se pode contabilizar acima.
+A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos secundários de dados
+em formato "dbf", "cnv" e "xlsx" das bases de dados CNES (STXXaamm + DCXXaamm + PFXXaamm + LTXXaamm + EQXXaamm +
+SRXXaamm + EPXXaamm + HBXXaamm + RCXXaamm + GMXXaamm + EEXXaamm + EFXXaamm + INXXaamm), SIH (RDXXaamm + SPXXaamm),
+SIM (DOXXaaaa), SINASC (DNXXaaaa) ou XXX. Destaca-se que algumas bases de dados, como a do CNES, se subdividem em
+várias tabelas principais de dados, que no caso são em número de 13, conforme se pode contabilizar acima.
 
-Os arquivos principais de dados formam a tabela principal (child table) do respectivo sistema ou subsistema e estão
-em pastas específicas do endereço ftp do Datasus (ftp://ftp.datasus.gov.br/dissemin/publicos/) em formato "dbc". Cada
-arquivo "dbc" é baixado em tempo de execução, descompactado para "dbf", lido como um objeto pandas DataFrame e, para
-evitar a repetição do download, é salvo numa pasta criada dinamicamente e denominada "datasus_content" no computador
-de execução deste script no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
+Os arquivos principais de dados formam a tabela principal (child table) da respectiva base de dados e estão em pastas
+específicas do endereço ftp do Datasus (ftp://ftp.datasus.gov.br/dissemin/publicos/) em formato "dbc". Cada arquivo
+"dbc" é baixado em tempo de execução, descompactado para "dbf", lido como um objeto pandas DataFrame e, para evitar a
+repetição do download, é salvo numa pasta criada dinamicamente e denominada "datasus_content" no computador de execução
+deste script no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
 
 Os arquivos secundários de dados formam as tabelas relacionais (parent tables) à tabela principal e estão em formato
 "dbf", "cnv" ou "xlsx". Os arquivos "dbf" e "cnv", presentes em diretórios do endereço ftp do Datasus, são baixados
-e convertidosem tempo de execução para objetos pandas DataFrame enquanto os arquivos "xlsx", quando necessários, foram
-criados a partir de relações descritas no Dicionário de Dados do respectivo sistema do Datasus e não retratadas em
-arquivos "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
+e convertidos em tempo de execução para objetos pandas DataFrame enquanto os arquivos "xlsx", quando necessários,
+foram  criados a partir de relações descritas no Dicionário de Dados da respectiva base de dado do Datasus e não
+retratadas em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
 
 É necessário instalar o SGBD PostgreSQL (https://www.postgresql.org/download/) e uma plataforma para gerenciamento de
 banco de dados é recomendável ter, tal como pgAdmin (https://www.pgadmin.org/download/) ou DBeaver [Community]
@@ -185,7 +185,7 @@ if __name__ == '__main__':
         # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
         # método pandas.to_sql
         most_tables(path_xlsx, engine, datasus_db)
-        print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas.')
+        print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
 
         # Remoção dos arquivos "cnv" baixados numa pasta zipada do endereço ftp do Datasus
         if datasus_db == 'cnes':
@@ -197,7 +197,7 @@ if __name__ == '__main__':
             os.rmdir('CNV')
             os.rmdir('DBF')
         elif datasus_db == 'sia':
-            s.remove('TAB_SIA.zip')
+            os.remove('TAB_SIA.zip')
             os.remove('TAB_SIH.zip')
             os.rmdir('CNV')
             os.rmdir('TAB_DBF')
@@ -208,6 +208,7 @@ if __name__ == '__main__':
             os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDN18.dbf
         elif datasus_db == 'sinan':
             os.remove('TAB_SINAN.zip')
+        os.remove('base_territorial.zip')
 
     print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
     # Carrega dados da tabela principal do "datasus_db" no PostgreSQL

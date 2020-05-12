@@ -339,43 +339,52 @@ class DataSiaAuxiliary:
     def get_CADMUN_treated(self):
         # Conversão da Tabela CADMUN para um objeto pandas DataFrame
         file_name = 'CADMUN'
-        df = download_table_dbf(file_name)
+        df1 = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'MUNCOD': 'ID', 'UFCOD': 'UFCOD_ID'}, inplace=True)
+        df1.rename(index=str, columns={'MUNCOD': 'ID', 'UFCOD': 'UFCOD_ID'}, inplace=True)
         # Drop a linha inteira em que a coluna "ID" tem o valor especificado por não representar nenhum município
-        df = df.drop(df[df['ID']=='000000'].index)
+        df1 = df1.drop(df1[df1['ID']=='000000'].index)
         # Remove colunas indesejáveis do objeto pandas DataFrame
-        df = df.drop(['MUNSINON', 'MUNSINONDV', 'MESOCOD', 'MICROCOD',
-                      'MSAUDCOD', 'CSAUDCOD', 'RMETRCOD', 'AGLCOD'], axis=1)
+        df1 = df1.drop(['MUNSINON', 'MUNSINONDV', 'MESOCOD', 'MICROCOD', 'MSAUDCOD',
+                        'RSAUDCOD', 'CSAUDCOD', 'RMETRCOD', 'AGLCOD'], axis=1)
         # Substitui uma string vazia pela string "?" nas colunas especificadas
         for col in ['SITUACAO', 'MUNSINP', 'MUNSIAFI', 'MUNNOME', 'MUNNOMEX', 'OBSERV',
-                    'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'RSAUDCOD', 'ANOINST', 'ANOEXT', 'SUCESSOR']:
-            df[col].replace('', '?', inplace=True)
+                    'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'ANOINST', 'ANOEXT', 'SUCESSOR']:
+            df1[col].replace('', '?', inplace=True)
         # Substitui uma string vazia pela string "NA" nas colunas especificadas
-        df['UFCOD_ID'].replace('', 'NA', inplace=True)
+        df1['UFCOD_ID'].replace('', 'NA', inplace=True)
         # Substitui uma string vazia pelo float "NaN" nas colunas especificadas
         for col in ['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']:
-            df[col].replace('', np.nan, inplace=True)
+            df1[col].replace('', np.nan, inplace=True)
         # Converte do tipo object para float as colunas especificadas
-        df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']] = \
-        df[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']].astype('float')
+        df1[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']] = \
+        df1[['LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA']].astype('float')
+        # Coloca todas as string das colunas especificadas como UPPER CASE
+        df1['MUNNOME'] = df1['MUNNOME'].apply(lambda x: x.upper())
+        df1['MUNNOMEX'] = df1['MUNNOMEX'].apply(lambda x: x.upper())
+        # Insere uma linha referente ao Município de Nazária/PI não constante originalmente do arquivo
+        df1.loc[df1.shape[0]] = ['220672', '2206720', 'ATIVO', '?', '?', 'NAZÁRIA', 'NAZARIA', '?',
+                                 'N', 'N', 'N', '22', '?', '?', '?', np.nan, np.nan, np.nan, 363.589]
+        # Ordena as linhas de "df1" por ordem crescente dos valores da coluna ID
+        df1.sort_values(by=['ID'], inplace=True)
+        # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
+        df1.reset_index(drop=True, inplace=True)
+        # Conversão da Tabela rl_municip_regsaud para um objeto pandas DataFrame
+        file_name = 'rl_municip_regsaud'
+        df2 = download_table_dbf(file_name)
+        # Renomeia as colunas especificadas
+        df2.rename(index=str, columns={'CO_MUNICIP': 'ID', 'CO_REGSAUD': 'RSAUDE_ID'}, inplace=True)
+        # Faz o merge de "df1" e "df2" pela coluna ID tendo por base "df1"
+        df = pd.merge(df1, df2, how='left', left_on='ID', right_on='ID')
+        # Converte o float NaN para a string "NA"
+        df['RSAUDE_ID'].replace(np.nan, 'NA', inplace=True)
         # Reordena as colunas priorizando as "mais" relevantes
         df = df[['ID', 'MUNNOME', 'MUNNOMEX', 'MUNCODDV', 'OBSERV', 'SITUACAO', 'MUNSINP',
-                 'MUNSIAFI', 'UFCOD_ID', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'RSAUDCOD',
+                 'MUNSIAFI', 'UFCOD_ID', 'AMAZONIA', 'FRONTEIRA', 'CAPITAL', 'RSAUDE_ID',
                  'LATITUDE', 'LONGITUDE', 'ALTITUDE', 'AREA', 'ANOINST', 'ANOEXT', 'SUCESSOR']]
-        # Coloca todas as string das colunas especificadas como UPPER CASE
-        df['MUNNOME'] = df['MUNNOME'].apply(lambda x: x.upper())
-        df['MUNNOMEX'] = df['MUNNOMEX'].apply(lambda x: x.upper())
-        # Insere uma linha referente ao Município de Nazária/PI não constante originalmente da
-        df.loc[df.shape[0]] = ['220672', 'NAZÁRIA', 'NAZARIA', '2206720', '?', '?', '?', '?', '22',
-                               '?', '?', '?', '?', np.nan, np.nan, np.nan, 363.589, '?', '?', '?']
-        # Ordena as linhas de "df" por ordem crescente dos valores da coluna ID
-        df.sort_values(by=['ID'], inplace=True)
-        # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
-        df.reset_index(drop=True, inplace=True)
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?', '?', '?', '?', '?', 'NA', '?',
-                               '?', '?', '?', np.nan, np.nan, np.nan, np.nan, '?', '?', '?']
+                               '?', '?', 'NA', np.nan, np.nan, np.nan, np.nan, '?', '?', '?']
         return df
 
 
@@ -743,6 +752,19 @@ class DataSiaAuxiliary:
         return df
 
 
+    # Função para adequar e formatar as colunas e valores da Tabela RSAUDE (do IBGE)
+    def get_RSAUDE_treated(self):
+        # Conversão da Tabela RSAUDE (em formato "xlsx") para um objeto pandas DataFrame
+        df = pd.read_excel(self.path + 'RSAUDE' + '.xlsx')
+        # Renomeia a coluna SIGNIFICACAO
+        df.rename(index=str, columns={'SIGNIFICACAO': 'REGIAO'}, inplace=True)
+        # Converte para string a coluna especificada
+        df['ID'] = df['ID'].astype('str')
+        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+        return df
+
+
     # Função para adequar e formatar as colunas e valores da Tabela TB_GRUPO (arquivo TB_GRUPO.dbf)
     def get_TB_GRUPO_treated(self):
         # Conversão da Tabela TB_GRUPO para um objeto pandas DataFrame
@@ -791,19 +813,6 @@ class DataSiaAuxiliary:
         return df
 
 
-    # Função para adequar e formatar as colunas e valores da Tabela REGIOESAUDE (do IBGE)
-    def get_REGIOESAUDE_treated(self):
-        # Conversão da Tabela REGIOESAUDE (em formato "xlsx") para um objeto pandas DataFrame
-        df = pd.read_excel(self.path + 'REGIOESAUDE' + '.xlsx')
-        # Renomeia a coluna SIGNIFICACAO
-        df.rename(index=str, columns={'SIGNIFICACAO': 'REGIAO'}, inplace=True)
-        # Converte para string a coluna especificada
-        df['ID'] = df['ID'].astype('str')
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
-        return df
-
-
 
 if __name__ == '__main__':
 
@@ -814,5 +823,3 @@ if __name__ == '__main__':
     the_path = os.getcwd()[:-len('\\transform')] + '\\files\\SIA\\'
 
     instancia = DataSiaAuxiliary(the_path)
-
-    print(max(instancia.get_REGIOESAUDE_treated()['REGIAO'].str.len()))

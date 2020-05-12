@@ -83,26 +83,30 @@ def download_table_dbf(file_name, cache=True):
 
     ftp = FTP('ftp.datasus.gov.br')
     ftp.login()
-    fname = file_name + '.DBF'
-
-    cachefile = os.path.join(CACHEPATH, 'SINAN_Tables_' + fname.split('.')[0] + '_.parquet')
-    if os.path.exists(cachefile):
-        df = pd.read_parquet(cachefile)
-        return df
 
     try:
-        ftp.cwd('/dissemin/publicos/SIM/CID10/TABELAS/')
-        ftp.retrbinary('RETR {}'.format(fname), open(fname, 'wb').write)
+        if file_name == 'CADMUN':
+            fname = file_name + '.DBF'
+            ftp.cwd('/dissemin/publicos/SIM/CID10/TABELAS/')
+            ftp.retrbinary(f'RETR {fname}', open(fname, 'wb').write)
+
+        elif file_name == 'rl_municip_regsaud':
+            folder = 'base_territorial.zip'
+            ftp.cwd('/territorio/tabelas/')
+            ftp.retrbinary(f'RETR {folder}', open(folder, 'wb').write)
+            zip = ZipFile(folder, 'r')
+            fname = file_name + '.dbf'
+            zip.extract(fname)
     except:
         raise Exception('Could not download {}'.format(fname))
 
     dbf = DBF(fname)
     df = pd.DataFrame(iter(dbf))
 
-    if cache:
-        df.to_parquet(cachefile)
     os.unlink(fname)
+
     return df
+    
 
 # Função de download de tabelas do SINAN em formato "cnv" (trata-se de parent tables)
 def download_table_cnv(file_name):

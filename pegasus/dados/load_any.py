@@ -16,30 +16,30 @@ pd.set_option('display.max_rows', None)
 
 
 """
-Cria um schema do banco de dados (neste computador denominado) "dbsus2" no SGBD PostgreSQL com integridade referencial
-(de "primary and foreign keys") e insere nele dados dos sistemas (do Datasus) CNES, SIH, SIA, SINAN ou XXX no SGBD
-PostgreSQL pelo método pandas.to_sql. Os dados são inseridos por sub-sistema: CNES_ST, CNES_DC, CNES_PF, CNES_LT, CNES_EQ,
-CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM, CNES_EE, CNES_EF, CNES_IN, SIH_RD, SIH_SP, SIA_PA, SINAN_DENG ou XXX. Assim,
-para cada sub-sistema do Datasus é criado um schema.
+Cria um schema do banco de dados (aqui denominado) "dbsus2" no SGBD PostgreSQL sem integridade referencial (de "primary
+and foreign keys") e insere nele dados principais das bases de dados (do Datasus) CNES, SIH, SIA, SINAN ou XXX no SGBD
+PostgreSQL pelo método copy_expert da classe cursor do pacote psycopg. Os dados são inseridos por sub-base de dados:
+CNES_ST, CNES_DC, CNES_PF, CNES_LT, CNES_EQ, CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM, CNES_EE, CNES_EF, CNES_IN,
+SIH_RD, SIH_SP, SIA_PA, SINAN_DENG ou XXX. Assim, para cada sub-base de dados do Datasus é criado um schema.
 
-A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos secundários de dados em
-formato "dbf", "cnv" e "xlsx" dos sub-sistemas CNES_ST (STXXaamm), CNES_DC (DCXXaamm), CNES_PF (PFXXaamm), CNES_LT
-(LTXXaamm), CNES_EQ (EQXXaamm), CNES_SR (SRXXaamm), CNES_EP (EPXXaamm), CNES_HB (HBXXaamm), CNES_RC (RCXXaamm), CNES_GM
-(GMXXaamm), CNES_EE (EEXXaamm), CNES_EF (EFXXaamm), CNES_IN (INXXaamm), SIH_RD (RDXXaamm), SIH_SP (SPXXaamm), SIA_PA
-(PAXXaamm), SINAN_DENG (DENGXXaa) ou XXX. Destaca-se que alguns sistemas, como o CNES, se subdividem em várias tabelas
-principais de dados, que no caso são em número de 13, conforme se pode contabilizar acima.
+A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos secundários de dados
+em formato "dbf", "cnv" e "xlsx" das sub-bases de dados CNES_ST (STXXaamm), CNES_DC (DCXXaamm), CNES_PF (PFXXaamm),
+CNES_LT (LTXXaamm), CNES_EQ (EQXXaamm), CNES_SR (SRXXaamm), CNES_EP (EPXXaamm), CNES_HB (HBXXaamm), CNES_RC (RCXXaamm),
+CNES_GM (GMXXaamm), CNES_EE (EEXXaamm), CNES_EF (EFXXaamm), CNES_IN (INXXaamm), SIH_RD (RDXXaamm), SIH_SP (SPXXaamm),
+SIA_PA (PAXXaamm), SINAN_DENG (DENGXXaa) ou XXX. Destaca-se que algumas bases de dados, como a do CNES, se subdividem
+em várias tabelas principais de dados, que no caso são em número de 13, conforme se pode contabilizar acima.
 
-Os arquivos principais de dados formam a tabela principal (child table) do respectivo sistema ou subsistema e estão em
+Os arquivos principais de dados formam a tabela principal (child table) das respectiva sub-base de dados e estão em
 pastas específicas do endereço ftp do Datasus (ftp://ftp.datasus.gov.br/dissemin/publicos/) em formato "dbc". Cada
 arquivo "dbc" é baixado em tempo de execução, descompactado para "dbf", lido como um objeto pandas DataFrame e, para
-evitar a repetição do download, é salvo numa pasta criada dinamicamente e denominada "datasus_content" no computador de
-execução deste script no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
+evitar a repetição do download, é salvo numa pasta criada dinamicamente e denominada "datasus_content" no computador
+de execução deste script no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
 
 Os arquivos secundários de dados formam as tabelas relacionais (parent tables) à tabela principal e estão em formato
 "dbf", "cnv" ou "xlsx". Os arquivos "dbf" e "cnv", presentes em diretórios do endereço ftp do Datasus, são baixados
 e convertidos em tempo de execução para objetos pandas DataFrame enquanto os arquivos "xlsx", quando necessários,
-foram  criados a partir de relações descritas no Dicionário de Dados do respectivo sistema do Datasus e não retratadas
-em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
+foram  criados a partir de relações descritas no Dicionário de Dados da respectiva base de dado do Datasus e não
+retratadas em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
 
 É necessário instalar o SGBD PostgreSQL (https://www.postgresql.org/download/) e uma plataforma para gerenciamento de
 banco de dados é recomendável ter, tal como pgAdmin (https://www.pgadmin.org/download/) ou DBeaver [Community]
@@ -228,7 +228,7 @@ if __name__ == '__main__':
         # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
         # método pandas.to_sql
         most_tables(path_xlsx, engine, datasus_db)
-        print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas.')
+        print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
 
         # Remoção dos arquivos "cnv" baixados numa pasta zipada do endereço ftp do Datasus
         if datasus_db in np.array(['cnes_st', 'cnes_lt', 'cnes_eq', 'cnes_sr', 'cnes_ep', 'cnes_ee', 'cnes_ef', 'cnes_in']):
@@ -251,11 +251,12 @@ if __name__ == '__main__':
             os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDN18.dbf
         elif datasus_db == 'sinan_deng':
             os.remove('TAB_SINAN.zip')
+        os.remove('base_territorial.zip')
 
     print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
     # Carrega dados da tabela principal do "datasus_db" no PostgreSQL
     for i in range(qtd_arqs_datasus):
         # Chama a função "main_tables" para a inserção de dados na tabela principal (child table) + respectivas informações...
         # na tabela arquivos usando copy_expert + pandas.to_sql
-        main_tables(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
-                    df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
+        main_table(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
+                   df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)

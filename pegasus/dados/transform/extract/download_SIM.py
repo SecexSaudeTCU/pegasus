@@ -81,11 +81,20 @@ def download_table_dbf(file_name):
     try:
         if file_name == 'CNESDO18': # Esse arquivo "dbf" deveria estar no diretório
                                     # ".../dissemin/publicos/SIM/CID10/TABELAS" do endereço "ftp"
-            ftp.cwd('/dissemin/publicos/SIM/CID10/TAB/')
             folder = 'OBITOS_CID10_TAB.ZIP'
+            ftp.cwd('/dissemin/publicos/SIM/CID10/TAB/')
             ftp.retrbinary(f'RETR {folder}', open(folder, 'wb').write)
             zip = ZipFile(folder, 'r')
             zip.extract(fname)
+
+        elif file_name == 'rl_municip_regsaud':
+            folder = 'base_territorial.zip'
+            ftp.cwd('/territorio/tabelas/')
+            ftp.retrbinary(f'RETR {folder}', open(folder, 'wb').write)
+            zip = ZipFile(folder, 'r')
+            fname = file_name + '.dbf'
+            zip.extract(fname)
+
         else:
             ftp.cwd('/dissemin/publicos/SIM/CID10/TABELAS/')
             ftp.retrbinary(f'RETR {fname}', open(fname, 'wb').write)
@@ -96,11 +105,13 @@ def download_table_dbf(file_name):
         dbf = DBF(fname, encoding='iso-8859-1')
     else:
         dbf = DBF(fname)
+
     df = pd.DataFrame(iter(dbf))
 
     os.unlink(fname)
 
     return df
+    
 
 # Função de download de tabelas do SIM em formato "cnv" (trata-se de parent tables)
 def download_table_cnv(file_name):
