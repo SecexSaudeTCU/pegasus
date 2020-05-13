@@ -11,7 +11,11 @@ from zipfile import ZipFile
 from dbfread import DBF
 
 from .folder import CACHEPATH
-from .read import read_dbc, read_cnv
+
+if os.name == 'nt':
+    from .read_windows import read_dbc, read_cnv
+elif os.name == 'posix':
+    from .read_unix import read_dbc, read_cnv
 
 """
 Lê arquivos principais de dados do CNES (STXXaamm = Estabelecimentos; DCXXaamm = Dados Complementares;

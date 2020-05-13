@@ -56,11 +56,11 @@ Sugerimos que você crie uma pasta, em seu computador, chamada TabWin, e copie o
 Por outro lado, para executar esse pacote em Python 3.6.9 a partir do sistema operacional Linux também se instalou a
 dependência libffi ("$ sudo apt install libffi-dev") e as bibliotecas Python codecs e cffi, prescindindo, porém, da
 instalação do executável "dbf2dbc". Nesse caso, se deve executar o módulo "_build_readdbc" contido no sub-package
-"insertion.data_wrangling.online" para criar um wrapper de um módulo na linguagem C que descompacta arquivos "dbc"
-para "dbf". Ainda se está trabalhando na coexistência Windows e Linux.
+"transform.extract" para criar um wrapper de um módulo na linguagem C que descompacta arquivos "dbc" para "dbf". Ainda
+se está trabalhando na coexistência entre a plataforma Windows e as baseadas em Unix.
 
 O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode ser
-alterado editando o módulo "folder" contido no sub-package "insertion.data_wrangling.online".
+alterado editando o módulo "folder" contido no sub-package "transform.extract".
 
 """
 

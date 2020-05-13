@@ -11,7 +11,11 @@ from zipfile import ZipFile
 from dbfread import DBF
 
 from .folder import CACHEPATH
-from .read import read_dbc, read_cnv
+
+if os.name == 'nt':
+    from .read_windows import read_dbc, read_cnv
+elif os.name == 'posix':
+    from .read_unix import read_dbc, read_cnv
 
 """
 Messy system!!!!!
@@ -106,7 +110,7 @@ def download_table_dbf(file_name, cache=True):
     os.unlink(fname)
 
     return df
-    
+
 
 # Função de download de tabelas do SINAN em formato "cnv" (trata-se de parent tables)
 def download_table_cnv(file_name):
