@@ -6,14 +6,8 @@ from tempfile import NamedTemporaryFile
 from dbfread import DBF
 import pandas as pd
 
-
 from .folder import CACHEPATH
 from ._readdbc import ffi, lib
-
-# import sys
-# sys.path.append('/home/ericc/Área de Trabalho/8dbs/insertion/data_wrangling/online/')
-# from folder import CACHEPATH
-# from _readdbc import ffi, lib
 
 """
 The functions read_dbc and dbc2dbf are based on the work of Flávio Coelho (https://github.com/fccoelho/PySUS)
@@ -53,7 +47,6 @@ def read_dbc(filename, signature='utf-8'):
     os.unlink(tf.name)
 
     return df
-
 
 
 # Função que converte o conteúdo útil (!!!) do arquivo texto em formato "cnv" para um objeto pandas DataFrame
