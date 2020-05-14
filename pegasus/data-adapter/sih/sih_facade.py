@@ -40,20 +40,31 @@ def get_df_procedimentos_realizados_por_municipio_e_populacao(ano):
 
     df_populacao = get_df_populacao()
 
-    df_analise1 = pd.merge(df_rd, df_populacao, on=['cod_municipio'])
+    df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'])
 
-    df_analise1['COD_FORMA'] = df_analise1['proc_rea'].str[:6]
-    df_analise1['COD_SUBGRUPO'] = df_analise1['proc_rea'].str[:4]
-    df_analise1['COD_GRUPO'] = df_analise1['proc_rea'].str[:2]
+    df_analise['COD_FORMA'] = df_analise['proc_rea'].str[:6]
+    df_analise['COD_SUBGRUPO'] = df_analise['proc_rea'].str[:4]
+    df_analise['COD_GRUPO'] = df_analise['proc_rea'].str[:2]
 
-    df_analise1['qtd_procedimento'] = df_analise1['qtd_procedimento'].fillna(0)
-    df_analise1['vl_total'] = df_analise1['vl_total'].fillna(0)
+    df_analise['qtd_procedimento'] = df_analise['qtd_procedimento'].fillna(0)
+    df_analise['vl_total'] = df_analise['vl_total'].fillna(0)
 
-    print(df_analise1.shape)
-    df_analise1.head()
+    print(df_analise.shape)
+    df_analise.head()
+
+    return df_analise
+
+def get_df_procedimento_painel(ano):
+    df_analise = get_df_procedimentos_realizados_por_municipio_e_populacao(ano)
+    df_analise.groupby(['ano_cmpt', 'cod_municipio', 'LATITUDE', 'LONGITUDE',
+                         'nm_municipio', 'proc_rea', 'uf',
+                         'POPULACAO', 'POPULACAO_UF', 'POPULACAO_BRASIL']).sum()[['qtd_procedimento',
+                                                                                  'vl_total']].reset_index()
+    print(df_analise.head())
 
 if __name__ == '__main__':
-    get_df_procedimentos_realizados_por_municipio_e_populacao(2015)
+    get_df_procedimento_painel(2019)
+    #get_df_procedimentos_realizados_por_municipio_e_populacao(2015)
     #get_df_lista_municipio_ano(2015)
     #get_df_lista_procedimento_ano(2015)
     #get_df_populacao()
