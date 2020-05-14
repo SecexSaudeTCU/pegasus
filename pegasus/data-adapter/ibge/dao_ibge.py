@@ -12,7 +12,7 @@ class DaoIBGE(DaoPostgresSQL):
         :return:
         """
         sql = 'SELECT m."ID" as COD_MUNICIPIO, m."MUNNOME" as NM_MUNICIPIO, uf."SIGLA_UF" as UF, pop."POPULACAO", ' \
-              'm."RSAUDCOD" as CD_REGSAUD ' \
+              'm."RSAUDE_ID" as CD_REGSAUD ' \
               'from ibge.populacao_municipio pop ' \
               'join sih_rd.ufzi m on m."ID" = pop."ID" ' \
               'join sih_rd.ufcod uf on uf."ID" = m."UFCOD_ID"'
