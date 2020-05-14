@@ -1,4 +1,3 @@
-
 import os
 import subprocess
 from tempfile import NamedTemporaryFile
@@ -13,8 +12,22 @@ The function read_dbc is based on the work of Flávio Coelho (https://github.com
 
 """
 
-def read_dbc(filename, signature='utf-8'):
+def dbc2dbf(infile):
+    """
+    Converts a Datasus "dbc" file to a "dbf" file.
+    :param infile: "dbc" file name
+    :return: "dbf" file with path.
 
+    """
+
+    infile = infile.decode()
+    subprocess.run(['C:/TabWin/dbf2dbc.exe', infile])
+    os.unlink(infile)
+    outfile = os.getcwd() + '/' + infile[:-4] + '.dbf'
+    return outfile
+
+
+def read_dbc(filename, signature='utf-8'):
     """
     Opens a Datasus "dbc" file and return its contents as a pandas
     Dataframe object.
@@ -33,22 +46,6 @@ def read_dbc(filename, signature='utf-8'):
         df = pd.DataFrame(iter(dbf))
     os.unlink(tf.name)
     return df
-
-
-def dbc2dbf(infile):
-
-    """
-    Converts a Datasus "dbc" file to a "dbf" file.
-    :param infile: "dbc" file name
-    :return: "dbf" file with path.
-
-    """
-
-    infile = infile.decode()
-    subprocess.run(['C:\\TabWin\\dbf2dbc.exe', CACHEPATH + '\\' + infile])
-    os.remove(CACHEPATH + '\\' + infile)
-    outfile = os.getcwd() + '\\' + infile[:-4] + '.dbf'
-    return outfile
 
 
 # Função que converte o conteúdo útil (!!!) do arquivo texto em formato "cnv" para um objeto pandas DataFrame

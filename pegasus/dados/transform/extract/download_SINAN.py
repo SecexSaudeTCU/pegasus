@@ -61,10 +61,10 @@ def download_SINANXXaa(base: str, state: str, year: str, cache: bool=True):
         elif int('20' + year) == 2017:
             ftp.cwd('/dissemin/publicos/SINAN/DADOS/PRELIM/')
         try:
-            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '\\' + fname, 'wb').write)
+            ftp.retrbinary(f'RETR {fname}', open(fname, 'wb').write)
         except:
             try:
-                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
+                ftp.retrbinary(f'RETR {fname.upper()}', open(fname, 'wb').write)
             except:
                 raise Exception(f'Could not access {fname}.')
         df = read_dbc(fname, 'iso-8859-1')

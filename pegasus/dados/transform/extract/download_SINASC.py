@@ -56,10 +56,10 @@ def download_DNXXaaaa(state: str, year: str, cache: bool=True):
         ftp.login()
         ftp.cwd('/dissemin/publicos/SINASC/NOV/DNRES/')
         try:
-            ftp.retrbinary(f'RETR {fname}', open(CACHEPATH + '\\' + fname, 'wb').write)
+            ftp.retrbinary(f'RETR {fname}', open(fname, 'wb').write)
         except:
             try:
-                ftp.retrbinary(f'RETR {fname.upper()}', open(CACHEPATH + '\\' + fname, 'wb').write)
+                ftp.retrbinary(f'RETR {fname.upper()}', open(fname, 'wb').write)
             except:
                 raise Exception(f'Could not access {fname}.')
         df = read_dbc(fname, 'iso-8859-1')

@@ -45,6 +45,7 @@ def read_dbc(filename, signature='utf-8'):
         dbf = DBF(tf.name, encoding=signature)
         df = pd.DataFrame(list(dbf))
     os.unlink(tf.name)
+    os.unlink(filename)
 
     return df
 
