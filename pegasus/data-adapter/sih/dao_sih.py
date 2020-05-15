@@ -53,6 +53,17 @@ class DaoSIH(DaoPostgresSQL):
         conexao.close()
         return df
 
+    def get_df_estados(self):
+        """
+        Retorna todos os estados da federação, com os respectivos códigos, nomes e siglas.
+        :return:
+        """
+        sql = 'SELECT * FROM sih_rd.ufcod'
+        conexao = self.get_conexao()
+        df = pd.read_sql(sql, conexao)
+        conexao.close()
+        return df
+
 if __name__ == '__main__':
     dao = DaoSIH()
 

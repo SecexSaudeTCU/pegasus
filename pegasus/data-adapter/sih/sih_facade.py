@@ -1,5 +1,5 @@
 from sih.dao_sih import DaoSIH
-from ibge.ibge_facade import get_df_populacao_ibge
+from ibge.ibge_facade import get_df_populacao_ibge, get_df_populacao_ufs
 import pandas as pd
 
 
@@ -39,7 +39,7 @@ def get_df_procedimentos_realizados_por_municipio_e_populacao(ano):
 
     df_populacao = get_df_populacao()
 
-    #df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'])
+    # df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'])
     df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'], how="left")
 
     df_analise['COD_FORMA'] = df_analise['proc_rea'].str[:6]
@@ -49,6 +49,25 @@ def get_df_procedimentos_realizados_por_municipio_e_populacao(ano):
     df_analise['qtd_procedimento'] = df_analise['qtd_procedimento'].fillna(0)
     df_analise['vl_total'] = df_analise['vl_total'].fillna(0)
 
+    #Trata os casos de municípios ignorados, preenchendo ao menos com a população da UF.
+    df_populacao_ufs = get_df_populacao_ufs()
+    df_estados = dao.get_df_estados()
+
+    for index, row in df_analise.iterrows():
+        if pd.isna(row['POPULACAO_UF']):
+            cod_municipio = row['cod_municipio']
+            cod_uf = cod_municipio[0:2]
+            populacao_uf = df_populacao_ufs.loc[df_populacao_ufs['COD_UF'] == cod_uf, 'POPULACAO'].values[0]
+            row['POPULACAO_UF'] = populacao_uf
+            sigla_uf = df_estados.loc[df_estados['ID'] == cod_uf, 'SIGLA_UF'].values[0]
+            row['uf'] = sigla_uf
+            row['nm_municipio'] = 'MUNICÍPIO IGNORADO - ' + sigla_uf
+            row['POPULACAO_BRASIL'] = df_populacao.loc[0, 'POPULACAO_BRASIL']
+            row['LATITUDE'] = 0
+            row['LONGITUDE'] = 0
+            #TODO: Checar
+            row['cd_regsaud'] = cod_uf + '000'
+
     return df_analise
 
 
@@ -56,14 +75,17 @@ def get_df_procedimento_painel(ano, habitantes_tx):
     return __get_df_painel(ano, habitantes_tx, coluna='proc_rea', nivel='PROCEDIMENTO')
 
 
-def get_df_forma_painel(ano,habitantes_tx):
+def get_df_forma_painel(ano, habitantes_tx):
     return __get_df_painel(ano, habitantes_tx, coluna='COD_FORMA', nivel='FORMA')
 
-def get_df_subgrupo_painel(ano,habitantes_tx):
+
+def get_df_subgrupo_painel(ano, habitantes_tx):
     return __get_df_painel(ano, habitantes_tx, coluna='COD_SUBGRUPO', nivel='SUBGRUPO')
 
-def get_df_grupo_painel(ano,habitantes_tx):
+
+def get_df_grupo_painel(ano, habitantes_tx):
     return __get_df_painel(ano, habitantes_tx, coluna='COD_GRUPO', nivel='GRUPO')
+
 
 def __get_df_painel(ano, habitantes_tx, coluna, nivel):
     df_analise = get_df_procedimentos_realizados_por_municipio_e_populacao(ano)
@@ -98,14 +120,12 @@ def __get_df_painel_brasil(df_analise, coluna):
     return df_procedimento_brasil_painel
 
 
-
-
 if __name__ == '__main__':
     habitantes_tx = 100
     get_df_grupo_painel(2014, habitantes_tx)
-    #get_df_subgrupo_painel(2008, habitantes_tx)
-    #get_df_forma_painel(2019, habitantes_tx)
-    #get_df_procedimento_painel()
+    # get_df_subgrupo_painel(2008, habitantes_tx)
+    # get_df_forma_painel(2019, habitantes_tx)
+    # get_df_procedimento_painel()
     # get_df_procedimento_painel_brasil(2019)
     # get_df_procedimento_painel_uf(2019)
     # get_df_procedimentos_realizados_por_municipio_e_populacao(2015)
