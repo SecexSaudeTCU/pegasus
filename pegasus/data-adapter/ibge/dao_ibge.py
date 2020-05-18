@@ -3,8 +3,8 @@ import pandas as pd
 
 
 class DaoIBGE(DaoPostgresSQL):
-    def __init__(self):
-        super(DaoIBGE, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
+    def __init__(self, arquivo_configuracao):
+        super(DaoIBGE, self).__init__(arquivo_configuracao)
 
     def get_df_populacao_municipios(self):
         """

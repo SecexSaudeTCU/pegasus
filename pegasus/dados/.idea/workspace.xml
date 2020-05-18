@@ -5,8 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/load_any.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_any.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transform/extract/folder.py" beforeDir="false" afterPath="$PROJECT_DIR$/transform/extract/folder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-adapter/ibge/ibge_facade.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/ibge/ibge_facade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-adapter/sih/dao_sih.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/sih/dao_sih.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../data-adapter/sih/sih_facade.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data-adapter/sih/sih_facade.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/load_any.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="154" column="8" selection-start-line="154" selection-start-column="8" selection-end-line="154" selection-end-column="8" />
+            <state relative-caret-position="464">
+              <caret line="166" column="22" lean-forward="true" selection-start-line="166" selection-start-column="22" selection-end-line="166" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -163,8 +161,8 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46676096" visible="true" weight="0.24438573" />
-      <window_info id="Structure" order="1" sideWeight="0.53323907" side_tool="true" visible="true" weight="0.24438573" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46534654" visible="true" weight="0.24438573" />
+      <window_info id="Structure" order="1" sideWeight="0.5346535" side_tool="true" visible="true" weight="0.24438573" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32956153" />
@@ -354,8 +352,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/load_any.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="154" column="8" selection-start-line="154" selection-start-column="8" selection-end-line="154" selection-end-column="8" />
+        <state relative-caret-position="464">
+          <caret line="166" column="22" lean-forward="true" selection-start-line="166" selection-start-column="22" selection-end-line="166" selection-end-column="22" />
         </state>
       </provider>
     </entry>

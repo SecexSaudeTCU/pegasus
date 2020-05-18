@@ -5,8 +5,8 @@ from util.postgres.dao_util import DaoPostgresSQL
 
 class DaoSIH(DaoPostgresSQL):
 
-    def __init__(self):
-        super(DaoSIH, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
+    def __init__(self, arquivo_configuracao):
+        super(DaoSIH, self).__init__(arquivo_configuracao)
 
     def get_df_descricao_procedimentos(self):
         """
