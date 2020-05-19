@@ -1,13 +1,11 @@
 import psycopg2
-import yaml
+from util.config.configuracoes import Config
 
+class ConfiguracoesConexaoPostgresSQL(Config):
 
-class ConfiguracoesConexaoPostgresSQL:
-
-    def __init__(self, arquivo_configuracao='config.yml'):
-        with open(arquivo_configuracao, "r") as ymlfile:
-            cfg = yaml.load(ymlfile)
-        self.config_banco = cfg['postgres_sql']
+    def __init__(self, arquivo_configuracao):
+        super(ConfiguracoesConexaoPostgresSQL, self).__init__(arquivo_configuracao)
+        self.config_banco = self.cfg['postgres_sql']
 
     def get_conexao(self):
         #TODO: Usar o parâmetro connection_factory

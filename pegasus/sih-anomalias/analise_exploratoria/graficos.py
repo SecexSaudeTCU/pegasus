@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def exibir_grafico_qtd_linhas_por_nivel(ano, habitantes_tx, arquivo_configuracao):
-    df_nivel = get_df_nivel(ano, arquivo_configuracao, habitantes_tx)
+    df_nivel = __get_df_nivel(ano, arquivo_configuracao, habitantes_tx)
     labels = df_nivel.NIVEL
     cores = ["#4e8b6b", "#69cacd", "#66bbe2", "#767ddd"]
 
@@ -21,20 +21,20 @@ def exibir_grafico_qtd_linhas_por_nivel(ano, habitantes_tx, arquivo_configuracao
 
 def exibir_grafico_barras_qtd_linhas_por_nivel(ano, habitantes_tx, arquivo_configuracao):
     plt.figure(figsize=(10, 5))
-    df_nivel_join = get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao)
+    df_nivel_join = __get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao)
     plt.bar(df_nivel_join.NIVEL, df_nivel_join.ANO)
     plt.title('Quantidade de linhas x Nível\n\n')
 
     plt.show()
 
-def get_df_nivel(ano, arquivo_configuracao, habitantes_tx):
+def __get_df_nivel(ano, arquivo_configuracao, habitantes_tx):
     fachada = SIHFacade(arquivo_configuracao)
     df_nivel = fachada.get_df_nivel(ano, habitantes_tx)
     return df_nivel
 
 
 def exibir_grafico_qtd_tipos_servico_por_nivel(ano, habitantes_tx, arquivo_configuracao):
-    df_nivel_proc = get_df_nivel_procedimento(ano, arquivo_configuracao, habitantes_tx)
+    df_nivel_proc = __get_df_nivel_procedimento(ano, arquivo_configuracao, habitantes_tx)
 
     cores = cores = ["#4e8b6b", "#69cacd", "#66bbe2", "#767ddd"]
     total = df_nivel_proc.PROCEDIMENTO.sum()
@@ -49,14 +49,14 @@ def exibir_grafico_qtd_tipos_servico_por_nivel(ano, habitantes_tx, arquivo_confi
 
 def exibir_grafico_barras_qtd_tipos_servico_por_nivel(ano, habitantes_tx, arquivo_configuracao):
     plt.figure(figsize=(10, 5))
-    df_nivel_join = get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao)
+    df_nivel_join = __get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao)
     plt.bar(df_nivel_join.NIVEL, df_nivel_join.PROCEDIMENTO)
     plt.title('Quantidade de diferentes serviços x Nível\n\n')
 
     plt.show()
 
 def exibir_grafico_consolidado_niveis(ano, habitantes_tx, arquivo_configuracao):
-    df_nivel_join = get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao)
+    df_nivel_join = __get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao)
 
     fig = plt.figure(figsize=(10, 5))
     ax1 = fig.add_subplot(111)
@@ -77,7 +77,7 @@ def exibir_grafico_consolidado_niveis(ano, habitantes_tx, arquivo_configuracao):
     fig.tight_layout()
     plt.show()
 
-def autolabel(rect1, rect2, ax, ax2):
+def __autolabel(rect1, rect2, ax, ax2):
     valores = rect2[0].get_data()[1]
     i=0
     for rect in rect1:
@@ -95,13 +95,13 @@ def autolabel(rect1, rect2, ax, ax2):
                     color = cor, horizontalalignment='left' )
         i=i+1
 
-def get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao):
-    df_nivel_join = pd.merge(get_df_nivel(ano, arquivo_configuracao, habitantes_tx),
-                             get_df_nivel_procedimento(ano, arquivo_configuracao, habitantes_tx), on=['NIVEL'])
+def __get_df_info_niveis(ano, habitantes_tx, arquivo_configuracao):
+    df_nivel_join = pd.merge(__get_df_nivel(ano, arquivo_configuracao, habitantes_tx),
+                             __get_df_nivel_procedimento(ano, arquivo_configuracao, habitantes_tx), on=['NIVEL'])
     print(df_nivel_join)
     return df_nivel_join
 
-def get_df_nivel_procedimento(ano, arquivo_configuracao, habitantes_tx):
+def __get_df_nivel_procedimento(ano, arquivo_configuracao, habitantes_tx):
     fachada = SIHFacade(arquivo_configuracao)
     df_nivel_proc = fachada.get_df_nivel_procedimento(ano, habitantes_tx)
     return df_nivel_proc
