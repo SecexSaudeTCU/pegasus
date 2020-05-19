@@ -549,7 +549,7 @@ def files_to_load(df_files_ftp, df_files_pg):
     df_difference = pd.DataFrame(columns=['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP'])
     # Iteração sobre cada nome de arquivo "dbc" que falta ser carregado
     for file_name in list_files_exclusivos_ftp:
-        # Coleta a linha do objeto pandas DataFrame "df_files_ftp" que contém na coluna Arquivo o valor "file_name"
+        # Coleta a linha do objeto pandas DataFrame "df_files_ftp" que contém na coluna NOME o valor "file_name"
         row = df_files_ftp.loc[df_files_ftp['NOME'] == file_name]
         # Aloca a linha "row" no objeto pandas DataFrame "df_difference"
         df_difference = df_difference.append(row, ignore_index=True)

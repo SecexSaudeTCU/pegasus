@@ -2,7 +2,6 @@
 #  SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM #
 ############################################################################################################################################################################
 
-import sys
 import os
 import time
 from datetime import datetime
@@ -11,7 +10,6 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-sys.path.append('.')
 from transform.prepare_SIM import DataSimMain, DataSimAuxiliary
 
 ############################################################################################################################################################################

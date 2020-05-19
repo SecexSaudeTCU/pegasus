@@ -8,7 +8,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from .extract.download_SIA import download_SIAXXaamm, download_table_dbf, download_table_cnv
+from transform.extract.download_SIA import download_SIAXXaamm, download_table_dbf, download_table_cnv
 
 """
 Módulo de limpeza/tratamento de dados do SIA.

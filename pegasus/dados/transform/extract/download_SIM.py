@@ -10,12 +10,12 @@ from ftplib import FTP
 from zipfile import ZipFile
 from dbfread import DBF
 
-from .folder import CACHEPATH
+from transform.extract.folder import CACHEPATH
 
 if os.name == 'nt':
-    from .read_windows import read_dbc, read_cnv
+    from transform.extract.read_windows import read_dbc, read_cnv
 elif os.name == 'posix':
-    from .read_unix import read_dbc, read_cnv
+    from transform.extract.read_unix import read_dbc, read_cnv
 
 """
 Lê arquivos principais de dados do SIM (DOXXaaaa = Declaração de Óbito) constante do endereço ftp

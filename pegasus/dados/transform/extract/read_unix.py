@@ -6,8 +6,8 @@ from tempfile import NamedTemporaryFile
 from dbfread import DBF
 import pandas as pd
 
-from .folder import CACHEPATH
-from ._readdbc import ffi, lib
+from transform.extract.folder import CACHEPATH
+from transform.extract._readdbc import ffi, lib
 
 """
 The functions read_dbc and dbc2dbf are based on the work of Flávio Coelho (https://github.com/fccoelho/PySUS)
