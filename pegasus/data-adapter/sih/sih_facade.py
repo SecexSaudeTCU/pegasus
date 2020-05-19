@@ -2,6 +2,8 @@ from sih.dao_sih import DaoSIH
 from ibge.ibge_facade import IBGEFacade
 import pandas as pd
 from sih.configuracoes import ConfiguracoesAnalise
+import time
+import sys
 
 class SIHFacade:
     def __init__(self, arquivo_configuracao):
@@ -123,22 +125,46 @@ class SIHFacade:
 
         return df_nivel_proc
 
-    def get_df_descricao_procedimentos(self, ano):
+    #TODO: Otimizar.  Esta consulta está levando horas...
+    def __get_df_descricao_procedimentos(self, ano):
+        start_time = time.time()
         df_proc_ano_analise = self.__get_df_procedimentos_por_ano(ano)
+        print("self.__get_df_procedimentos_por_ano(ano): --- %s seconds ---" % (time.time() - start_time))
+
         df_procedimentos_analise = pd.DataFrame(columns=['PROCEDIMENTO'],
                                                 data=df_proc_ano_analise['PROCEDIMENTO'].unique())
 
+        start_time = time.time()
         df_descricao_procedimento = self.dao.get_df_descricao_procedimentos()
+        print("self.dao.get_df_descricao_procedimentos(): --- %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
         df_procedimentos_analise['DESCRICAO_COMPLETA'] = df_procedimentos_analise['PROCEDIMENTO'].apply(
             SIHFacade.__get_proc_descricao, df_descricao_procedimento=df_descricao_procedimento)
+        print("SIHFacade.__get_proc_descricao: --- %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
         df_procedimentos_analise['DESCRICAO'] = df_procedimentos_analise['PROCEDIMENTO'].apply(
             SIHFacade.__get_proc_name, df_descricao_procedimento=df_descricao_procedimento)
+        print("SIHFacade.__get_proc_name: --- %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
         df_procedimentos_analise = df_procedimentos_analise.set_index('PROCEDIMENTO')
+        print("df_procedimentos_analise.set_index('PROCEDIMENTO'): --- %s seconds ---" % (time.time() - start_time))
 
         print(df_procedimentos_analise.shape)
         print(df_procedimentos_analise.head())
 
         return df_procedimentos_analise
+
+    def get_df_procedimentos_por_ano_com_descricao(self, ano):
+        df_proc_ano_analise = self.__get_df_procedimentos_por_ano(ano)
+        df_proc_ano_analise = df_proc_ano_analise.join(self.__get_df_descricao_procedimentos(ano), on=['PROCEDIMENTO'])
+
+        print(df_proc_ano_analise.shape)
+        print(df_proc_ano_analise.head())
+
+        return df_proc_ano_analise
 
     @staticmethod
     def __get_proc_descricao(procedimento, df_descricao_procedimento):
@@ -146,7 +172,7 @@ class SIHFacade:
 
         # Obtendo nome do procedimento
         df_proc = df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]
-        if (len(df_proc) > 0):
+        if len(df_proc) > 0:
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
             if (len_proc in (2, 4, 6, 10)):
@@ -228,8 +254,7 @@ class SIHFacade:
 
 
 if __name__ == '__main__':
-    # TODO: Mudar para que o arquivo de configuração possa ser passado por linha de comando
-    arquivo_configuracao = input('Arquivo de configuração de acesso a dados:')
+    arquivo_configuracao = sys.argv[1]
 
     fachada = SIHFacade(arquivo_configuracao)
-    fachada.get_df_descricao_procedimentos(2014)
+    fachada.get_df_procedimentos_por_ano_com_descricao(2014)

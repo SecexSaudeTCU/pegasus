@@ -4,6 +4,5 @@ postgres_sql:
   password: postgres
   port: 5432
   database: dbsus2
-
 analise:
   habitantes_tx: 100
