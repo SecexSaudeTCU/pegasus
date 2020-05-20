@@ -27,21 +27,21 @@ AP_S_BOXCOX = 'NORMAL APÓS BOXCOX'
 class SIHCompositeDetectorOutlier(DetectorOutlier):
     def __init__(self, df, nome_coluna, distribuicao, qtd_std=3, quantidade_vizinhos=20):
         super(SIHCompositeDetectorOutlier, self).__init__(df, nome_coluna)
-        self.distribuicao = distribuicao
-        self.qtd_std = qtd_std
-        self.quantidade_vizinhos = quantidade_vizinhos
+        self.__distribuicao = distribuicao
+        self.__qtd_std = qtd_std
+        self.__quantidade_vizinhos = quantidade_vizinhos
 
     def get_outliers(self):
         df_pop = self.df[[self.nome_coluna]]
 
         print(df_pop.describe())
 
-        if (self.distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, AP_S_BOXCOX)):
+        if (self.__distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, AP_S_BOXCOX)):
             # metodos estatisticos
             # Z-score
-            zscore_outliers = ZScore(self.df, self.nome_coluna, self.qtd_std).get_outliers()
+            zscore_outliers = ZScore(self.df, self.nome_coluna, self.__qtd_std).get_outliers()
             # Z-score modificado
-            zscore_outliers2 = ZScoreModificado(self.df, self.nome_coluna, self.qtd_std).get_outliers()
+            zscore_outliers2 = ZScoreModificado(self.df, self.nome_coluna, self.__qtd_std).get_outliers()
             # IQR
             iqr_outliers = InterquartileRange(self.df, self.nome_coluna).get_outliers()
 
@@ -51,16 +51,16 @@ class SIHCompositeDetectorOutlier(DetectorOutlier):
 
         # baseado em densidade
         # LocalOutlierFactor
-        lof_outliers = LOF(self.df, self.nome_coluna, self.quantidade_vizinhos).get_outliers()
+        lof_outliers = LOF(self.df, self.nome_coluna, self.__quantidade_vizinhos).get_outliers()
 
-        if (self.distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, AP_S_BOXCOX)):
+        if (self.__distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, AP_S_BOXCOX)):
             comum_outliers = zscore_outliers & zscore_outliers2 & iqr_outliers & isolation_outliers & lof_outliers
         else:
             comum_outliers = isolation_outliers & lof_outliers
         outliers = sorted(set(comum_outliers))
 
         if len(outliers) > 0:
-            if (self.distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, 'NORMAL APÓS BOXCOX')):
+            if (self.__distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, 'NORMAL APÓS BOXCOX')):
                 print('\nZ-Score: ' + str(len(zscore_outliers)),
                       '\nZ-Score modificado: ' + str(len(zscore_outliers2)),
                       '\nIQR: ' + str(len(iqr_outliers)),
@@ -163,7 +163,7 @@ def __gerar_informacoes_estatisticas(df_procedimentos_por_ano_com_descricao, len
     return df_proc
 
 
-def gerar_dataframes():
+def __gerar_dataframes():
     df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(ano)
     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
         ano, df_descricao_procedimentos)
@@ -184,15 +184,15 @@ def __get_df_procedimentos_para_analise(len_min, df_descricao_procedimentos, df_
     return df_proc_ano_completo_analise
 
 
-def get_outliers(config, df_procedimentos, df_proc_ano_completo):
+def get_outliers(config, df_descricao_procedimentos, df_proc_ano_completo):
     df_proc_outlier = pd.DataFrame(columns=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'TX_QTD'])
 
     # quantidade de desvio padrão para ser considerado outlier
     qtd_std = config.get_propriedade('qtd_std_zcore')
     quantidade_vizinhos = config.get_propriedade('quantidade_vizinhos_lof')
 
-    for procedimento in df_procedimentos.index.values:
-        print('\n\n', df_procedimentos.loc[procedimento]['DESCRICAO'])
+    for procedimento in df_descricao_procedimentos.index.values:
+        print('\n\n', df_descricao_procedimentos.loc[procedimento]['DESCRICAO'])
 
         # Obtendo dados da análise para o procedimento
         df_proc = df_proc_ano_completo[df_proc_ano_completo['PROCEDIMENTO'] == procedimento][['ANO', 'cod_municipio',

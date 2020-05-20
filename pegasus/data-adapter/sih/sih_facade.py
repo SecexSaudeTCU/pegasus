@@ -8,12 +8,12 @@ import sys
 
 class SIHFacade:
     def __init__(self, arquivo_configuracao):
-        self.dao = DaoSIH(arquivo_configuracao)
-        self.ibge_facade = IBGEFacade(arquivo_configuracao)
-        self.habitantes_tx = ConfiguracoesAnalise(arquivo_configuracao).get_propriedade('habitantes_tx')
+        self.__dao = DaoSIH(arquivo_configuracao)
+        self.__ibge_facade = IBGEFacade(arquivo_configuracao)
+        self.__habitantes_tx = ConfiguracoesAnalise(arquivo_configuracao).get_propriedade('habitantes_tx')
 
     def get_df_lista_procedimento_ano(self, ano):
-        df_rd = self.dao.get_df_procedimentos_realizados_por_municipio(ano)
+        df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
 
         df_lista_procedimento_ano = df_rd[['ano_cmpt', 'proc_rea']].drop_duplicates()
         df_lista_procedimento_ano['key'] = 0
@@ -21,7 +21,7 @@ class SIHFacade:
         return df_lista_procedimento_ano
 
     def get_df_lista_municipio_ano(self, ano):
-        df_rd = self.dao.get_df_procedimentos_realizados_por_municipio(ano)
+        df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
 
         df_lista_municipio_ano = df_rd[['ano_cmpt', 'cod_municipio']].drop_duplicates()
         df_lista_municipio_ano['key'] = 0
@@ -29,14 +29,14 @@ class SIHFacade:
         return df_lista_municipio_ano
 
     def __get_df_populacao(self):
-        df_populacao = self.ibge_facade.get_df_populacao_ibge()
-        df_coordenadas = self.dao.get_df_coordenadas()
+        df_populacao = self.__ibge_facade.get_df_populacao_ibge()
+        df_coordenadas = self.__dao.get_df_coordenadas()
         df_populacao = pd.merge(df_populacao, df_coordenadas, on='cod_municipio')
 
         return df_populacao
 
     def __get_df_procedimentos_realizados_por_municipio_e_populacao(self, ano):
-        df_rd = self.dao.get_df_procedimentos_realizados_por_municipio(ano)
+        df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
 
         df_populacao = self.__get_df_populacao()
 
@@ -50,8 +50,8 @@ class SIHFacade:
         df_analise['vl_total'] = df_analise['vl_total'].fillna(0)
 
         # Trata os casos de municípios ignorados, preenchendo ao menos com a população da UF.
-        df_populacao_ufs = self.ibge_facade.get_df_populacao_ufs()
-        df_estados = self.dao.get_df_estados()
+        df_populacao_ufs = self.__ibge_facade.get_df_populacao_ufs()
+        df_estados = self.__dao.get_df_estados()
 
         for index, row in df_analise.iterrows():
             if pd.isna(row['POPULACAO_UF']):
@@ -136,7 +136,7 @@ class SIHFacade:
                                                 data=df_proc_ano_analise['PROCEDIMENTO'].unique())
 
         start_time = time.time()
-        df_descricao_procedimento = self.dao.get_df_descricao_procedimentos()
+        df_descricao_procedimento = self.__dao.get_df_descricao_procedimentos()
         print("self.dao.get_df_descricao_procedimentos(): --- %s seconds ---" % (time.time() - start_time))
 
         start_time = time.time()
@@ -245,9 +245,9 @@ class SIHFacade:
 
         df_painel = df_painel.rename(columns={"ano_cmpt": "ANO", coluna: "PROCEDIMENTO"})
 
-        df_painel['TX'] = df_painel['qtd_procedimento'] * self.habitantes_tx / df_painel['POPULACAO']
-        df_painel['TX_UF'] = df_painel['qtd_procedimento_UF'] * self.habitantes_tx / df_painel['POPULACAO_UF']
-        df_painel['TX_BRASIL'] = df_painel['qtd_procedimento_BRASIL'] * self.habitantes_tx / df_painel[
+        df_painel['TX'] = df_painel['qtd_procedimento'] * self.__habitantes_tx / df_painel['POPULACAO']
+        df_painel['TX_UF'] = df_painel['qtd_procedimento_UF'] * self.__habitantes_tx / df_painel['POPULACAO_UF']
+        df_painel['TX_BRASIL'] = df_painel['qtd_procedimento_BRASIL'] * self.__habitantes_tx / df_painel[
             'POPULACAO_BRASIL']
 
         df_painel['NIVEL'] = nivel
