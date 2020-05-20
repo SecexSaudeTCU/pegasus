@@ -15,12 +15,12 @@ from utilities.essential_postgreSQL import files_in_ftp_subbase, get_tables_coun
 def load_any(db_name, db_user, db_password):
     """
     Cria um schema do banco de dados "db_name" no SGBD PostgreSQL sem integridade referencial (de "primary and foreign
-    keys") e insere nele dados principais das bases de dados (do Datasus) CNES, SIH, SIA, SINAN ou XXX no SGBD PostgreSQL
-    pelo método copy_expert da classe cursor do pacote psycopg. Os dados são inseridos por sub-base de dados: CNES_ST,
-    CNES_DC, CNES_PF, CNES_LT, CNES_EQ, CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM, CNES_EE, CNES_EF, CNES_IN, SIH_RD,
-    SIH_SP, SIA_PA, SINAN_DENG ou XXX. Assim, para cada sub-base de dados do Datasus é criado um schema.
+    keys") e insere nele dados das bases de dados (do Datasus) CNES, SIH, SIA, SINAN ou XXX no SGBD PostgreSQL pelo
+    método copy_expert da classe cursor do pacote psycopg. Os dados são inseridos por sub-base de dados: CNES_ST, CNES_DC,
+    CNES_PF, CNES_LT, CNES_EQ, CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM, CNES_EE, CNES_EF, CNES_IN, SIH_RD, SIH_SP,
+    SIA_PA, SINAN_DENG ou XXX. Assim, para cada sub-base de dados do Datasus é criado um schema.
 
-    A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos secundários de dados
+    A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos auxiliares de dados
     em formato "dbf", "cnv" e "xlsx" das sub-bases de dados CNES_ST (STXXaamm), CNES_DC (DCXXaamm), CNES_PF (PFXXaamm),
     CNES_LT (LTXXaamm), CNES_EQ (EQXXaamm), CNES_SR (SRXXaamm), CNES_EP (EPXXaamm), CNES_HB (HBXXaamm), CNES_RC (RCXXaamm),
     CNES_GM (GMXXaamm), CNES_EE (EEXXaamm), CNES_EF (EFXXaamm), CNES_IN (INXXaamm), SIH_RD (RDXXaamm), SIH_SP (SPXXaamm),
@@ -39,27 +39,6 @@ def load_any(db_name, db_user, db_password):
     foram  criados a partir de relações descritas no Dicionário de Dados da respectiva base de dado do Datasus e não
     retratadas em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
 
-    É necessário instalar o SGBD PostgreSQL (https://www.postgresql.org/download/) e uma plataforma para gerenciamento de
-    banco de dados é recomendável ter, tal como pgAdmin (https://www.pgadmin.org/download/) ou DBeaver [Community]
-    (https://dbeaver.io/). É necessário ter as seguintes bibliotecas Python instaladas: psycopg2, SQLAlchemy, ftplib,
-    zipfile, dbfread, xlrd, pyarrow, fast_parquet, numpy e pandas.
-
-    Para se executar esse pacote em Python 3.7.4 a partir do sistema operacional Windows 10 também se instalou em C:/
-    o programa TabWin do Datasus, que no seu diretório raiz contém um executável que permite a conversão de arquivos
-    em formato "dbc" para "dbf" denominado "dbf2dbc". O programa TabWin pode ser baixado de http://datasus1.saude.gov.br/...
-    transferencia-download-de-arquivos/download-do-tabwin selecionando o link "Tab415.zip" presente na primeira linha da
-    coluna "Nome" da tabela que aparece nessa página. As instruções de instalação presentes nessa página ensinam:
-
-    "Os arquivos compactados abaixo contêm os componentes básicos que permitem o funcionamento do Tab para Windows.
-    Sugerimos que você crie uma pasta, em seu computador, chamada TabWin, e copie o arquivo abaixo para essa pasta."
-
-    Por outro lado, para executar esse pacote em Python 3.6.9 a partir de sistemas operacionais baseados em Unix também
-    se instalou a dependência libffi ("$ sudo apt install libffi-dev") e as bibliotecas Python codecs e cffi, prescindindo,
-    porém, da instalação do executável "dbf2dbc". Nesse caso, se deve executar, antes de qualquer carga, o módulo python
-    "_build_readdbc.py" com sucesso. Ele está contido no sub-package "transform.extract" e serve para criar um wrapper de
-    um módulo na linguagem C (https://github.com/madler/zlib/tree/master/contrib/blast) que descompacta arquivos "dbc"
-    para "dbf".
-
     O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode ser
     alterado editando o módulo "folder" contido no sub-package "transform.extract".
     """
@@ -67,7 +46,7 @@ def load_any(db_name, db_user, db_password):
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
 
-    print('\n*****************************************************************')
+    print('\n*******************************************************************')
     print('O banco de dados PostgreSQL a ser preenchido deve antes ser criado!'.upper())
     print('*******************************************************************\n')
 

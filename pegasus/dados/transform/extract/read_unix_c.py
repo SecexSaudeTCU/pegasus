@@ -1,3 +1,7 @@
+"""
+As funções read_dbc and dbc2dbf no trabalho de Flávio Coelho (https://github.com/fccoelho/PySUS)
+"""
+
 import os
 import subprocess
 import codecs
@@ -6,13 +10,8 @@ from tempfile import NamedTemporaryFile
 from dbfread import DBF
 import pandas as pd
 
-from transform.extract.folder import CACHEPATH
 from transform.extract._readdbc import ffi, lib
 
-"""
-The functions read_dbc and dbc2dbf are based on the work of Flávio Coelho (https://github.com/fccoelho/PySUS)
-
-"""
 
 def dbc2dbf(infile, outfile):
     """

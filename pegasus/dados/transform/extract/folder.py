@@ -1,16 +1,17 @@
-import os
-
 """
-Cria o diretório Datasus_content no diretório root do drive D do computador Avell se não existente.
+Cria o diretório datasus_content no home directory do computador de execução deste módulo.
 
 Código elaborado por Flávio Coelho (https://github.com/fccoelho/PySUS).
 
 """
 
+import os
+from pathlib import Path
 
-if not os.path.exists(os.path.join('D:/', 'datasus_content')):
-    os.mkdir(os.path.join('D:/', 'datasus_content'))
-CACHEPATH = os.path.join('D:/', 'datasus_content')
+
+if not os.path.exists(os.path.join(Path.home(), 'datasus_content')):
+    os.mkdir(os.path.join(Path.home(), 'datasus_content'))
+CACHEPATH = os.path.join(Path.home(), 'datasus_content')
 
 
 def cache_contents():
