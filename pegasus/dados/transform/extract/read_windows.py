@@ -5,7 +5,7 @@ from tempfile import NamedTemporaryFile
 from dbfread import DBF
 import pandas as pd
 
-from .folder import CACHEPATH
+from transform.extract.folder import CACHEPATH
 
 """
 The function read_dbc is based on the work of Flávio Coelho (https://github.com/fccoelho/PySUS)

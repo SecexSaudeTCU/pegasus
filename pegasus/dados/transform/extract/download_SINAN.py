@@ -13,9 +13,9 @@ from dbfread import DBF
 from .folder import CACHEPATH
 
 if os.name == 'nt':
-    from .read_windows import read_dbc, read_cnv
+    from transform.extract.read_windows import read_dbc, read_cnv
 elif os.name == 'posix':
-    from .read_unix import read_dbc, read_cnv
+    from transform.extract.read_unix import read_dbc, read_cnv
 
 """
 Messy system!!!!!
