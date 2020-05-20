@@ -1,6 +1,18 @@
-###############################################################################################################################################################
-# SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN #
-###############################################################################################################################################################
+###########################################################################################################################
+# SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN #
+###########################################################################################################################
+"""
+Messy system!!!!!
+
+Lê arquivos principais de dados do SINAN (DENGXXaaaa = Dengue e Chikungunya, XXX) constante do endereço
+ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato "parquet". Caso o
+arquivo de dados já conste da pasta criada automaticamente no módulo folder é então realizada a leitura
+desse arquivo que está no formato "parquet".
+
+Falar sobre o download das tabelas em formato "dbf"...
+
+Falar sobre o download das tabelas em formato "cnv"...
+"""
 
 import os
 
@@ -15,23 +27,8 @@ from .folder import CACHEPATH
 if os.name == 'nt':
     from transform.extract.read_windows import read_dbc, read_cnv
 elif os.name == 'posix':
-    from transform.extract.read_unix import read_dbc, read_cnv
+    from transform.extract.read_unix_wine import read_dbc, read_cnv
 
-"""
-Messy system!!!!!
-
-Lê arquivos principais de dados do SINAN (DENGXXaaaa = Dengue e Chikungunya, XXX) constante do endereço
-ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato "parquet". Caso o
-arquivo de dados já conste da pasta criada automaticamente no módulo folder é então realizada a leitura
-desse arquivo que está no formato "parquet".
-
-Falar sobre o download das tabelas em formato "dbf"...
-
-Falar sobre o download das tabelas em formato "cnv"...
-
-Esse código é baseado no projeto de Flávio Coelho (https://github.com/fccoelho/PySUS).
-
-"""
 
 # Função de download de arquivos principais de dados do SINAN em formato "dbc" (trata-se de dados...
 # das n child tables referidas acima, no docstring desse módulo)

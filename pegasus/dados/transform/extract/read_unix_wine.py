@@ -5,6 +5,7 @@
 import os
 import subprocess
 from pathlib import Path
+import codecs
 
 from dbfread import DBF
 import pandas as pd
@@ -17,7 +18,7 @@ def dbc2dbf(infile):
     :return: "dbf" file name.
     """
 
-    subprocess.run([str(Path.home()).replace('\\', '/') +  '/dbf2dbc/dbf2dbc.exe', infile])
+    subprocess.run(['wine', str(Path.home()) +  '/dbf2dbc/dbf2dbc.exe', infile])
     os.unlink(infile)
     outfile = infile[:-4] + '.dbf'
 
@@ -65,7 +66,7 @@ def attempt_int(value):
         return value
 
 
-def read_cnv(filename):
+def read_cnv(name_of_file):
 
     """
     Opens a Datasus "cnv" file and return its contents as a pandas
@@ -76,7 +77,16 @@ def read_cnv(filename):
     """
 
     # Cria um file handler do arquivo "cnv"
-    fhandler = open(filename)
+    try:
+        # Torna a variável string "name_of_file" UPPER CASE e concatena a ela a string ".cnv"
+        filename = name_of_file[:-4] + '.cnv'
+        # Cria um file handler do arquivo "cnv"
+        fhandler = codecs.open(filename, 'r', encoding='iso-8859-1', errors='ignore')
+    except:
+        # Torna a variável string "name_of_file" UPPER CASE e concatena a ela a string ".CNV"
+        filename = name_of_file[:-4] + '.CNV'
+        # Cria um file handler do arquivo "CNV"
+        fhandler = codecs.open(filename, 'r', encoding='iso-8859-1', errors='ignore')
 
     k = 0  # Inicialização de uma variável para identificar a primeira e as outras linhas
     lista_significacao = []  # "Inicialização" da lista de decodificações
@@ -113,7 +123,7 @@ def read_cnv(filename):
                 lista_id.append(linha[112:112+size_id].strip())
 
     elif filename[:-4] == 'cnv/CNES_Equip_Tp':  # Os dois últimos dígitos da coluna de códigos desse arquivo permite construir a parent table CODEQUIP e assim...
-                                            # decodificar a coluna CODEQUIP_ID da tabela eqbr do banco de dados CNES_EQ
+                                                # decodificar a coluna CODEQUIP_ID da tabela eqbr do banco de dados CNES_EQ
         size_id = 2
         for linha in fhandler:
             k += 1

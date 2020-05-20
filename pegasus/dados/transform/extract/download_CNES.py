@@ -1,6 +1,19 @@
-##############################################################################################################################################################
-# CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
-##############################################################################################################################################################
+###########################################################################################################################
+# CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES CNES #
+###########################################################################################################################
+"""
+Lê arquivos principais de dados do CNES (STXXaamm = Estabelecimentos; DCXXaamm = Dados Complementares;
+PFXXaamm = Profissionais; LTXXaamm = Leitos; EQXXaamm = Equipamentos; SRXXaamm = Serviço Especializado;
+EPXXaamm = Equipe; HBXXaamm = Habilitações; RCXXaamm = Regras Contratuais; GMXXaamm = Gestão e Metas;
+EEXXaamm = Estabelecimento de Ensino; EFXXaamm = Estabelecimento Filantrópico; INXXaamm = IntegraSUS)
+constante do endereço ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato
+"parquet". Caso o arquivo de dados já conste da pasta criada automaticamente no módulo folder é então
+realizada a leitura desse arquivo que está no formato "parquet".
+
+Falar sobre o download das tabelas em formato "dbf"...
+
+Falar sobre o download das tabelas em formato "cnv"...
+"""
 
 import os
 
@@ -15,24 +28,8 @@ from transform.extract.folder import CACHEPATH
 if os.name == 'nt':
     from transform.extract.read_windows import read_dbc, read_cnv
 elif os.name == 'posix':
-    from transform.extract.read_unix import read_dbc, read_cnv
+    from transform.extract.read_unix_wine import read_dbc, read_cnv
 
-"""
-Lê arquivos principais de dados do CNES (STXXaamm = Estabelecimentos; DCXXaamm = Dados Complementares;
-PFXXaamm = Profissionais; LTXXaamm = Leitos; EQXXaamm = Equipamentos; SRXXaamm = Serviço Especializado;
-EPXXaamm = Equipe; HBXXaamm = Habilitações; RCXXaamm = Regras Contratuais; GMXXaamm = Gestão e Metas;
-EEXXaamm = Estabelecimento de Ensino; EFXXaamm = Estabelecimento Filantrópico; INXXaamm = IntegraSUS)
-constante do endereço ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato
-"parquet". Caso o arquivo de dados já conste da pasta criada automaticamente no módulo folder é então
-realizada a leitura desse arquivo que está no formato "parquet".
-
-Falar sobre o download das tabelas em formato "dbf"...
-
-Falar sobre o download das tabelas em formato "cnv"...
-
-Esse código é inspirado no projeto de Flávio Coelho (https://github.com/fccoelho/PySUS).
-
-"""
 
 # Função de download de arquivos principais de dados do CNES em formato "dbc" (trata-se de dados...
 # das 13 child tables referidas acima, no docstring desse módulo)
