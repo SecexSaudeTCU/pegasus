@@ -12,11 +12,10 @@ class SIHFacade:
         self.__ibge_facade = IBGEFacade(arquivo_configuracao)
         self.__habitantes_tx = ConfiguracoesAnalise(arquivo_configuracao).get_propriedade('habitantes_tx')
 
+    # TODO: ANÁLISE 2
     def get_df_lista_procedimento_ano(self, ano):
         df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
-
         df_lista_procedimento_ano = df_rd[['ano_cmpt', 'proc_rea']].drop_duplicates()
-        df_lista_procedimento_ano['key'] = 0
 
         return df_lista_procedimento_ano
 
@@ -35,12 +34,16 @@ class SIHFacade:
 
         return df_populacao
 
+    # TODO: MUDA ENTRE ANÁLISE 1 E ANÁLISE 2
     def __get_df_procedimentos_realizados_por_municipio_e_populacao(self, ano):
+        #############
+        # Trecho que difere entre análises 1 e 2
         df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
 
         df_populacao = self.__get_df_populacao()
 
         df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'], how="left")
+        #############
 
         df_analise['COD_FORMA'] = df_analise['proc_rea'].str[:6]
         df_analise['COD_SUBGRUPO'] = df_analise['proc_rea'].str[:4]
@@ -177,7 +180,7 @@ class SIHFacade:
         print("self.__get_proc_descricao() -> df_proc = "
               "df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]: --- "
               "%s seconds ---" % (
-                    time.time() - start_time))
+                      time.time() - start_time))
         if len(df_proc) > 0:
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
@@ -233,6 +236,8 @@ class SIHFacade:
         return proc_name
 
     def __get_df_painel(self, ano, coluna, nivel):
+        # TODO: Não precisa invocar esta linha aqui.  Basta que ela seja invocada uma única vez nas antes das várias
+        #  chamadas a este método.
         df_analise = self.__get_df_procedimentos_realizados_por_municipio_e_populacao(ano)
         df_painel = df_analise.groupby(
             ['ano_cmpt', 'cod_municipio', 'LATITUDE', 'LONGITUDE', 'nm_municipio', coluna, 'uf', 'POPULACAO',

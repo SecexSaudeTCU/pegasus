@@ -37,6 +37,7 @@ class DaoSIH(DaoPostgresSQL):
         conexao.close()
         return df
 
+    #TODO: ANÁLISE 2
     def get_df_procedimentos_realizados_por_municipio(self, ano):
         """
         Retorna os procedimentos realizados agrpados por município.
@@ -63,15 +64,3 @@ class DaoSIH(DaoPostgresSQL):
         df = pd.read_sql(sql, conexao)
         conexao.close()
         return df
-
-if __name__ == '__main__':
-    dao = DaoSIH()
-
-    df = dao.get_df_coordenadas()
-    print(df.head())
-
-    df = dao.get_df_procedimentos_realizados_por_municipio(2018)
-    print(df.head())
-
-    df = dao.get_df_descricao_procedimentos()
-    print(df.head())

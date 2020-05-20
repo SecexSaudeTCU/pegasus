@@ -10,6 +10,7 @@ import numpy as np
 from scipy import stats
 import pandas as pd
 from config.configuracoes import ConfiguracoesAnalise
+from ibge.ibge_facade import IBGEFacade
 
 NOME_COLUNA = 'TX_QTD'
 
@@ -163,13 +164,13 @@ def __gerar_informacoes_estatisticas(df_procedimentos_por_ano_com_descricao, len
     return df_proc
 
 
-def __gerar_dataframes():
-    df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(ano)
-    df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
-        ano, df_descricao_procedimentos)
-    df_descricao_procedimentos.to_csv('df_descricao_procedimentos.csv')
-    df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
-    return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
+# def __gerar_dataframes():
+#     df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(ano)
+#     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
+#         ano, df_descricao_procedimentos)
+#     df_descricao_procedimentos.to_csv('df_descricao_procedimentos.csv')
+#     df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
+#     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
 
 
 def __get_df_procedimentos_para_analise(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao):
@@ -216,39 +217,52 @@ def get_outliers(config, df_descricao_procedimentos, df_proc_ano_completo):
     return df_proc_outlier
 
 
-if __name__ == '__main__':
+def analise1():
     arquivo_configuracao = sys.argv[1]
-
     sih_facade = SIHFacade(arquivo_configuracao)
     ano = 2014
     # df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao = gerar_dataframes()
     df_descricao_procedimentos = pd.read_csv('df_descricao_procedimentos.csv')
     df_descricao_procedimentos = df_descricao_procedimentos.set_index('PROCEDIMENTO')
     df_procedimentos_por_ano_com_descricao = pd.read_csv('df_procedimentos_por_ano_com_descricao.csv')
-
     # get_df_distribuicao_nivel(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao)
     # __get_df_procedimentos_para_analise(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao)
-
     config = ConfiguracoesAnalise(arquivo_configuracao)
     df_proc_ano_completo = __get_df_procedimentos_para_analise(config.get_propriedade('len_min'),
                                                                df_descricao_procedimentos,
                                                                df_procedimentos_por_ano_com_descricao)
-
     df_proc_outlier_analise = get_outliers(config, df_descricao_procedimentos, df_proc_ano_completo)
-
     df_painel_analise = pd.merge(df_proc_ano_completo, df_proc_outlier_analise,
                                  on=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'TX_QTD', 'DISTRIBUICAO'], how='left')
     df_painel_analise['OUTLIER'] = df_painel_analise['OUTLIER'].fillna('N')
-
     print(df_painel_analise.shape)
     print(df_painel_analise.head(2))
-
     # coluna que identifica se o outlier é maior ou menor que a média
     df_painel_analise['OUTLIER_'] = 'N'
     df_painel_analise.loc[(df_painel_analise['OUTLIER'] == 'S') & (
             df_painel_analise['TX_QTD'] >= df_painel_analise['MEDIA']), 'OUTLIER_'] = 'S_MAIOR'
     df_painel_analise.loc[(df_painel_analise['OUTLIER'] == 'S') & (
             df_painel_analise['TX_QTD'] < df_painel_analise['MEDIA']), 'OUTLIER_'] = 'S_MENOR'
-
     # dado para painel
     df_painel_analise.to_csv('painel_SIH_DADOS_transformados_analise1', sep=';', index=False, decimal=',')
+
+## ANALISE 2 - municipio x procedimento - acrescentando qtd 0
+#TODO: Colocar aqui a explanação que está no TCC (inclui municípios onde não houve realização de cada procedimento)
+# def analise2():
+#     arquivo_configuracao = sys.argv[1]
+#
+#     sih_facade = SIHFacade(arquivo_configuracao)
+#     #df_populacao = sih_facade.
+#     df_populacao['key'] = 0
+#
+#
+#     ano = 2014
+#     df_lista_procedimento_ano = sih_facade.get_df_lista_procedimento_ano(ano)
+#     df_lista_procedimento_ano['key'] = 0
+#
+#     df_proc_ano_munic = pd.merge(df_lista_procedimento_ano, df_populacao, on='key', how='outer')
+#     print(df_proc_ano_munic.shape)
+#     df_proc_ano_munic.head(2)
+
+if __name__ == '__main__':
+    analise1()
