@@ -1,4 +1,9 @@
-from util.config.configuracoes import Config
+import yaml
+
+class Config:
+    def __init__(self, arquivo_configuracao):
+        with open(arquivo_configuracao, "r", encoding="utf8") as ymlfile:
+            self.cfg = yaml.load(ymlfile)
 
 class ConfiguracoesAnalise(Config):
     def __init__(self, arquivo_configuracao):

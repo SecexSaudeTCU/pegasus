@@ -1,5 +1,5 @@
 import psycopg2
-from util.config.configuracoes import Config
+from config.configuracoes import Config
 
 class ConfiguracoesConexaoPostgresSQL(Config):
 

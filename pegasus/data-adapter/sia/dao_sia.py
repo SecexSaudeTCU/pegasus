@@ -4,8 +4,8 @@ import pandas as pd
 
 class DaoSIA(DaoPostgresSQL):
 
-    def __init__(self):
-        super(DaoSIA, self).__init__(arquivo_configuracao='../util/postgres/config.yml')
+    def __init__(self, arquivo_configuracao):
+        super(DaoSIA, self).__init__(arquivo_configuracao)
 
     def obter_nome_procedimento(self, id):
         """
@@ -86,28 +86,3 @@ class DaoSIA(DaoPostgresSQL):
         conexao.close()
         return df
 
-if __name__ == '__main__':
-    dao = DaoSIA()
-    nome = dao.obter_nome_procedimento('01')
-    print(nome)
-
-    nome = dao.obter_nome_procedimento('0101')
-    print(nome)
-
-    nome = dao.obter_nome_procedimento('010101')
-    print(nome)
-
-    nome = dao.obter_nome_procedimento('0101010010')
-    print(nome)
-
-    df = dao.obter_procedimentos('01')
-    print(df.head())
-
-    df = dao.obter_procedimentos('0101')
-    print(df.head())
-
-    df = dao.obter_procedimentos('010101')
-    print(df.head())
-
-    df = dao.obter_procedimentos('0101010010')
-    print(df.head())

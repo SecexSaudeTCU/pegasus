@@ -6,3 +6,6 @@ postgres_sql:
   database: dbsus2
 analise:
   habitantes_tx: 100
+  len_min: 48
+  qtd_std_zcore: 3
+  quantidade_vizinhos_lof: 20

@@ -1,7 +1,7 @@
 from sih.dao_sih import DaoSIH
 from ibge.ibge_facade import IBGEFacade
 import pandas as pd
-from sih.configuracoes import ConfiguracoesAnalise
+from config.configuracoes import ConfiguracoesAnalise
 import time
 import sys
 

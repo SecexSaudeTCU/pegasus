@@ -4,7 +4,7 @@ from sklearn.neighbors import LocalOutlierFactor
 class LOF(DetectorOutlier):
 
     def __init__(self, df, nome_coluna, quantidade_vizinhos=20):
-        super().__init__(self, df, nome_coluna)
+        super().__init__(df, nome_coluna)
         self.quantidade_vizinhos = quantidade_vizinhos
 
     def get_outliers(self):

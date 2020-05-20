@@ -4,7 +4,7 @@ from scipy import stats
 
 class ZScore(DetectorOutlier):
     def __init__(self, df, nome_coluna, qtd_std=3):
-        super().__init__(self, df, nome_coluna)
+        super().__init__(df, nome_coluna)
         self.qtd_std = qtd_std
 
     def get_outliers(self):
@@ -16,7 +16,7 @@ class ZScore(DetectorOutlier):
 
 class ZScoreModificado(ZScore):
     def __init__(self, df, nome_coluna, qtd_std=3):
-        super().__init__(self, df, nome_coluna, qtd_std)
+        super().__init__(df, nome_coluna, qtd_std)
 
     def get_outliers(self):
         df_pop = self.df[[self.nome_coluna]]

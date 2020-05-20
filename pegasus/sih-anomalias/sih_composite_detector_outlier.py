@@ -9,6 +9,7 @@ from estatistica.normalidade import se_distribuicao_normal
 import numpy as np
 from scipy import stats
 import pandas as pd
+from config.configuracoes import ConfiguracoesAnalise
 
 NOME_COLUNA = 'TX_QTD'
 
@@ -24,9 +25,11 @@ AP_S_BOXCOX = 'NORMAL APÓS BOXCOX'
 # TODO: Implemenar também CompositeSIADetector e checar o que existe em comum em termos de lógica
 
 class SIHCompositeDetectorOutlier(DetectorOutlier):
-    def __init__(self, df, nome_coluna, distribuicao):
-        super(SIHCompositeDetectorOutlier, self).__init__(self, df, nome_coluna)
+    def __init__(self, df, nome_coluna, distribuicao, qtd_std=3, quantidade_vizinhos=20):
+        super(SIHCompositeDetectorOutlier, self).__init__(df, nome_coluna)
         self.distribuicao = distribuicao
+        self.qtd_std = qtd_std
+        self.quantidade_vizinhos = quantidade_vizinhos
 
     def get_outliers(self):
         df_pop = self.df[[self.nome_coluna]]
@@ -36,9 +39,9 @@ class SIHCompositeDetectorOutlier(DetectorOutlier):
         if (self.distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, AP_S_BOXCOX)):
             # metodos estatisticos
             # Z-score
-            zscore_outliers = ZScore(self.df, self.nome_coluna).get_outliers()
+            zscore_outliers = ZScore(self.df, self.nome_coluna, self.qtd_std).get_outliers()
             # Z-score modificado
-            zscore_outliers2 = ZScoreModificado(self.df, self.nome_coluna).get_outliers()
+            zscore_outliers2 = ZScoreModificado(self.df, self.nome_coluna, self.qtd_std).get_outliers()
             # IQR
             iqr_outliers = InterquartileRange(self.df, self.nome_coluna).get_outliers()
 
@@ -48,7 +51,7 @@ class SIHCompositeDetectorOutlier(DetectorOutlier):
 
         # baseado em densidade
         # LocalOutlierFactor
-        lof_outliers = LOF(self.df, self.nome_coluna).get_outliers()
+        lof_outliers = LOF(self.df, self.nome_coluna, self.quantidade_vizinhos).get_outliers()
 
         if (self.distribuicao in (NORMAL_ORIGINAL, AP_S_LOG, AP_S_BOXCOX)):
             comum_outliers = zscore_outliers & zscore_outliers2 & iqr_outliers & isolation_outliers & lof_outliers
@@ -168,9 +171,53 @@ def gerar_dataframes():
     df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
 
+
+def __get_df_procedimentos_para_analise(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao):
+    df_proc_statistic_analise1 = __teste_normalidade(len_min, df_descricao_procedimentos,
+                                                     df_procedimentos_por_ano_com_descricao)
+    # TODO: Checar por que df_procedimentos_por_ano_com_descricao tem uma coluna a mais (Unnamed)
+    df_proc_ano_completo_analise = pd.merge(df_procedimentos_por_ano_com_descricao, df_proc_statistic_analise1,
+                                            on=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'TX', 'NIVEL'])
+
+    print(df_proc_ano_completo_analise.shape)
+    print(df_proc_ano_completo_analise.head(2))
+    return df_proc_ano_completo_analise
+
+
+def get_outliers(config, df_procedimentos, df_proc_ano_completo):
+    df_proc_outlier = pd.DataFrame(columns=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'TX_QTD'])
+
+    # quantidade de desvio padrão para ser considerado outlier
+    qtd_std = config.get_propriedade('qtd_std_zcore')
+    quantidade_vizinhos = config.get_propriedade('quantidade_vizinhos_lof')
+
+    for procedimento in df_procedimentos.index.values:
+        print('\n\n', df_procedimentos.loc[procedimento]['DESCRICAO'])
+
+        # Obtendo dados da análise para o procedimento
+        df_proc = df_proc_ano_completo[df_proc_ano_completo['PROCEDIMENTO'] == procedimento][['ANO', 'cod_municipio',
+                                                                                              'PROCEDIMENTO', 'TX_QTD',
+                                                                                              'DISTRIBUICAO']].copy()
+        print('\n## Número de linhas: ', len(df_proc))
+
+        # Detecção de outliers
+        if (len(df_proc) > 1):
+            distribuicao = df_proc['DISTRIBUICAO'].iloc[0]
+            detector = SIHCompositeDetectorOutlier(df_proc, NOME_COLUNA, distribuicao, qtd_std, quantidade_vizinhos)
+            outliers = detector.get_outliers()
+            df_outlier = df_proc.loc[outliers, :]
+
+            df_proc_outlier = df_proc_outlier.append(df_outlier)
+        else:
+            print('Quantidade de linhas insuficiente para detecção de outlier')
+
+    df_proc_outlier['OUTLIER'] = 'S'
+
+    return df_proc_outlier
+
+
 if __name__ == '__main__':
     arquivo_configuracao = sys.argv[1]
-    len_min = 48
 
     sih_facade = SIHFacade(arquivo_configuracao)
     ano = 2014
@@ -179,4 +226,29 @@ if __name__ == '__main__':
     df_descricao_procedimentos = df_descricao_procedimentos.set_index('PROCEDIMENTO')
     df_procedimentos_por_ano_com_descricao = pd.read_csv('df_procedimentos_por_ano_com_descricao.csv')
 
-    get_df_distribuicao_nivel(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao)
+    # get_df_distribuicao_nivel(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao)
+    # __get_df_procedimentos_para_analise(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao)
+
+    config = ConfiguracoesAnalise(arquivo_configuracao)
+    df_proc_ano_completo = __get_df_procedimentos_para_analise(config.get_propriedade('len_min'),
+                                                               df_descricao_procedimentos,
+                                                               df_procedimentos_por_ano_com_descricao)
+
+    df_proc_outlier_analise = get_outliers(config, df_descricao_procedimentos, df_proc_ano_completo)
+
+    df_painel_analise = pd.merge(df_proc_ano_completo, df_proc_outlier_analise,
+                                 on=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'TX_QTD', 'DISTRIBUICAO'], how='left')
+    df_painel_analise['OUTLIER'] = df_painel_analise['OUTLIER'].fillna('N')
+
+    print(df_painel_analise.shape)
+    print(df_painel_analise.head(2))
+
+    # coluna que identifica se o outlier é maior ou menor que a média
+    df_painel_analise['OUTLIER_'] = 'N'
+    df_painel_analise.loc[(df_painel_analise['OUTLIER'] == 'S') & (
+            df_painel_analise['TX_QTD'] >= df_painel_analise['MEDIA']), 'OUTLIER_'] = 'S_MAIOR'
+    df_painel_analise.loc[(df_painel_analise['OUTLIER'] == 'S') & (
+            df_painel_analise['TX_QTD'] < df_painel_analise['MEDIA']), 'OUTLIER_'] = 'S_MENOR'
+
+    # dado para painel
+    df_painel_analise.to_csv('painel_SIH_DADOS_transformados_analise1', sep=';', index=False, decimal=',')
