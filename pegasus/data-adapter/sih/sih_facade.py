@@ -5,6 +5,7 @@ from sih.configuracoes import ConfiguracoesAnalise
 import time
 import sys
 
+
 class SIHFacade:
     def __init__(self, arquivo_configuracao):
         self.dao = DaoSIH(arquivo_configuracao)
@@ -125,8 +126,8 @@ class SIHFacade:
 
         return df_nivel_proc
 
-    #TODO: Otimizar.  Esta consulta está levando horas...
-    def __get_df_descricao_procedimentos(self, ano):
+    # TODO: Otimizar.  Esta consulta está levando horas...
+    def get_df_descricao_procedimentos(self, ano):
         start_time = time.time()
         df_proc_ano_analise = self.__get_df_procedimentos_por_ano(ano)
         print("self.__get_df_procedimentos_por_ano(ano): --- %s seconds ---" % (time.time() - start_time))
@@ -157,9 +158,9 @@ class SIHFacade:
 
         return df_procedimentos_analise
 
-    def get_df_procedimentos_por_ano_com_descricao(self, ano):
+    def get_df_procedimentos_por_ano_com_descricao(self, ano, df_descricao_procedimentos):
         df_proc_ano_analise = self.__get_df_procedimentos_por_ano(ano)
-        df_proc_ano_analise = df_proc_ano_analise.join(self.__get_df_descricao_procedimentos(ano), on=['PROCEDIMENTO'])
+        df_proc_ano_analise = df_proc_ano_analise.join(df_descricao_procedimentos, on=['PROCEDIMENTO'])
 
         print(df_proc_ano_analise.shape)
         print(df_proc_ano_analise.head())
@@ -171,7 +172,12 @@ class SIHFacade:
         len_proc = len(procedimento)
 
         # Obtendo nome do procedimento
+        start_time = time.time()
         df_proc = df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]
+        print("self.__get_proc_descricao() -> df_proc = "
+              "df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]: --- "
+              "%s seconds ---" % (
+                    time.time() - start_time))
         if len(df_proc) > 0:
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
@@ -200,7 +206,12 @@ class SIHFacade:
         len_proc = len(procedimento)
 
         # Obtendo nome do procedimento
+        start_time = time.time()
         df_proc = df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]
+        print("self.__get_proc_descricao() -> df_proc = "
+              "df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]: --- "
+              "%s seconds ---" % (
+                      time.time() - start_time))
         if (len(df_proc) > 0):
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
@@ -236,7 +247,8 @@ class SIHFacade:
 
         df_painel['TX'] = df_painel['qtd_procedimento'] * self.habitantes_tx / df_painel['POPULACAO']
         df_painel['TX_UF'] = df_painel['qtd_procedimento_UF'] * self.habitantes_tx / df_painel['POPULACAO_UF']
-        df_painel['TX_BRASIL'] = df_painel['qtd_procedimento_BRASIL'] * self.habitantes_tx / df_painel['POPULACAO_BRASIL']
+        df_painel['TX_BRASIL'] = df_painel['qtd_procedimento_BRASIL'] * self.habitantes_tx / df_painel[
+            'POPULACAO_BRASIL']
 
         df_painel['NIVEL'] = nivel
 
