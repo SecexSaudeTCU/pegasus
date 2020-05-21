@@ -10,7 +10,7 @@ import numpy as np
 from scipy import stats
 import pandas as pd
 from config.configuracoes import ConfiguracoesAnalise
-from ibge.ibge_facade import IBGEFacade
+from sih.dao_sih import DaoSIH
 
 NOME_COLUNA = 'TX_QTD'
 
@@ -164,15 +164,6 @@ def __gerar_informacoes_estatisticas(df_procedimentos_por_ano_com_descricao, len
     return df_proc
 
 
-# def __gerar_dataframes():
-#     df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(ano)
-#     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
-#         ano, df_descricao_procedimentos)
-#     df_descricao_procedimentos.to_csv('df_descricao_procedimentos.csv')
-#     df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
-#     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
-
-
 def __get_df_procedimentos_para_analise(len_min, df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao):
     df_proc_statistic_analise1 = __teste_normalidade(len_min, df_descricao_procedimentos,
                                                      df_procedimentos_por_ano_com_descricao)
@@ -217,6 +208,31 @@ def get_outliers(config, df_descricao_procedimentos, df_proc_ano_completo):
     return df_proc_outlier
 
 
+def __get_df_analise1(ano):
+    arquivo_configuracao = sys.argv[1]
+    dao = DaoSIH(arquivo_configuracao)
+    sih_facade = SIHFacade(arquivo_configuracao)
+    df_rd = dao.get_df_procedimentos_realizados_por_municipio(ano)
+    df_populacao = sih_facade.get_df_populacao()
+    df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'], how="left")
+    return df_analise, df_populacao
+
+
+def __gerar_dataframes():
+    arquivo_configuracao = sys.argv[1]
+    sih_facade = SIHFacade(arquivo_configuracao)
+
+    ano = 2014
+    df_analise, df_populacao = __get_df_analise1(ano)
+    df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_analise, df_populacao)
+
+    df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
+        df_analise, df_populacao, df_descricao_procedimentos)
+    df_descricao_procedimentos.to_csv('df_descricao_procedimentos.csv')
+    df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
+    return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
+
+
 def analise1():
     arquivo_configuracao = sys.argv[1]
     sih_facade = SIHFacade(arquivo_configuracao)
@@ -246,8 +262,9 @@ def analise1():
     # dado para painel
     df_painel_analise.to_csv('painel_SIH_DADOS_transformados_analise1', sep=';', index=False, decimal=',')
 
+
 ## ANALISE 2 - municipio x procedimento - acrescentando qtd 0
-#TODO: Colocar aqui a explanação que está no TCC (inclui municípios onde não houve realização de cada procedimento)
+# TODO: Colocar aqui a explanação que está no TCC (inclui municípios onde não houve realização de cada procedimento)
 # def analise2():
 #     arquivo_configuracao = sys.argv[1]
 #
@@ -265,4 +282,5 @@ def analise1():
 #     df_proc_ano_munic.head(2)
 
 if __name__ == '__main__':
-    analise1()
+    #analise1()
+    __gerar_dataframes()
