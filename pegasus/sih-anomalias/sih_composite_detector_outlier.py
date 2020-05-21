@@ -217,6 +217,29 @@ def __get_df_analise1(ano):
     df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'], how="left")
     return df_analise, df_populacao
 
+## ANALISE 2 - municipio x procedimento - acrescentando qtd 0
+# TODO: Colocar aqui a explanação que está no TCC (inclui municípios onde não houve realização de cada procedimento)
+def __get_df_analise2(ano):
+    arquivo_configuracao = sys.argv[1]
+    sih_facade = SIHFacade(arquivo_configuracao)
+    df_populacao = sih_facade.get_df_populacao()
+    df_populacao['key'] = 0
+
+    df_lista_procedimento_ano = sih_facade.get_df_lista_procedimento_ano(ano)
+    df_lista_procedimento_ano['key'] = 0
+
+    df_proc_ano_munic = pd.merge(df_lista_procedimento_ano, df_populacao, on='key', how='outer')
+    print(df_proc_ano_munic.shape)
+    print(df_proc_ano_munic.head())
+
+    dao = DaoSIH(arquivo_configuracao)
+    df_rd = dao.get_df_procedimentos_realizados_por_municipio(ano)
+    df_analise2 = pd.merge(df_rd, df_proc_ano_munic, on=['cod_municipio', 'proc_rea', 'ano_cmpt'], how='right')
+
+    print(df_analise2.shape)
+    print(df_analise2.head())
+
+    return df_analise2, df_populacao
 
 def __gerar_dataframes():
     arquivo_configuracao = sys.argv[1]
@@ -263,24 +286,9 @@ def analise1():
     df_painel_analise.to_csv('painel_SIH_DADOS_transformados_analise1', sep=';', index=False, decimal=',')
 
 
-## ANALISE 2 - municipio x procedimento - acrescentando qtd 0
-# TODO: Colocar aqui a explanação que está no TCC (inclui municípios onde não houve realização de cada procedimento)
-# def analise2():
-#     arquivo_configuracao = sys.argv[1]
-#
-#     sih_facade = SIHFacade(arquivo_configuracao)
-#     #df_populacao = sih_facade.
-#     df_populacao['key'] = 0
-#
-#
-#     ano = 2014
-#     df_lista_procedimento_ano = sih_facade.get_df_lista_procedimento_ano(ano)
-#     df_lista_procedimento_ano['key'] = 0
-#
-#     df_proc_ano_munic = pd.merge(df_lista_procedimento_ano, df_populacao, on='key', how='outer')
-#     print(df_proc_ano_munic.shape)
-#     df_proc_ano_munic.head(2)
+
 
 if __name__ == '__main__':
-    analise1()
+    #analise1()
     #__gerar_dataframes()
+    __get_df_analise2(2014)
