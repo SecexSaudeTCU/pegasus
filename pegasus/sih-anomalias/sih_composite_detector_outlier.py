@@ -282,5 +282,5 @@ def analise1():
 #     df_proc_ano_munic.head(2)
 
 if __name__ == '__main__':
-    #analise1()
-    __gerar_dataframes()
+    analise1()
+    #__gerar_dataframes()
