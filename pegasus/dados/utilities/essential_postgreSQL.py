@@ -36,7 +36,7 @@ def get_dbc_info(ftp_path):
 
     Retorno
     -------
-    df_files: objeto pandas dataframe
+    df_files: objeto pandas Dataframe
         Dataframe tendo como colunas o nome, o diretório e a data de inserção de cada arquivo principal de
         um diretório FTP do Datasus
     """
@@ -92,7 +92,7 @@ def files_in_ftp_base(name_base):
 
     Retorno
     -------
-    df_ftp: objeto pandas dataframe
+    df_ftp: objeto pandas Dataframe
         Dataframe tendo como colunas o nome, o diretório e a data de inserção dos arquivos principais de dados
         selecionados de uma base de dados do Datasus
     """
@@ -208,7 +208,7 @@ def files_in_ftp_subbase(name_subbase):
 
     Retorno
     -------
-    df_ftp: objeto pandas dataframe
+    df_ftp: objeto pandas Dataframe
         Dataframe tendo como colunas o nome, o diretório e a data de inserção dos arquivos principais de dados
         selecionados de uma sub-base de dados do Datasus
     """

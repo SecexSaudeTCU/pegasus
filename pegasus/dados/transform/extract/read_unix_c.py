@@ -1,5 +1,10 @@
 """
-As funções read_dbc and dbc2dbf no trabalho de Flávio Coelho (https://github.com/fccoelho/PySUS)
+Módulo que contém funções que leem arquivo "dbc" em plataformas Unix utilizando a biblioteca
+"blast" elaborada na linguagem de programação C por Mark Adler (https://github.com/madler/...
+zlib/tree/master/contrib/blast) e arquivo texto em formato "cnv".
+
+As funções relativas à leitura de arquivo "dbc" (read_dbc and dbc2dbf) foram elaboradas por
+Flávio Coelho, conforme se pode verificar em (https://github.com/fccoelho/PySUS)
 """
 
 import os
@@ -15,10 +20,22 @@ from transform.extract._readdbc import ffi, lib
 
 def dbc2dbf(infile, outfile):
     """
-    Converts a DATASUS dbc file to a DBF database.
-    :param infile: .dbc file name
-    :param outfile: name of the .dbf file to be created.
+    Descompacta um arquivo "dbc" para "dbf" utilizando um wrapper em Python para o módulo de
+    descompactação "blast" elaborado em C.
+
+    Parâmetros
+    ----------
+    infile: objeto str
+        String do nome do arquivo "dbc"
+    outfile: objeto str
+        String do nome do arquivo "dbf"
+
+    Retorno
+    -------
+    outfile: objeto str
+        String do nome do arquivo "dbf"
     """
+
     if isinstance(infile, str):
         infile = infile.encode()
     if isinstance(outfile, str):
@@ -31,12 +48,22 @@ def dbc2dbf(infile, outfile):
 
 def read_dbc(filename, signature='utf-8'):
     """
-    Opens a DATASUS .dbc file and return its contents as a pandas
-    Dataframe.
-    :param filename: .dbc filename
-    :param encoding: encoding of the data
-    :return: Pandas Dataframe.
+    Descompacta um arquivo "dbc" para "dbf", em seguida o lê como tal e por fim o converte em um objeto
+    pandas DataFrame e elimina os dois arquivos.
+
+    Parâmetros
+    ----------
+    filename: objeto str
+        String do nome do arquivo "dbc"
+    signature: objeto str
+        String do nome do formato de encoding do arquivo "dbc"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo principal de dados originalmente em formato "dbc"
     """
+
     if isinstance(filename, str):
         filename = filename.encode()
     with NamedTemporaryFile(delete=False) as tf:
@@ -49,24 +76,22 @@ def read_dbc(filename, signature='utf-8'):
     return df
 
 
-# Função que converte o conteúdo útil (!!!) do arquivo texto em formato "cnv" para um objeto pandas DataFrame
-
-# Às vezes os arquivos "cnv" vem com mais de um código, separados por vírgula, para uma mesma decodificação. O script abaixo coleta o primeiro código
-# que é o que vale para aquela decodificação.
-
-# Nesse caso, pode constar do arquivo de dados principal (no caso do SINASC: DNXXaaaa; no caso do SIM: DOXXaaaa, etc.) valores antigos de código. Isto é,
-# valores que constam após a vírgula na "coluna" código do arquivo "cnv" (a última "coluna"). Assim, no passo de preprocessing dos dados, torna-se
-# necessário usar o método replace na coluna do objeto pandas DataFrame (foreign key) para substituir o(s) valor(es) antigos pelo atual.
-
-# Veja o exemplo do comando replace para a coluna CODANOMAL (foreign key) do arquivo de dados principal do SINASC (DNXXaaaa) por conter valor antigo para
-# um código de doença discriminado na respectiva tabela relacional representada pelo arquivo CID1017.cnv:
-
-# Código python::: df['CODANOMAL'].replace(['Q356', 'Q358'], 'Q359', inplace=True)
-# Linha do arquivo CID1017.cnv::: 213  Q35.9 Fenda palatina NE                            Q359,Q356,Q358,
-
-
-# Função para converter um "value" no type "int" ou caso não seja possível utiliza o valor "default"
 def attempt_int(value):
+    """
+    Converte um objeto referenciado pelo parâmetro "value" para o tipo int ou caso não seja possível
+    o retorna íntegro.
+
+    Parâmetros
+    ----------
+    infile: objeto de qualquer tipo
+        Objeto que se deseja converter para o tipo int
+
+    Retorno
+    -------
+    df: objeto int ou na sua class original
+        Objeto convertido para o tipo int ou íntegro
+    """
+
     try:
         return int(value)
     except (ValueError, TypeError):
@@ -74,13 +99,18 @@ def attempt_int(value):
 
 
 def read_cnv(name_of_file):
-
     """
-    Opens a Datasus "cnv" file and return its contents as a pandas
-    Dataframe object.
-    :param filename: file name without format
-    :return: pandas Dataframe object.
+    Converte o conteúdo útil do arquivo texto em formato "cnv" para um objeto pandas DataFrame.
 
+    Parâmetros
+    ----------
+    filename: objeto str
+        String do nome do arquivo "cnv"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados úteis de um arquivo auxiliar de dados em formato "cnv"
     """
 
     # Cria um file handler do arquivo "cnv"

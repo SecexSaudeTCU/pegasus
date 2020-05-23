@@ -2,14 +2,13 @@
 # SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH SIH #
 ###########################################################################################################################
 """
-Lê arquivos de dados do SIH (RDXXaamm = AIH Reduzidas; SPXXaamm = AIH Serviços Profissionais)
-constante do endereço ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva
-no formato "parquet". Caso o arquivo de dados já conste da pasta criada automaticamente no módulo
-folder é então realizada a leitura desse arquivo que está no formato "parquet".
+Realiza o download de arquivos de dados do SIH (RDXXaamm = AIH Reduzidas; SPXXaamm =
+AIH Serviços Profissionais) constante do endereço ftp do Datasus em formato "dbc" como
+um objeto pandas DataFrame e o salva no formato "parquet". Caso o arquivo de dados já
+conste da pasta criada automaticamente no módulo folder é então realizada a leitura
+desse arquivo que está no formato "parquet".
 
-Falar sobre o download das tabelas em formato "dbf"...
-
-Falar sobre o download das tabelas em formato "cnv"...
+Também realiza o download de arquivos auxiliares em formato "dbf" e "cnv".
 """
 
 import os
@@ -28,20 +27,28 @@ elif os.name == 'posix':
     from transform.extract.read_unix_wine import read_dbc, read_cnv
 
 
-# Função de download de arquivos principais de dados do SIH em formato "dbc" (trata-se de dados...
-# das 2 child tables referidas acima, no docstring desse módulo)
 def download_SIHXXaamm(base: str, state: str, year: str, month: str, cache: bool=True):
-
     """
-    Downloads a SIH data file in "dbc" format from Datasus ftp server
+    Realiza o download de um arquivo principal de dados do SIH em formato "dbc" se já não
+    existente no formato "parquet" no diretório CACHEPATH e o lê como um objeto pandas DataFrame
 
-    :param base: 2 digit character of a SIH child table: RD == AIH Reduzida
-    :param state: two-letter state identifier: MG == Minas Gerais
-    :param year: 2 digit character
-    :param month: 2 digit character
-    :param cache: boolean value
-    :return: pandas dataframe object
+    Parâmetros
+    ----------
+    base: objeto str
+        String de tamanho 2 do nome de uma sub-base de dados do SIH
+    state: objeto str
+        String de tamanho 2 da sigla de um Estado da RFB
+    year: objeto str
+        String de tamanho 2 do ano
+    month: objeto str
+        String de tamanho 2 do mês
+    cache: objeto bool
+        Boolean se o arquivo "dbc" baixado deve ser salvo no formato "parquet"
 
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo principal de dados originalmente em formato "dbc"
     """
 
     state = state.upper()
@@ -69,14 +76,21 @@ def download_SIHXXaamm(base: str, state: str, year: str, month: str, cache: bool
         return df
 
 
-# Função de download de tabelas do SIH em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name):
-
     """
-    Fetch a table in "dbf" format from Datasus ftp server
-    :param file_name: string of file name without format
-    :return: pandas dataframe object
+    Realiza o download de um arquivo auxiliar de dados do SIH em formato "dbf" ou de uma pasta
+    "zip" que o contém (se a pasta "zip" já não foi baixada), em seguida o lê como um objeto pandas
+    DataFrame e por fim o elimina
 
+    Parâmetros
+    ----------
+    file_name: objeto str
+        String do nome do arquivo "dbf"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo auxiliar de dados originalmente em formato "dbf"
     """
 
     if ((file_name == 'CADMUN') or (file_name == 'TABUF')):
@@ -135,14 +149,21 @@ def download_table_dbf(file_name):
     return df
 
 
-# Função de download de tabelas do CNES em formato "cnv" (trata-se de parent tables)
 def download_table_cnv(file_name):
-
     """
-    Downloads a table in "cnv" format from Datasus ftp server if not already downloaded
-    :param file_name: string of file name without format
-    :return: pandas dataframe object
+    Realiza o download de um arquivo auxiliar de dados do SIH em formato "cnv" ou de uma pasta
+    "zip" que o contém (se a pasta "zip" já não foi baixada), em seguida o lê como um objeto pandas
+    DataFrame
 
+    Parâmetros
+    ----------
+    file_name: objeto str
+        String do nome do arquivo "cnv"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo auxiliar de dados originalmente em formato "cnv"
     """
 
     folder = 'TAB_SIH.zip'

@@ -1,5 +1,6 @@
 """
-
+Módulo que contém funções que leem arquivo "dbc" em plataformas Unix utilizando os programas "dbf2dbc.exe" e Wine
+e arquivo texto em formato "cnv".
 """
 
 import os
@@ -13,9 +14,18 @@ import pandas as pd
 
 def dbc2dbf(infile):
     """
-    Converts a Datasus "dbc" file to a "dbf" file.
-    :param infile: "dbc" file name
-    :return: "dbf" file name.
+    Descompacta um arquivo "dbc" para "dbf" utilizando o programa executável "dbf2dbc" pertencente ao Datasus,
+    que, por sua vez, é executado através do uso do programa Wine.
+
+    Parâmetros
+    ----------
+    infile: objeto str
+        String do nome do arquivo "dbc"
+
+    Retorno
+    -------
+    outfile: objeto str
+        String do nome do arquivo "dbf"
     """
 
     subprocess.run(['wine', str(Path.home()) +  '/dbf2dbc/dbf2dbc.exe', infile])
@@ -27,11 +37,20 @@ def dbc2dbf(infile):
 
 def read_dbc(filename, signature='utf-8'):
     """
-    Opens a Datasus "dbc" file and return its contents as a pandas
-    Dataframe object.
-    :param filename: "dbc" file name
-    :param encoding: encoding of the data
-    :return: pandas Dataframe object.
+    Descompacta um arquivo "dbc" para "dbf", em seguida o lê como tal e por fim o converte em um objeto
+    pandas DataFrame e o elimina.
+
+    Parâmetros
+    ----------
+    filename: objeto str
+        String do nome do arquivo "dbc"
+    signature: objeto str
+        String do nome do formato de encoding do arquivo "dbc"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo principal de dados originalmente em formato "dbc"
     """
 
     file_name = dbc2dbf(filename)
@@ -42,24 +61,22 @@ def read_dbc(filename, signature='utf-8'):
     return df
 
 
-# Função que converte o conteúdo útil (!!!) do arquivo texto em formato "cnv" para um objeto pandas DataFrame
-
-# Às vezes os arquivos "cnv" vem com mais de um código, separados por vírgula, para uma mesma decodificação. O script abaixo coleta o primeiro código
-# que é o que vale para aquela decodificação.
-
-# Nesse caso, pode constar do arquivo de dados principal (no caso do SINASC: DNXXaaaa; no caso do SIM: DOXXaaaa, etc.) valores antigos de código. Isto é,
-# valores que constam após a vírgula na "coluna" código do arquivo "cnv" (a última "coluna"). Assim, no passo de preprocessing dos dados, torna-se
-# necessário usar o método replace na coluna do objeto pandas DataFrame (foreign key) para substituir o(s) valor(es) antigos pelo atual.
-
-# Veja o exemplo do comando replace para a coluna CODANOMAL (foreign key) do arquivo de dados principal do SINASC (DNXXaaaa) por conter valor antigo para
-# um código de doença discriminado na respectiva tabela relacional representada pelo arquivo CID1017.cnv:
-
-# Código python::: df['CODANOMAL'].replace(['Q356', 'Q358'], 'Q359', inplace=True)
-# Linha do arquivo CID1017.cnv::: 213  Q35.9 Fenda palatina NE                            Q359,Q356,Q358,
-
-
-# Função para converter um "value" no type "int" ou caso não seja possível utiliza o valor "default"
 def attempt_int(value):
+    """
+    Converte um objeto referenciado pelo parâmetro "value" para o tipo int ou caso não seja possível
+    o retorna íntegro.
+
+    Parâmetros
+    ----------
+    infile: objeto de qualquer tipo
+        Objeto que se deseja converter para o tipo int
+
+    Retorno
+    -------
+    df: objeto int ou na sua class original
+        Objeto convertido para o tipo int ou íntegro
+    """
+
     try:
         return int(value)
     except (ValueError, TypeError):
@@ -67,13 +84,18 @@ def attempt_int(value):
 
 
 def read_cnv(name_of_file):
-
     """
-    Opens a Datasus "cnv" file and return its contents as a pandas
-    Dataframe object.
-    :param filename: file name without format
-    :return: pandas Dataframe object.
+    Converte o conteúdo útil do arquivo texto em formato "cnv" para um objeto pandas DataFrame.
 
+    Parâmetros
+    ----------
+    filename: objeto str
+        String do nome do arquivo "cnv"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados úteis de um arquivo auxiliar de dados em formato "cnv"
     """
 
     # Cria um file handler do arquivo "cnv"

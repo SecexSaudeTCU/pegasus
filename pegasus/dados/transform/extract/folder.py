@@ -2,7 +2,6 @@
 Cria o diretório datasus_content no home directory do computador de execução deste módulo.
 
 Código elaborado por Flávio Coelho (https://github.com/fccoelho/PySUS).
-
 """
 
 import os

@@ -2,16 +2,12 @@
 # SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN SINAN #
 ###########################################################################################################################
 """
-Messy system!!!!!
+Realiza o download de arquivos principais de dados do SINAN (DENGXXaaaa = Dengue e Chikungunya, XXX)
+constante do endereço ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no
+formato "parquet". Caso o arquivo de dados já conste da pasta criada automaticamente no módulo folder
+é então realizada a leitura desse arquivo que está no formato "parquet".
 
-Lê arquivos principais de dados do SINAN (DENGXXaaaa = Dengue e Chikungunya, XXX) constante do endereço
-ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato "parquet". Caso o
-arquivo de dados já conste da pasta criada automaticamente no módulo folder é então realizada a leitura
-desse arquivo que está no formato "parquet".
-
-Falar sobre o download das tabelas em formato "dbf"...
-
-Falar sobre o download das tabelas em formato "cnv"...
+Também realiza o download de arquivos auxiliares em formato "dbf" e "cnv".
 """
 
 import os
@@ -22,7 +18,7 @@ from ftplib import FTP
 from zipfile import ZipFile
 from dbfread import DBF
 
-from .folder import CACHEPATH
+from transform.extract.folder import CACHEPATH
 
 if os.name == 'nt':
     from transform.extract.read_windows import read_dbc, read_cnv
@@ -30,17 +26,27 @@ elif os.name == 'posix':
     from transform.extract.read_unix_wine import read_dbc, read_cnv
 
 
-# Função de download de arquivos principais de dados do SINAN em formato "dbc" (trata-se de dados...
-# das n child tables referidas acima, no docstring desse módulo)
 def download_SINANXXaa(base: str, state: str, year: str, cache: bool=True):
 
     """
-    Downloads a SINAN data file in "dbc" format from Datasus ftp server
-    :param state: two-letter state identifier: MG == Minas Gerais
-    :param year: 4 digit character
-    :param cache: boolean value
-    :return: pandas dataframe object
+    Realiza o download de um arquivo principal de dados do SINAN em formato "dbc" se já não
+    existente no formato "parquet" no diretório CACHEPATH e o lê como um objeto pandas DataFrame
 
+    Parâmetros
+    ----------
+    base: objeto str
+        String de tamanho 4 do nome de uma sub-base de dados do SINAN
+    state: objeto str
+        String de tamanho 2 da sigla de um Estado da RFB
+    year: objeto str
+        String de tamanho 4 do ano
+    cache: objeto bool
+        Boolean se o arquivo "dbc" baixado deve ser salvo no formato "parquet"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo principal de dados originalmente em formato "dbc"
     """
 
     state = state.upper()
@@ -71,15 +77,21 @@ def download_SINANXXaa(base: str, state: str, year: str, cache: bool=True):
         return df
 
 
-# Função de download de tabelas do SINAN em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name, cache=True):
-
     """
-    Fetch a table in "dbf" format from Datasus ftp server
-    :param file_name: string of file name without format
-    :param cache: boolean value
-    :return: pandas dataframe object
+    Realiza o download de um arquivo auxiliar de dados do SINAN em formato "dbf" ou de uma pasta
+    "zip" que o contém (se a pasta "zip" já não foi baixada), em seguida o lê como um objeto pandas
+    DataFrame e por fim o elimina
 
+    Parâmetros
+    ----------
+    file_name: objeto str
+        String do nome do arquivo "dbf"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo auxiliar de dados originalmente em formato "dbf"
     """
 
     ftp = FTP('ftp.datasus.gov.br')
@@ -109,14 +121,21 @@ def download_table_dbf(file_name, cache=True):
     return df
 
 
-# Função de download de tabelas do SINAN em formato "cnv" (trata-se de parent tables)
 def download_table_cnv(file_name):
-
     """
-    Downloads a table in "cnv" format from Datasus ftp server if not already downloaded
-    :param file_name: string of file name without format
-    :return: pandas dataframe object
+    Realiza o download de um arquivo auxiliar de dados do SINAN em formato "cnv" ou de uma pasta
+    "zip" que o contém (se a pasta "zip" já não foi baixada), em seguida o lê como um objeto pandas
+    DataFrame
 
+    Parâmetros
+    ----------
+    file_name: objeto str
+        String do nome do arquivo "cnv"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo auxiliar de dados originalmente em formato "cnv"
     """
 
     ftp = FTP('ftp.datasus.gov.br')

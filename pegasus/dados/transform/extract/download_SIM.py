@@ -2,14 +2,12 @@
 # SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM SIM #
 ###########################################################################################################################
 """
-Lê arquivos principais de dados do SIM (DOXXaaaa = Declaração de Óbito) constante do endereço ftp
-do Datasus em formato "dbc" como um objeto pandas DataFrame e o salva no formato "parquet".
-Caso o arquivo de dados já conste da pasta criada automaticamente no módulo folder é então realizada
-a leitura desse arquivo que está no formato "parquet".
+Realiza o download de arquivos principais de dados do SIM (DOXXaaaa = Declaração de Óbito)
+constante do endereço ftp do Datasus em formato "dbc" como um objeto pandas DataFrame e o
+salva no formato "parquet". Caso o arquivo de dados já conste da pasta criada automaticamente
+no módulo folder é então realizada a leitura desse arquivo que está no formato "parquet".
 
-Falar sobre o download das tabelas em formato "dbf"...
-
-Falar sobre o download das tabelas em formato "cnv"...
+Também realiza o download de arquivos auxiliares em formato "dbf" e "cnv".
 """
 
 import os
@@ -28,16 +26,24 @@ elif os.name == 'posix':
     from transform.extract.read_unix_wine import read_dbc, read_cnv
 
 
-# Função de download de arquivos principais de dados do SIM em formato "dbc" (trata-se de dados...
-# da child table referida acima, no docstring desse módulo)
 def download_DOXXaaaa(state: str, year: str, cache: bool=True):
-
     """
-    Downloads a DOXXaaaa file in "dbc" format from Datasus ftp server
-    :param state: two-letter state identifier: MG == Minas Gerais
-    :param year: 4 digit character
-    :param cache: boolean value
-    :return: pandas dataframe object
+    Realiza o download de um arquivo principal de dados do SIM em formato "dbc" se já não
+    existente no formato "parquet" no diretório CACHEPATH e o lê como um objeto pandas DataFrame
+
+    Parâmetros
+    ----------
+    state: objeto str
+        String de tamanho 2 da sigla de um Estado da RFB
+    year: objeto str
+        String de tamanho 4 do ano
+    cache: objeto bool
+        Boolean se o arquivo "dbc" baixado deve ser salvo no formato "parquet"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo principal de dados originalmente em formato "dbc"
     """
 
     state = state.upper()
@@ -65,14 +71,21 @@ def download_DOXXaaaa(state: str, year: str, cache: bool=True):
         return df
 
 
-# Função de download de tabelas do SIM em formato "dbf" (trata-se de parent tables)
 def download_table_dbf(file_name):
-
     """
-    Fetch a table in "dbf" format from Datasus ftp server
-    :param file_name: string of file name without format
-    :return: pandas dataframe object
+    Realiza o download de um arquivo auxiliar de dados do SIM em formato "dbf" ou de uma pasta
+    "zip" que o contém (se a pasta "zip" já não foi baixada), em seguida o lê como um objeto pandas
+    DataFrame e por fim o elimina
 
+    Parâmetros
+    ----------
+    file_name: objeto str
+        String do nome do arquivo "dbf"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo auxiliar de dados originalmente em formato "dbf"
     """
 
     ftp = FTP('ftp.datasus.gov.br')
@@ -114,14 +127,21 @@ def download_table_dbf(file_name):
     return df
 
 
-# Função de download de tabelas do SIM em formato "cnv" (trata-se de parent tables)
 def download_table_cnv(file_name):
-
     """
-    Downloads a table in "cnv" format from Datasus ftp server if not already downloaded
-    :param file_name: string of file name without format
-    :return: pandas dataframe object
+    Realiza o download de um arquivo auxiliar de dados do SIM em formato "cnv" ou de uma pasta
+    "zip" que o contém (se a pasta "zip" já não foi baixada), em seguida o lê como um objeto pandas
+    DataFrame
 
+    Parâmetros
+    ----------
+    file_name: objeto str
+        String do nome do arquivo "cnv"
+
+    Retorno
+    -------
+    df: objeto pandas DataFrame
+        Dataframe que contém os dados de um arquivo auxiliar de dados originalmente em formato "cnv"
     """
 
     ftp = FTP('ftp.datasus.gov.br')
