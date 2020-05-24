@@ -31,7 +31,7 @@ def load_any(db_name, db_user, db_password):
     pastas específicas do endereço ftp do Datasus (ftp://ftp.datasus.gov.br/dissemin/publicos/) em formato "dbc". Cada
     arquivo "dbc" é baixado em tempo de execução, descompactado para "dbf", lido como um objeto pandas DataFrame e, para
     evitar a repetição do download, é salvo numa pasta criada dinamicamente e denominada "datasus_content" no computador
-    de execução deste script no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
+    de execução deste módulo no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
 
     Os arquivos secundários de dados formam as tabelas relacionais (parent tables) à tabela principal e estão em formato
     "dbf", "cnv" ou "xlsx". Os arquivos "dbf" e "cnv", presentes em diretórios do endereço ftp do Datasus, são baixados
@@ -39,8 +39,8 @@ def load_any(db_name, db_user, db_password):
     foram  criados a partir de relações descritas no Dicionário de Dados da respectiva base de dado do Datasus e não
     retratadas em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
 
-    O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode ser
-    alterado editando o módulo "folder" contido no sub-package "transform.extract".
+    O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode
+    ser alterado editando o módulo "folder" contido no subpackage "transform.extract".
     """
 
     pd.set_option('display.max_columns', None)
@@ -57,7 +57,7 @@ def load_any(db_name, db_user, db_password):
         # Nome do banco de dados do Datasus almejado
         datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/SINAN/XXX): ').lower()
 
-        # Construção do objeto string do nome do sub banco de dados do CNES ou SIH ou SIA ou SINAN ou XXX
+        # Construção do objeto string do nome do sub-banco de dados do CNES, SIH, SIA, SINAN ou XXX
         # CNES
         if datasus_db == 'cnes':
             print('\nST: Estabelecimentos')
@@ -200,7 +200,7 @@ def load_any(db_name, db_user, db_password):
             most_tables(path_xlsx, engine, datasus_db)
             print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
 
-            # Remoção dos arquivos "cnv" baixados numa pasta zipada do endereço ftp do Datasus
+            # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
             if datasus_db in np.array(['cnes_st', 'cnes_lt', 'cnes_eq', 'cnes_sr', 'cnes_ep', 'cnes_ee', 'cnes_ef', 'cnes_in']):
                 os.remove('TAB_CNES.zip')
                 os.rmdir('TAB_DBF')
