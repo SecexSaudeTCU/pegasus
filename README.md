@@ -1,6 +1,6 @@
 # PegaSUS
 Plataforma Eletrônica de Governança e Accountability do SUS
-<p style="text-align: justify">
+
 Este projeto está dividido em n módulos. Um dos módulos já implementado,
 denominado dados, permite criar um *schema* de um banco de dados PostgreSQL local,
 já criado previamente, e insere nele dados das bases de dados (do Datasus) CNES,
@@ -11,15 +11,15 @@ diretamente como objetos pandas DataFrame. Essa segunda opção é recomendada n
 caso de consulta mais pontual.
 
 O outro módulo deste projeto já implementado se denomina analise e realiza
-análise de anomalias estatísticas das bases de dados do SIH e SIA...</p>
+análise de anomalias estatísticas das bases de dados do SIH e SIA...
 
 ## Instalação do módulo dados
-<p style="text-align: justify">
+
 Para o uso do módulo dados por estrutura de banco de dados é necessário instalar  
 o SGBD [PostgreSQL](https://www.postgresql.org/download/) e é recomendável ter
 um software para gerenciamento de banco de dados, tal como [pgAdmin](https://www.pgadmin.org/download/) ou
 [DBeaver Community](https://dbeaver.io/), para eventualmente visualizar os
-dados no banco de dados.</p>
+dados no banco de dados.
 
 Para uso do módulo dados em plataformas Linux ou MacOS é necessária a instalação
 da dependência libffi:
@@ -36,8 +36,8 @@ deletados) para uma pasta nova denominada dbf2dbc no seu *home directory*, o
 qual toma a seguinte forma em plataformas Windows:</p>
 
 ```C:\Users\username\```
-<p style="text-align: justify">
-Em seguida se pode instalar o módulo dados através do comando (em plataformas Linux):</p>
+
+Em seguida se pode instalar o módulo dados através do comando (em plataformas Linux):
 
 ```$ sudo pip install pegasus-dados```
 
