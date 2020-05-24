@@ -23,8 +23,8 @@ dados no banco de dados.
 
 Para uso do módulo dados em plataformas Linux ou MacOS é necessária a instalação
 da dependência libffi:
-1) Linux: `sudo apt install libffi-dev`
-2) MacOS: `brew install libffi`
+1) Linux: `$ sudo apt install libffi-dev`
+2) MacOS: `$ brew install libffi`
 
 Para uso em plataformas Windows, é necessária a instalação do programa executável
 (*.exe*) dbf2dbc que faz parte do programa TabWin do Datasus. Faça o download da
@@ -33,7 +33,7 @@ e presente na primeira linha da coluna "Nome" da tabela que aparece nessa págin
 Descompacte a pasta "Tab415.zip", copie o executável "dbf2dbc.exe" e o arquivo
 "IMPBORL.DLL" (a pasta descompactada "Tab415" e seu *.zip* podem então ser
 deletados) para uma pasta nova denominada dbf2dbc no seu *home directory*, o
-qual toma a seguinte forma em plataformas Windows:</p>
+qual toma normalmente a seguinte forma em plataformas Windows:
 
 ```C:\Users\username\```
 
@@ -45,4 +45,4 @@ Em seguida se pode instalar o módulo dados através do comando (em plataformas 
 ...
 
 ## Exemplos do uso do módulo analise
-...</div>
+...
