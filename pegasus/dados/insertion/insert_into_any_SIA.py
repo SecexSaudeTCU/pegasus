@@ -125,9 +125,6 @@ def insert_into_most_SIA_PA_tables(path, device, child_db):
     df_TB_FORMA = data_sia_auxiliary.get_TB_FORMA_treated()
     df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_REGIOESAUDE = data_sia_auxiliary.get_REGIOESAUDE_treated()
-    df_REGIOESAUDE.to_sql('regioesaude', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
 
 ###########################################################################################################################################################################
 #         copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas         #
