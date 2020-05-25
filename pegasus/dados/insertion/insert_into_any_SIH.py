@@ -1,6 +1,6 @@
-############################################################################################################################################################################
-#  SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY #
-############################################################################################################################################################################
+###########################################################################################################################
+# SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY SIH_ANY #
+###########################################################################################################################
 
 import os
 import time
@@ -12,13 +12,12 @@ import psycopg2
 
 from transform.prepare_SIH import DataSihMain, DataSihAuxiliary
 
-############################################################################################################################################################################
-#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
-############################################################################################################################################################################
-############################################################################################################################################################################
-# AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES #
-############################################################################################################################################################################
-
+###########################################################################################################################
+#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+###########################################################################################################################
+###########################################################################################################################
+#     AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES     #
+###########################################################################################################################
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
 def insert_into_most_SIH_RD_tables(path, device, child_db):
 
@@ -129,13 +128,12 @@ def insert_into_most_SIH_RD_tables(path, device, child_db):
     df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
-############################################################################################################################################################################
-#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
-############################################################################################################################################################################
-############################################################################################################################################################################
-# AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES #
-############################################################################################################################################################################
-
+###########################################################################################################################
+#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+###########################################################################################################################
+###########################################################################################################################
+#     AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES * AUXILIARY TABLES     #
+###########################################################################################################################
 # Função que utiliza "pandas.to_sql" para a inserção de dados não principais no banco de dados "child_db"
 def insert_into_most_SIH_SP_tables(path, device, child_db):
     # Inserção dos dados das tabelas não principais no banco de dados
@@ -204,13 +202,12 @@ def insert_into_most_SIH_SP_tables(path, device, child_db):
     df_TB_FORMA.to_sql('forma', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
 
-###########################################################################################################################################################################
-#         copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas         #
-###########################################################################################################################################################################
-###########################################################################################################################################################################
-#  MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE #
-###########################################################################################################################################################################
-
+###########################################################################################################################
+#    copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas copy_expert+pandas    #
+###########################################################################################################################
+###########################################################################################################################
+#    MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE   #
+###########################################################################################################################
 # Função que utiliza "copy_expert" para a inserção de dados principais e "pandas.to_sql" para a inserção
 # dos respectivos metadados no banco de dados "child_db"
 def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, child_db, connection_data):
@@ -277,3 +274,53 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
     print(f'Demorou {round((end - start), 1)} segundos para essas duas inserções no {connection_data[0]}/PostgreSQL!')
+
+
+###########################################################################################################################
+#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
+###########################################################################################################################
+###########################################################################################################################
+#    MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE   #
+###########################################################################################################################
+# Função que utiliza "pandas.to_sql" para a inserção de dados principais e dos respectivos metadados...
+# no banco de dados "child_db"
+def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, device, child_db, connection_data):
+    start = time.time()
+    counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
+    qtd_files_pg = counting_rows.iloc[0]['count']
+    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
+
+    # Tratamento de dados principais do sih_xx
+    base = file_name[0:2]
+    state = file_name[2:4]
+    year = file_name[4:6]
+    month = file_name[6:8]
+    main_table = base.lower() + 'br'
+    counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
+    n_rows = counting_rows.iloc[0]['count']
+    print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}...')
+
+    # Cria uma instância da classe "DataSihMain" do módulo "prepare_SIH" do package "data_wrangling"
+    data_sih_main = DataSihMain(base, state, year, month)
+    # Chama método da classe "DataSihMain" do módulo "prepare_SIH" referentes ao sub-banco de dados sih_xx
+    df = data_sih_main.get_SIHXXaamm_treated()
+
+    # Inserção das colunas UF_XX, ANO_XX e MES_XX no objeto pandas DataFrame "df"
+    df.insert(1, 'UF_' + base, [state]*df.shape[0])
+    df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
+    df.insert(3, 'MES_' + base, [month]*df.shape[0])
+    #df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
+    # Inserção dos dados da tabela principal no banco de dados "child_db"
+    df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
+    print(f'Terminou de inserir os dados do arquivo {base}{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
+
+    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
+    file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
+                             columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
+                             index=None
+                             )
+    # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
+    file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
+    print(f'Terminou de inserir os metadados do arquivo {base}{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
+    end = time.time()
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL pelo pandas!')

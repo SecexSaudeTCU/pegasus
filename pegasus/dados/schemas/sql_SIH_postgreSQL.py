@@ -175,9 +175,9 @@ def create_tables(connection_data, child_db):
                                                                   "VAL_SP_FED"              FLOAT,
                                                                   "VAL_SH_GES"              FLOAT,
                                                                   "VAL_SP_GES"              FLOAT,
-                                                                  "GRUPO"                   VARCHAR(2),
-                                                                  "SUBGRUPO"                VARCHAR(4),
-                                                                  "FORMA"                   VARCHAR(6));
+                                                                  "GRUPO_ID"                VARCHAR(2),
+                                                                  "SUBGRUPO_ID"             VARCHAR(4),
+                                                                  "FORMA_ID"                VARCHAR(6));
 
                        /*Tabela dos tipos de AIH*/
                        CREATE TABLE IF NOT EXISTS {child_db}.ident("ID"                     VARCHAR(2),
@@ -276,9 +276,9 @@ def create_tables(connection_data, child_db):
                                                                   "SPCIDSEC_ID"             VARCHAR(4),
                                                                   "SP_QT_PROC"              FLOAT,
                                                                   "SP_U_AIH"                NUMERIC,
-                                                                  "GRUPO"                   VARCHAR(2),
-                                                                  "SUBGRUPO"                VARCHAR(4),
-                                                                  "FORMA"                   VARCHAR(6));
+                                                                  "GRUPO_ID"                VARCHAR(2),
+                                                                  "SUBGRUPO_ID"             VARCHAR(4),
+                                                                  "FORMA_ID"                VARCHAR(6));
 
                        /*Tabela dos tipos de recursos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.intpval("ID"                   VARCHAR(2),

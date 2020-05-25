@@ -84,9 +84,9 @@ def create_tables(connection_data, child_db):
                                                                   "PASRCC_ID"              VARCHAR(6),
                                                                   "PAINE_ID"               VARCHAR(10),
                                                                   "PANATJUR_ID"            VARCHAR(4),
-                                                                  "GRUPO"                  VARCHAR(2),
-                                                                  "SUBGRUPO"               VARCHAR(4),
-                                                                  "FORMA"                  VARCHAR(6));
+                                                                  "GRUPO_ID"               VARCHAR(2),
+                                                                  "SUBGRUPO_ID"            VARCHAR(4),
+                                                                  "FORMA_ID"               VARCHAR(6));
 
                        /*Tabela dos estabelecimentos de saúde*/
                        CREATE TABLE IF NOT EXISTS {child_db}.pacoduni("ID"                 VARCHAR(7),
