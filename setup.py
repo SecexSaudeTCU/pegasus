@@ -30,10 +30,10 @@ da internet http://www2.datasus.gov.br/DATASUS/index.php?area=060805&item=3 e
 presente na primeira linha da coluna "Nome" da tabela que aparece nessa página.
 Descompacte a pasta "Tab415.zip", copie o executável "dbf2dbc.exe" e o arquivo
 "IMPBORL.DLL" (a pasta descompactada "Tab415" e seu *.zip* podem então ser deletados)
-para uma pasta nova denominada dbf2dbc no seu *home directory*, o qual toma
+para uma pasta nova denominada dbf2dbc no seu *root directory*, o qual toma
 normalmente a seguinte forma em plataformas Windows:
 
-```C:\\Users\\username\\```
+```C:\\```
 
 Em seguida se pode instalar o pegasus-dados através do comando (em plataformas Linux):
 

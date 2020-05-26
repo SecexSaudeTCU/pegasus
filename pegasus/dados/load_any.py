@@ -93,7 +93,7 @@ def load_any(db_name, db_user, db_password):
         # Criação de objetos string do nome das duas funções de inserção de dados do "datasus_db" contidas no respectivo...
         # módulo do package "insertion"
         str_most = 'insert_into_most_' + datasus_db.upper() + '_tables'
-        str_main = 'insert_into_main_table_and_arquivos_pandas'
+        str_main = 'insert_into_main_table_and_arquivos'
 
         # Importação das duas funções de inserção de dados do "datasus_db" usando a função nativa "__import__"
         if datasus_db.startswith('sinan'):

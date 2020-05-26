@@ -18,8 +18,8 @@ análise de anomalias estatísticas das bases de dados do SIH e SIA...
 Para o uso do módulo dados por estrutura de banco de dados é necessário instalar  
 o SGBD [PostgreSQL](https://www.postgresql.org/download/) e é recomendável ter
 um software para gerenciamento de banco de dados, tal como [pgAdmin](https://www.pgadmin.org/download/) ou
-[DBeaver Community](https://dbeaver.io/), para eventualmente visualizar os
-dados no banco de dados.
+[DBeaver Community](https://dbeaver.io/), para visualizar os dados no banco de
+dados.
 
 Para uso do módulo dados em plataformas Linux ou MacOS é necessária a instalação
 da dependência libffi:
@@ -32,10 +32,10 @@ download da pasta *.zip* Tab415 selecionando o link "Tab415.zip" contido [aqui](
 e presente na primeira linha da coluna "Nome" da tabela que aparece nessa página.
 Descompacte a pasta "Tab415.zip", copie o executável "dbf2dbc.exe" e o arquivo
 "IMPBORL.DLL" (a pasta descompactada "Tab415" e seu *.zip* podem então ser
-deletados) para uma pasta nova denominada dbf2dbc no seu *home directory*, o qual
+deletados) para uma pasta nova denominada dbf2dbc no seu *root directory*, o qual
 toma normalmente a seguinte forma em plataformas Windows:
 
-```C:\Users\username\```
+```C:\```
 
 Em seguida se pode instalar o módulo dados através do comando (em plataformas Linux):
 

@@ -132,10 +132,8 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     state = file_name[2:4]
     year = file_name[4:8]
     main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql(f'''SELECT COUNT(*) from {child_db}.{main_table}''', con=device)
-    n_rows = counting_rows.iloc[0]['count']
-    print(f'\nIniciando a lida com o arquivo DN{state}{year}...')
 
+    print(f'\nIniciando a lida com o arquivo DN{state}{year}...')
     # Cria uma instância da classe "DataSinascMain" do módulo "prepare_SINASC" do package "data_wrangling"
     data_sinasc_main = DataSinascMain(state, year)
     # Chama método da classe "DataSinascMain" do módulo "prepare_SINASC" referentes ao banco de dados sinasc
@@ -145,9 +143,9 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int(year)]*df.shape[0])
 
-    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sinasc armazenado no objeto
+    # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sinasc armazenado no objeto...
     # pandas DataFrame "df"
-    df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1', escapechar=' ')
+    df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False, escapechar=' ')
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sinasc
     f = open(base + state + year + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
@@ -158,10 +156,15 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
                             password=connection_data[4])
     # Criação de um cursor da conexão tipo "psycopg2" referenciado à variável "cursor"
     cursor = conn.cursor()
-    # Faz a inserção dos dados armazenados em "f" na tabela "main_table" do banco de dados "child_db"
-    # usando o método "copy_expert" do "psycopg2"
-    cursor.copy_expert(f'''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
-    conn.commit()
+    try:
+        # Faz a inserção dos dados armazenados em "f" na tabela "main_table" do banco de dados "child_db"...
+        # usando o método "copy_expert" do "psycopg2"
+        cursor.copy_expert(f'''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+    except:
+        print(f'Tentando a inserção do arquivo {base}{state}{year} por método alternativo (pandas)...')
+        df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
+    else:
+        conn.commit()
     # Encerra o cursor
     cursor.close()
     # Encerra a conexão
@@ -172,7 +175,8 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     os.remove(base + state + year + '.csv')
     print(f'Terminou de inserir os dados do arquivo {base}{state}{year} na tabela {main_table} do banco de dados {child_db}.')
 
-    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
+    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o...
+    # arquivo de dados principal carregado
     file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
                              columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
                              index=None
@@ -182,51 +186,3 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
     print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL!')
-
-
-###########################################################################################################################
-#  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
-###########################################################################################################################
-###########################################################################################################################
-#    MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE * MAIN TABLE   #
-###########################################################################################################################
-# Função que utiliza "pandas.to_sql" para a inserção de dados principais e dos respectivos metadados...
-# no banco de dados "child_db"
-def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, device, child_db, connection_data):
-    start = time.time()
-    counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
-    qtd_files_pg = counting_rows.iloc[0]['count']
-    print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
-
-    # Tratamento de dados principais do sinasc
-    base = file_name[0:2]
-    state = file_name[2:4]
-    year = file_name[4:8]
-    main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
-    n_rows = counting_rows.iloc[0]['count']
-    print(f'\nIniciando a lida com o arquivo DN{state}{year}...')
-
-    # Cria uma instância da classe "DataSinascMain" do módulo "prepare_SINASC" do package "data_wrangling"
-    data_sinasc_main = DataSinascMain(state, year)
-    # Chama método da classe "DataSinascMain" do módulo "prepare_SINASC" referentes ao banco de dados sinasc
-    df = data_sinasc_main.get_DNXXaaaa_treated()
-
-    # Inserção das colunas UF_DN e ANO_DN no objeto pandas DataFrame "df"
-    df.insert(1, 'UF_' + base, [state]*df.shape[0])
-    df.insert(2, 'ANO_' + base, [int(year)]*df.shape[0])
-    #df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
-    # Inserção dos dados da tabela principal no banco de dados "child_db"
-    df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os dados do arquivo {base}{state}{year} na tabela {main_table} do banco de dados {child_db}.')
-
-    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
-    file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
-                             columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
-                             index=None
-                             )
-    # Inserção de informações do arquivo principal de dados no banco de dados "child_db"
-    file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
-    print(f'Terminou de inserir os metadados do arquivo {base}{state}{year} na tabela arquivos do banco de dados {child_db}.')
-    end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL pelo pandas!')
