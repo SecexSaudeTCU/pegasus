@@ -34,7 +34,6 @@ class SIHFacade:
 
         return df_populacao
 
-    # TODO: MUDA ENTRE ANÁLISE 1 E ANÁLISE 2
     def __get_df_procedimentos_realizados_por_municipio_e_populacao(self, df_analise, df_populacao):
         #############
         # Trecho que difere entre análises 1 e 2

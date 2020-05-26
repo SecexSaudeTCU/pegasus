@@ -1,6 +1,7 @@
 from util.postgres.conexao import ConfiguracoesConexaoPostgresSQL
 from ibge.extract.download import get_dados_populacionais_municipios, get_dados_populacionais_ufs
 from sqlalchemy import create_engine
+import sys
 
 def criar_esquema(config, child_db):
 
@@ -68,7 +69,7 @@ def inserir_dados_municipios(child_db, config):
 
 if __name__ == '__main__':
     # Conecta ao banco de dados mãe "DB_NAME" do SGBD PostgreSQL usando o módulo python "psycopg2"
-    arquivo_configuracao = input('Caminho para o arquivo de configuração de acesso ao banco de dados:')
+    arquivo_configuracao = sys.argv[1]
     config = ConfiguracoesConexaoPostgresSQL(arquivo_configuracao)
 
     child_db = 'ibge'

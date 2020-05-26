@@ -3,7 +3,7 @@ postgres_sql:
   user: postgres
   password: postgres
   port: 5432
-  database: dbsus2
+  database: dbsus4
 analise:
   habitantes_tx: 100
   len_min: 48
