@@ -37,7 +37,7 @@ toma normalmente a seguinte forma em plataformas Windows:
 
 ```C:\```
 
-Em seguida se pode instalar o módulo dados através do comando (em plataformas Linux):
+Por fim, instala-se o módulo dados através do comando (em plataformas Linux):
 
 ```$ sudo pip install pegasus-dados```
 

@@ -10,8 +10,6 @@ auxiliares de dados dessas bases do Datasus (em formato *.dbf* ou *.cnv*)
 diretamente como objetos pandas DataFrame. Essa segunda opção é recomendada no
 caso de consulta mais pontual.
 
-## Installation of pegasus-dados
-
 Para o uso do módulo dados por estrutura de banco de dados é necessário instalar
 o SGBD PostgreSQL (https://www.postgresql.org/download/) e é recomendável ter
 um software para gerenciamento de banco de dados, tal como pgAdmin
@@ -35,14 +33,14 @@ normalmente a seguinte forma em plataformas Windows:
 
 ```C:\\```
 
-Em seguida se pode instalar o pegasus-dados através do comando (em plataformas Linux):
+Por fim, instala-se o módulo dados através do comando (em plataformas Linux):
 
 ```$ sudo pip install pegasus-dados```
 """
 
 setuptools.setup(
     name="pegasus-dados",
-    version="0.1.5",
+    version="0.1.6",
     packages=setuptools.find_packages(),
     package_data={
         '': ['*.xlsx', '*.c', '*.h', '*.o', '*.so', '*.md']
