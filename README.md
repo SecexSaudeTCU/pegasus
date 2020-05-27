@@ -2,7 +2,7 @@
 **Plataforma Eletrônica de Governança e Accountability do SUS**
 
 <p align="justify">Este projeto está dividido em n módulos. Um dos módulos já
-implementado, denominado dados, permite criar um <i>schema</i> de um banco de dados
+implementados, denominado dados, permite criar um <i>schema</i> de um banco de dados
 PostgreSQL local, já criado previamente, e insere nele dados das bases de dados
 dos seguintes sistemas de informações em saúde do Sistema Único de Saúde (SUS):
 CNES, SIH, SIA, SIM, SINASC ou SINAN (por enquanto). Esse módulo também permite
