@@ -7,7 +7,7 @@ PostgreSQL local, já criado previamente, e insere nele dados das bases de dados
 dos seguintes sistemas de informações em saúde do Sistema Único de Saúde (SUS):
 CNES, SIH, SIA, SIM, SINASC ou SINAN (por enquanto). Esse módulo também permite
 que se faça a leitura de arquivos principais de dados (em formato <i>.dbc</i>) e
-de arquivos auxiliares de dados dessas bases do Datasus (em formato <i>.dbf</i>
+de arquivos auxiliares de dados dessas bases do SUS (em formato <i>.dbf</i>
 ou <i>.cnv</i>) diretamente como objetos pandas DataFrame. Essa segunda opção é
 recomendada no caso de consulta mais pontual.</p>
 
