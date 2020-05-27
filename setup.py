@@ -3,12 +3,12 @@ import setuptools
 lg = """
 O projeto PegaSUS está dividido em n módulos. Um dos módulos já implementado,
 denominado dados, permite criar um *schema* de um banco de dados PostgreSQL local,
-já criado previamente, e insere nele dados das bases de dados (do Datasus) CNES,
-SIH, SIA, SIM, SINASC ou SINAN (por enquanto). Esse módulo também permite que se
-faça a leitura de arquivos principais de dados (em formato *.dbc*) e de arquivos
-auxiliares de dados dessas bases do Datasus (em formato *.dbf* ou *.cnv*)
-diretamente como objetos pandas DataFrame. Essa segunda opção é recomendada no
-caso de consulta mais pontual.
+já criado previamente, e insere nele dados das bases de dados dos seguintes sistemas
+de informação do Sistema Único de Saúde (SUS): CNES, SIH, SIA, SIM, SINASC ou SINAN
+(por enquanto). Esse módulo também permite que se faça a leitura de arquivos
+principais de dados (em formato *.dbc*) e de arquivos auxiliares de dados dessas
+bases do Datasus (em formato *.dbf* ou *.cnv*) diretamente como objetos pandas
+DataFrame. Essa segunda opção é recomendada no caso de consulta mais pontual.
 
 Para o uso do módulo dados por estrutura de banco de dados é necessário instalar
 o SGBD PostgreSQL (https://www.postgresql.org/download/) e é recomendável ter
@@ -23,12 +23,11 @@ da dependência libffi:
 
 Para uso em plataformas Windows, é necessária a instalação do programa executável
 (*.exe*) dbf2dbc que faz parte do programa TabWin do Datasus. Para isso, faça o
-download da pasta *.zip* Tab415 selecionando o link "Tab415.zip" contido na página
-da internet http://www2.datasus.gov.br/DATASUS/index.php?area=060805&item=3 e
-presente na primeira linha da coluna "Nome" da tabela que aparece nessa página.
+download da pasta *.zip* Tab415 selecionando o link "Tab415.zip" contido na primeira
+linha da coluna "Nome" da tabela que aparece em http://www2.datasus.gov.br/DATASUS/index.php?area=060805&item=3.
 Descompacte a pasta "Tab415.zip", copie o executável "dbf2dbc.exe" e o arquivo
 "IMPBORL.DLL" (a pasta descompactada "Tab415" e seu *.zip* podem então ser deletados)
-para uma pasta nova denominada dbf2dbc no seu *root directory*, o qual toma
+para uma pasta nova denominada "dbf2dbc" no seu *root directory*, o qual toma
 normalmente a seguinte forma em plataformas Windows:
 
 ```C:\\```
