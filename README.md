@@ -1,4 +1,4 @@
-# PEGASUS
+# Pegasus
 **Plataforma Eletrônica de Governança e Accountability do SUS**
 
 <p align="justify">Este projeto está dividido em n módulos. Um dos módulos já
