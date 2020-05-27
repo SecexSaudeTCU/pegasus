@@ -1,6 +1,6 @@
 from util.postgres.dao_util import DaoPostgresSQL
 import pandas as pd
-
+from util.metricas import downcast
 
 class DaoIBGE(DaoPostgresSQL):
     def __init__(self, arquivo_configuracao):
@@ -11,13 +11,19 @@ class DaoIBGE(DaoPostgresSQL):
         Retorna a população (estimada) de cada município.
         :return:
         """
-        sql = 'SELECT m."ID" as COD_MUNICIPIO, m."MUNNOME" as NM_MUNICIPIO, uf."SIGLA_UF" as UF, pop."POPULACAO", ' \
+        # sql = 'SELECT m."ID" as COD_MUNICIPIO, m."MUNNOME" as NM_MUNICIPIO, uf."SIGLA_UF" as UF, pop."POPULACAO", ' \
+        #       'm."RSAUDE_ID" as CD_REGSAUD ' \
+        #       'from ibge.populacao_municipio pop ' \
+        #       'join sih_rd.ufzi m on m."ID" = pop."ID" ' \
+        #       'join sih_rd.ufcod uf on uf."ID" = m."UFCOD_ID"'
+        sql = 'SELECT m."ID" as COD_MUNICIPIO, pop."POPULACAO", ' \
               'm."RSAUDE_ID" as CD_REGSAUD ' \
               'from ibge.populacao_municipio pop ' \
               'join sih_rd.ufzi m on m."ID" = pop."ID" ' \
               'join sih_rd.ufcod uf on uf."ID" = m."UFCOD_ID"'
         conexao = self.get_conexao()
         df = pd.read_sql(sql, conexao)
+        df = downcast(df)
         conexao.close()
         return df
 
@@ -26,7 +32,8 @@ class DaoIBGE(DaoPostgresSQL):
         Retorna a população (estimada) de cada unidade da federação.
         :return:
         """
-        sql = 'SELECT * FROM ibge.populacao_uf'
+        #sql = 'SELECT * FROM ibge.populacao_uf'
+        sql = 'SELECT "ID", "POPULACAO" FROM ibge.populacao_uf'
         conexao = self.get_conexao()
         df = pd.read_sql(sql, conexao)
         conexao.close()

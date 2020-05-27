@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c0f901a5-2340-4bad-b331-e9ec3e5a3263" name="Default Changelist" comment="" />
+    <list default="true" id="d8328d4d-e495-44ae-9f32-d0ede7e75ab6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../dados/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../dados/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dados/load_any.py" beforeDir="false" afterPath="$PROJECT_DIR$/../dados/load_any.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,9 +29,23 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="data-adapter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="data-adapter" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope" />
     </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -44,19 +64,19 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c0f901a5-2340-4bad-b331-e9ec3e5a3263" name="Default Changelist" comment="" />
-      <created>1588167368809</created>
+      <changelist id="d8328d4d-e495-44ae-9f32-d0ede7e75ab6" name="Default Changelist" comment="" />
+      <created>1590517319698</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1588167368809</updated>
+      <updated>1590517319698</updated>
     </task>
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="0" y="-1" width="1920" height="1040" extended-state="6" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24986821" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Python Console" />

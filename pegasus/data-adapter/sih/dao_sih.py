@@ -1,7 +1,7 @@
 import pandas as pd
 
 from util.postgres.dao_util import DaoPostgresSQL
-
+from util.metricas import downcast
 
 class DaoSIH(DaoPostgresSQL):
 
@@ -51,6 +51,7 @@ class DaoSIH(DaoPostgresSQL):
                                                'group by "ANO_RD", "PROCREA_ID", "UFZI_ID"'
         conexao = self.get_conexao()
         df = pd.read_sql(sql, conexao)
+        df = downcast(df)
         conexao.close()
         return df
 

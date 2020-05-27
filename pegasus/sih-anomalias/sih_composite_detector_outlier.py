@@ -245,7 +245,7 @@ def __gerar_dataframes1():
     arquivo_configuracao = sys.argv[1]
     sih_facade = SIHFacade(arquivo_configuracao)
 
-    ano = 2014
+    ano = 2018
     df_analise, df_populacao = __get_df_analise1(ano)
     df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_analise, df_populacao)
 
@@ -303,6 +303,6 @@ def analise1():
 
 if __name__ == '__main__':
     #analise1()
-    #__gerar_dataframes()
-    __gerar_dataframes2()
+    __gerar_dataframes1()
+    #__gerar_dataframes2()
 

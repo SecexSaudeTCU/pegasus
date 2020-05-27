@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sih-data-adapter.iml" filepath="$PROJECT_DIR$/.idea/sih-data-adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/data-adapter.iml" filepath="$PROJECT_DIR$/.idea/data-adapter.iml" />
     </modules>
   </component>
 </project>
