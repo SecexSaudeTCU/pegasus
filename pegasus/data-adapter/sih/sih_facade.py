@@ -253,8 +253,11 @@ class SIHFacade:
 
     def __get_df_painel(self, coluna, nivel, df_analise):
         #TODO: CONTINUAR A OTMIZAÇÃO A PARTIR DAQUI...
+        # df_painel = df_analise.groupby(
+        #     ['ano_cmpt', 'cod_municipio', 'LATITUDE', 'LONGITUDE', 'nm_municipio', coluna, 'uf', 'POPULACAO',
+        #      'POPULACAO_UF', 'POPULACAO_BRASIL']).sum()[['qtd_procedimento', 'vl_total']].reset_index()
         df_painel = df_analise.groupby(
-            ['ano_cmpt', 'cod_municipio', 'LATITUDE', 'LONGITUDE', 'nm_municipio', coluna, 'uf', 'POPULACAO',
+            ['ano_cmpt', 'cod_municipio', coluna, 'POPULACAO',
              'POPULACAO_UF', 'POPULACAO_BRASIL']).sum()[['qtd_procedimento', 'vl_total']].reset_index()
         df_uf_painel = self.__get_df_painel_uf(df_analise, coluna)
         df_brasil_painel = self.__get_df_painel_brasil(df_analise, coluna)
