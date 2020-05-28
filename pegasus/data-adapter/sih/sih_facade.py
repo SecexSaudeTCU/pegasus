@@ -88,6 +88,7 @@ class SIHFacade:
              'qtd_procedimento_UF': 'uint32', 'qtd_procedimento_BRASIL': 'uint32', 'NIVEL': 'category'})
         print(mem_usage(df_proc_ano_analise))
 
+        #TODO: Retomar a comparação de código a partir deste ponto em diante.
         return df_proc_ano_analise
 
     def get_df_nivel(self, df_analise, df_populacao):
@@ -144,9 +145,7 @@ class SIHFacade:
         df_procedimentos_analise = df_procedimentos_analise.set_index('PROCEDIMENTO')
         print("df_procedimentos_analise.set_index('PROCEDIMENTO'): --- %s seconds ---" % (time.time() - start_time))
 
-        print(df_procedimentos_analise.shape)
-        print(df_procedimentos_analise.head())
-
+        #TODO: Retomar as otimizações de dataframes deste ponto em diante.
         return df_procedimentos_analise
 
     def get_df_procedimentos_por_ano_com_descricao(self, df_analise, df_populacao, df_descricao_procedimentos):
@@ -173,10 +172,10 @@ class SIHFacade:
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
             if (len_proc in (2, 4, 6, 10)):
-                proc_name = 'Grupo: ' + _procedimento['GRUPO'] + ' : ' + _procedimento['dsc_grupo']
+                proc_name = 'Grupo: ' + _procedimento['GRUPO_ID'] + ' : ' + _procedimento['dsc_grupo']
                 # (nível de subgrupo)
                 if (len_proc in (4, 6, 10)):
-                    proc_name = proc_name + ' - SubGrupo: ' + _procedimento['SUBGRUPO'] + ' : ' + _procedimento[
+                    proc_name = proc_name + ' - SubGrupo: ' + _procedimento['SUBGRUPO_ID'] + ' : ' + _procedimento[
                         'dsc_subgrupo']
                     # (nível de forma)
                     if (len_proc in (6, 10)):
@@ -207,10 +206,10 @@ class SIHFacade:
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
             if (len_proc == 2):
-                proc_name = 'Grupo: ' + _procedimento['GRUPO'] + ' : ' + _procedimento['dsc_grupo']
+                proc_name = 'Grupo: ' + _procedimento['GRUPO_ID'] + ' : ' + _procedimento['dsc_grupo']
                 # (nível de subgrupo)
             elif (len_proc == 4):
-                proc_name = 'SubGrupo: ' + _procedimento['SUBGRUPO'] + ' : ' + _procedimento['dsc_subgrupo']
+                proc_name = 'SubGrupo: ' + _procedimento['SUBGRUPO_ID'] + ' : ' + _procedimento['dsc_subgrupo']
                 # (nível de forma)
             elif (len_proc == 6):
                 proc_name = 'Forma: ' + _procedimento['cod_forma'] + ' : ' + _procedimento['dsc_forma']

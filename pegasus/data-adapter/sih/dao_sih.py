@@ -1,7 +1,7 @@
 import pandas as pd
 
 from util.postgres.dao_util import DaoPostgresSQL
-from util.metricas import downcast
+from util.metricas import downcast, mem_usage
 
 class DaoSIH(DaoPostgresSQL):
 
@@ -13,15 +13,19 @@ class DaoSIH(DaoPostgresSQL):
         Retorna as descrições dos procedimentos, bem como dos seus grupos, subgrupos e formas.
         :return:
         """
-        sql = 'select p."PROCREA_ID", p."GRUPO", g."GRUPO" as DSC_GRUPO, p."SUBGRUPO", s."SUBGRUPO" as DSC_SUBGRUPO, ' \
-              'p."FORMA" as COD_FORMA, f."FORMA" as DSC_FORMA, pr."PROCEDIMENTO" as DSC_PROC ' \
+        sql = 'select p."PROCREA_ID", p."GRUPO_ID", g."GRUPO" as DSC_GRUPO, p."SUBGRUPO_ID", ' \
+              's."SUBGRUPO" as DSC_SUBGRUPO, p."FORMA_ID" as COD_FORMA, f."FORMA" as DSC_FORMA, ' \
+              'pr."PROCEDIMENTO" as DSC_PROC ' \
               'from sih_rd.rdbr p ' \
-              'join sih_rd.grupo g on p."GRUPO" = g."ID" ' \
-              'join sih_rd.subgrupo s on p."SUBGRUPO" = s."ID" ' \
-              'join sih_rd.forma f on p."FORMA" = f."ID" ' \
+              'join sih_rd.grupo g on p."GRUPO_ID" = g."ID" ' \
+              'join sih_rd.subgrupo s on p."SUBGRUPO_ID" = s."ID" ' \
+              'join sih_rd.forma f on p."FORMA_ID" = f."ID" ' \
               'join sih_rd.procrea pr on p."PROCREA_ID" = pr."ID"'
         conexao = self.get_conexao()
         df = pd.read_sql(sql, conexao)
+        print(mem_usage(df))
+        df = df.astype('category')
+        print(mem_usage(df))
         conexao.close()
         return df
 
