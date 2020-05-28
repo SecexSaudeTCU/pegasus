@@ -214,8 +214,13 @@ def __get_df_analise1(ano):
     sih_facade = SIHFacade(arquivo_configuracao)
     df_rd = dao.get_df_procedimentos_realizados_por_municipio(ano)
     df_populacao = sih_facade.get_df_populacao()
-    df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'], how="left")
+    # df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'], how="left")
+    # TODO: Descomentando a linha acima, vai considerar registros para municípios não informados.  A consequência é que
+    #  é necessário setar NaN ou 0 para as respecitvas populações, o que pode levar a resultados inconsistentes.  No
+    #  TCC, aparentemente apenas registros relativos a municípios conhecidos são levados em consideração.
+    df_analise = pd.merge(df_rd, df_populacao, on=['cod_municipio'])
     return df_analise, df_populacao
+
 
 ## ANALISE 2 - municipio x procedimento - acrescentando qtd 0
 # TODO: Colocar aqui a explanação que está no TCC (inclui municípios onde não houve realização de cada procedimento)
@@ -241,12 +246,15 @@ def __get_df_analise2(ano):
 
     return df_analise2, df_populacao
 
+
 def __gerar_dataframes1():
     arquivo_configuracao = sys.argv[1]
     sih_facade = SIHFacade(arquivo_configuracao)
 
     ano = 2018
     df_analise, df_populacao = __get_df_analise1(ano)
+
+    # TODO: Aparentemente, este código está diferente do notebook original.
     df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_analise, df_populacao)
 
     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
@@ -254,6 +262,7 @@ def __gerar_dataframes1():
     df_descricao_procedimentos.to_csv('df_descricao_procedimentos_1.csv')
     df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao_1.csv')
     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
+
 
 def __gerar_dataframes2():
     arquivo_configuracao = sys.argv[1]
@@ -268,6 +277,7 @@ def __gerar_dataframes2():
     df_descricao_procedimentos.to_csv('df_descricao_procedimentos.csv')
     df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
+
 
 def analise1():
     arquivo_configuracao = sys.argv[1]
@@ -299,10 +309,7 @@ def analise1():
     df_painel_analise.to_csv('painel_SIH_DADOS_transformados_analise1', sep=';', index=False, decimal=',')
 
 
-
-
 if __name__ == '__main__':
-    #analise1()
+    # analise1()
     __gerar_dataframes1()
-    #__gerar_dataframes2()
-
+    # __gerar_dataframes2()

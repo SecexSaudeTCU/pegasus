@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/analise.iml" filepath="$PROJECT_DIR$/.idea/analise.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../dados/.idea/dados.iml" filepath="$PROJECT_DIR$/../dados/.idea/dados.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../data-adapter/.idea/data-adapter.iml" filepath="$PROJECT_DIR$/../data-adapter/.idea/data-adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sih-anomalias/.idea/sih-anomalias.iml" filepath="$PROJECT_DIR$/../sih-anomalias/.idea/sih-anomalias.iml" />
     </modules>
   </component>
 </project>

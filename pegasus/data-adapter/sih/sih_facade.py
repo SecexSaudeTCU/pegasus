@@ -29,17 +29,12 @@ class SIHFacade:
 
     def get_df_populacao(self):
         df_populacao = self.__ibge_facade.get_df_populacao_ibge()
-        #df_coordenadas = self.__dao.get_df_coordenadas()
-        #df_populacao = pd.merge(df_populacao, df_coordenadas, on='cod_municipio')
+        # df_coordenadas = self.__dao.get_df_coordenadas()
+        # df_populacao = pd.merge(df_populacao, df_coordenadas, on='cod_municipio')
 
         return df_populacao
 
     def __get_df_procedimentos_realizados_por_municipio_e_populacao(self, df_analise, df_populacao):
-        #############
-        # Trecho que difere entre análises 1 e 2
-        # df_analise, df_populacao = self.get_df_analise1(ano)
-        #############
-
         df_analise['COD_FORMA'] = df_analise['proc_rea'].str[:6]
         df_analise['COD_SUBGRUPO'] = df_analise['proc_rea'].str[:4]
         df_analise['COD_GRUPO'] = df_analise['proc_rea'].str[:2]
@@ -47,38 +42,9 @@ class SIHFacade:
         df_analise['qtd_procedimento'] = df_analise['qtd_procedimento'].fillna(0)
         df_analise['vl_total'] = df_analise['vl_total'].fillna(0)
 
-        # Trata os casos de municípios ignorados, preenchendo ao menos com a população da UF.
-        df_populacao_ufs = self.__ibge_facade.get_df_populacao_ufs()
-        #df_estados = self.__dao.get_df_estados()
-
-        for index, row in df_analise.iterrows():
-            if pd.isna(row['POPULACAO_UF']):
-                cod_municipio = row['cod_municipio']
-                cod_uf = cod_municipio[0:2]
-                populacao_uf = df_populacao_ufs.loc[df_populacao_ufs['COD_UF'] == cod_uf, 'POPULACAO'].values[0]
-                #row['POPULACAO_UF'] = populacao_uf
-                df_analise.set_value(index, 'POPULACAO_UF', populacao_uf)
-                #sigla_uf = df_estados.loc[df_estados['ID'] == cod_uf, 'SIGLA_UF'].values[0]
-                #row['uf'] = sigla_uf
-                #row['nm_municipio'] = 'MUNICÍPIO IGNORADO - ' + sigla_uf
-                #row['POPULACAO_BRASIL'] = df_populacao.loc[0, 'POPULACAO_BRASIL']
-                df_analise.set_value(index, 'POPULACAO_BRASIL', df_populacao.loc[0, 'POPULACAO_BRASIL'])
-                #row['LATITUDE'] = 0
-                #row['LONGITUDE'] = 0
-                # TODO: Checar
-                #row['cd_regsaud'] = cod_uf + '000'
-                cats = df_analise['cd_regsaud'].cat.categories.tolist()
-                reg_saud = cod_uf + '000'
-                if not reg_saud in cats:
-                    df_analise['cd_regsaud'] = df_analise['cd_regsaud'].cat.add_categories(reg_saud)
-                df_analise.set_value(index, 'cd_regsaud', reg_saud)
-
         df_analise = downcast(df_analise)
-        ###
-        df_analise['POPULACAO'] = df_analise['POPULACAO'].fillna(0)
-        ###
         print(mem_usage(df_analise))
-        df_analise = df_analise.astype({'POPULACAO':'uint32', 'POPULACAO_UF':'uint32', 'POPULACAO_BRASIL':'uint32'})
+        df_analise = df_analise.astype({'POPULACAO': 'uint32', 'POPULACAO_UF': 'uint32', 'POPULACAO_BRASIL': 'uint32'})
         print(mem_usage(df_analise))
         return df_analise
 
@@ -95,26 +61,32 @@ class SIHFacade:
         return self.__get_df_painel('COD_GRUPO', 'GRUPO', df_analise)
 
     def __get_df_procedimentos_ano_para_analise(self, df_analise, df_populacao):
+        df_analise = self.__get_df_procedimentos_realizados_por_municipio_e_populacao(df_analise, df_populacao)
+
+        df_procedimento_painel = self.__get_df_procedimento_painel(df_analise)
+        df_forma_painel = self.__get_df_forma_painel(df_analise)
+        df_subgrupo_painel = self.__get_df_subgrupo_painel(df_analise)
+        df_grupo_painel = self.__get_df_grupo_painel(df_analise)
+
         # df_proc_ano_analise = pd.DataFrame(
         #     columns=['ANO', 'cod_municipio', 'nm_municipio', 'PROCEDIMENTO', 'uf', 'POPULACAO', 'POPULACAO_UF',
         #              'POPULACAO_BRASIL', 'LATITUDE', 'LONGITUDE', 'qtd_procedimento', 'vl_total', 'qtd_procedimento_UF',
         #              'vl_total_UF', 'qtd_procedimento_BRASIL', 'vl_total_BRASIL', 'TX', 'TX_UF', 'TX_BRASIL', 'NIVEL'])
         df_proc_ano_analise = pd.DataFrame(
-            columns=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'uf', 'POPULACAO', 'POPULACAO_UF',
+            columns=['ANO', 'cod_municipio', 'PROCEDIMENTO', 'POPULACAO', 'POPULACAO_UF',
                      'POPULACAO_BRASIL', 'qtd_procedimento', 'vl_total', 'qtd_procedimento_UF',
                      'vl_total_UF', 'qtd_procedimento_BRASIL', 'vl_total_BRASIL', 'TX', 'TX_UF', 'TX_BRASIL', 'NIVEL'])
-        df_analise = self.__get_df_procedimentos_realizados_por_municipio_e_populacao(df_analise, df_populacao)
-        df_procedimento_painel = self.__get_df_procedimento_painel(df_analise)
         df_proc_ano_analise = df_proc_ano_analise.append(df_procedimento_painel, sort=False)
-        df_forma_painel = self.__get_df_forma_painel(df_analise)
         df_proc_ano_analise = df_proc_ano_analise.append(df_forma_painel, sort=False)
-        df_subgrupo_painel = self.__get_df_subgrupo_painel(df_analise)
         df_proc_ano_analise = df_proc_ano_analise.append(df_subgrupo_painel, sort=False)
-        df_grupo_painel = self.__get_df_grupo_painel(df_analise)
         df_proc_ano_analise = df_proc_ano_analise.append(df_grupo_painel, sort=False)
 
-        print(df_proc_ano_analise.shape)
-        print(df_proc_ano_analise.head())
+        print(mem_usage(df_proc_ano_analise))
+        df_proc_ano_analise = df_proc_ano_analise.astype(
+            {'ANO': 'category', 'cod_municipio': 'category', 'PROCEDIMENTO': 'category', 'POPULACAO': 'uint32',
+             'POPULACAO_UF': 'uint32', 'POPULACAO_BRASIL': 'uint32', 'qtd_procedimento': 'uint32',
+             'qtd_procedimento_UF': 'uint32', 'qtd_procedimento_BRASIL': 'uint32', 'NIVEL': 'category'})
+        print(mem_usage(df_proc_ano_analise))
 
         return df_proc_ano_analise
 
@@ -252,17 +224,18 @@ class SIHFacade:
         return proc_name
 
     def __get_df_painel(self, coluna, nivel, df_analise):
-        #TODO: CONTINUAR A OTMIZAÇÃO A PARTIR DAQUI...
         # df_painel = df_analise.groupby(
         #     ['ano_cmpt', 'cod_municipio', 'LATITUDE', 'LONGITUDE', 'nm_municipio', coluna, 'uf', 'POPULACAO',
         #      'POPULACAO_UF', 'POPULACAO_BRASIL']).sum()[['qtd_procedimento', 'vl_total']].reset_index()
         df_painel = df_analise.groupby(
-            ['ano_cmpt', 'cod_municipio', coluna, 'POPULACAO',
-             'POPULACAO_UF', 'POPULACAO_BRASIL']).sum()[['qtd_procedimento', 'vl_total']].reset_index()
+            ['ano_cmpt', 'cod_municipio', coluna, 'POPULACAO', 'POPULACAO_UF', 'POPULACAO_BRASIL'],
+            observed=True).sum()[['qtd_procedimento', 'vl_total']].reset_index()
+
         df_uf_painel = self.__get_df_painel_uf(df_analise, coluna)
         df_brasil_painel = self.__get_df_painel_brasil(df_analise, coluna)
 
-        df_painel = df_painel.join(df_uf_painel, on=['ano_cmpt', 'uf', coluna, 'POPULACAO_UF'], rsuffix='_UF')
+        # df_painel = df_painel.join(df_uf_painel, on=['ano_cmpt', 'uf', coluna, 'POPULACAO_UF'], rsuffix='_UF')
+        df_painel = df_painel.join(df_uf_painel, on=['ano_cmpt', coluna, 'POPULACAO_UF'], rsuffix='_UF')
         df_painel = df_painel.join(df_brasil_painel, on=['ano_cmpt', coluna, 'POPULACAO_BRASIL'], rsuffix='_BRASIL')
 
         df_painel = df_painel.rename(columns={"ano_cmpt": "ANO", coluna: "PROCEDIMENTO"})
@@ -277,11 +250,14 @@ class SIHFacade:
         return df_painel
 
     def __get_df_painel_uf(self, df_analise, coluna):
-        df_procedimento_uf_painel = df_analise.groupby(['ano_cmpt', 'uf', coluna, 'POPULACAO_UF']).sum()[
+        # df_procedimento_uf_painel = df_analise.groupby(['ano_cmpt', 'uf', coluna, 'POPULACAO_UF']).sum()[
+        #     ['qtd_procedimento', 'vl_total']]
+        df_procedimento_uf_painel = df_analise.groupby(['ano_cmpt', coluna, 'POPULACAO_UF'], observed=True).sum()[
             ['qtd_procedimento', 'vl_total']]
         return df_procedimento_uf_painel
 
     def __get_df_painel_brasil(self, df_analise, coluna):
-        df_procedimento_brasil_painel = df_analise.groupby(['ano_cmpt', coluna, 'POPULACAO_BRASIL']).sum()[
-            ['qtd_procedimento', 'vl_total']]
+        df_procedimento_brasil_painel = \
+            df_analise.groupby(['ano_cmpt', coluna, 'POPULACAO_BRASIL'], observed=True).sum()[
+                ['qtd_procedimento', 'vl_total']]
         return df_procedimento_brasil_painel
