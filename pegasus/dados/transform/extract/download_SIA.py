@@ -18,12 +18,12 @@ from ftplib import FTP
 from zipfile import ZipFile
 from dbfread import DBF
 
-from transform.extract.folder import CACHEPATH
+from pegasus.dados.transform.extract.folder import CACHEPATH
 
 if os.name == 'nt':
-    from transform.extract.read_windows import read_dbc, read_cnv
+    from pegasus.dados.transform.extract.read_windows import read_dbc, read_cnv
 elif os.name == 'posix':
-    from transform.extract.read_unix_c import read_dbc, read_cnv
+    from pegasus.dados.transform.extract.read_unix_c import read_dbc, read_cnv
 
 
 def download_SIAXXaamm(base: str, state: str, year: str, month: str, cache: bool=True):

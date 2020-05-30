@@ -1,0 +1,25 @@
+"""
+Módulo de testes unitários do banco e dos sub-bancos de dados do CNES
+"""
+
+import unittest
+
+import pandas as pd
+
+from pegasus.dados.transform.extract.download_CNES import (download_CNESXXaamm,
+                                                           download_table_dbf,
+                                                           download_table_cnv)
+
+
+class TestCNESDownload(unittest.TestCase):
+
+    def test_dbc_CNES(self):
+        df = download_CNESXXaamm('ST', 'SP', '19', '12')
+        self.assertIsInstance(df, pd.DataFrame)
+        self.assertGreater(df.shape[0], 0)
+        self.assertGreater(df.shape[1], 0)
+
+
+
+if __name__ == '__main__':
+    unittest.main()

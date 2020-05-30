@@ -8,7 +8,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from transform.extract.download_SINASC import download_DNXXaaaa, download_table_dbf, download_table_cnv
+from pegasus.dados.transform.extract.download_SINASC import download_DNXXaaaa, download_table_dbf, download_table_cnv
 
 
 """

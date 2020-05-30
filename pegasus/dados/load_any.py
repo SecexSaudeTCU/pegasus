@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 import numpy as np
 import pandas as pd
 
-from utilities.essential_postgreSQL import files_in_ftp_subbase, get_tables_counts_subdb, files_loaded, files_to_load
+from pegasus.dados.utilities.essential_postgreSQL import files_in_ftp_subbase, get_tables_counts_subdb, files_loaded, files_to_load
 
 
 def load_any(db_name, db_user, db_password):
@@ -40,7 +40,7 @@ def load_any(db_name, db_user, db_password):
     retratadas em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
 
     O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode
-    ser alterado editando o módulo "folder" contido no subpackage "transform.extract".
+    ser alterado editando o módulo "folder" contido no subpackage "pegasus.dados.transform.extract".
     """
 
     pd.set_option('display.max_columns', None)
@@ -98,10 +98,14 @@ def load_any(db_name, db_user, db_password):
         # Importação das duas funções de inserção de dados do "datasus_db" usando a função nativa "__import__"
         if datasus_db.startswith('sinan'):
             #
-            module1 = __import__('insertion.insert_into_any_' + datasus_db.upper()[:-5], fromlist=[str_most, str_main], level=0)
+            module1 = __import__('pegasus.dados.insertion.insert_into_any_' + datasus_db.upper()[:-5],
+                                 fromlist=[str_most, str_main],
+                                 level=0)
         else:
             #
-            module1 = __import__('insertion.insert_into_any_' + datasus_db.upper()[:-3], fromlist=[str_most, str_main], level=0)
+            module1 = __import__('pegasus.dados.insertion.insert_into_any_' + datasus_db.upper()[:-3],
+                                 fromlist=[str_most, str_main],
+                                 level=0)
 
         # Colocação do nome das duas funções de inserção de dados importadas nas variáveis "most_tables" e "main_table"
         most_tables = getattr(module1, str_most)
@@ -141,7 +145,9 @@ def load_any(db_name, db_user, db_password):
 
         # Importação da função "create_tables" de criação do schema do banco de dados "datasus_db" existente no respectivo
         # módulo do package "schemas" usando a função python "__import__"
-        module2 = __import__('schemas.sql_' + datasus_db.upper() + '_postgreSQL', fromlist=['create_tables'], level=0)
+        module2 = __import__('pegasus.dados.schemas.sql_' + datasus_db.upper() + '_postgreSQL',
+                             fromlist=['create_tables'],
+                             level=0)
         # Referenciação da função "create_tables" à variável deste módulo denominada "create_schema"
         create_schema = getattr(module2, 'create_tables')
         # Uso da função "create_schema" para a criação do schema do banco de dados "datasus_db"
@@ -238,4 +244,4 @@ def load_any(db_name, db_user, db_password):
 
 if __name__ == '__main__':
 
-    load_any('dbsus4', 'ericc', 'teste')
+    load_any('dbsus4', 'Eric', 'teste')

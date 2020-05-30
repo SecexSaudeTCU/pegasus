@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from transform.prepare_SINASC import DataSinascMain, DataSinascAuxiliary
+from pegasus.dados.transform.prepare_SINASC import DataSinascMain, DataSinascAuxiliary
 
 ###########################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

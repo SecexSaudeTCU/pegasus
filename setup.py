@@ -1,13 +1,13 @@
 import setuptools
 
 lg = """
-O projeto PegaSUS está dividido em n módulos. Um dos módulos já implementado,
+O projeto PegaSUS está dividido em n módulos. Um dos módulos já implementados,
 denominado dados, permite criar um *schema* de um banco de dados PostgreSQL local,
 já criado previamente, e insere nele dados das bases de dados dos seguintes sistemas
 de informação do Sistema Único de Saúde (SUS): CNES, SIH, SIA, SIM, SINASC ou SINAN
 (por enquanto). Esse módulo também permite que se faça a leitura de arquivos
 principais de dados (em formato *.dbc*) e de arquivos auxiliares de dados dessas
-bases do Datasus (em formato *.dbf* ou *.cnv*) diretamente como objetos pandas
+bases do SUS (em formato *.dbf* ou *.cnv*) diretamente como objetos pandas
 DataFrame. Essa segunda opção é recomendada no caso de consulta mais pontual.
 
 Para o uso do módulo dados por estrutura de banco de dados é necessário instalar

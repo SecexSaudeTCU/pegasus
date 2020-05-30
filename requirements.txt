@@ -1,0 +1,9 @@
+numpy
+pandas
+xlrd
+dbfread
+cffi
+pyarrow
+fastparquet
+psycopg2
+SQLAlchemy
