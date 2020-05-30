@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SecexSaudeTCU/pegasus.svg?branch=master)](https://travis-ci.org/SecexSaudeTCU/pegasus)
+
 # Pegasus
 **Plataforma Eletrônica de Governança e Accountability do SUS**
 
