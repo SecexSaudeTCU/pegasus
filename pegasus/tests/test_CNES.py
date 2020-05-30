@@ -2,6 +2,12 @@
 Módulo de testes unitários do banco e dos sub-bancos de dados do CNES
 """
 
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)).replace('\\', '/')[:-14])
+print(os.path.dirname(os.path.abspath(__file__)).replace('\\', '/')[:-14])
+
 import unittest
 
 import pandas as pd
