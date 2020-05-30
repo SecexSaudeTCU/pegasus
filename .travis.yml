@@ -28,4 +28,3 @@ script:
   - python --version
   - cd -
   - cd pegasus/tests
-  - python -m unittest
