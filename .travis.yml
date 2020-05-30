@@ -27,5 +27,5 @@ script:
   - python _build_readdbc.py
   - python --version
   - cd -
-  - cd pegasus/tests
+  - cd tests
   - python -m unittest

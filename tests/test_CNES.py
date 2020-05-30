@@ -24,8 +24,3 @@ class TestCNESDownload(unittest.TestCase):
         self.assertIsInstance(df, pd.DataFrame)
         self.assertGreater(df.shape[0], 0)
         self.assertGreater(df.shape[1], 0)
-
-
-
-if __name__ == '__main__':
-    unittest.main()
