@@ -29,3 +29,4 @@ script:
   - python --version
   - cd -
   - cd tests
+  - python -m unittest
