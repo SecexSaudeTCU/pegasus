@@ -29,4 +29,4 @@ script:
   - python --version
   - cd -
   - cd tests
-  - python -m unittest
+  - python test_CNES.py
