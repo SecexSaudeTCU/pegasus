@@ -27,4 +27,4 @@ script:
   - cd pegasus/dados/transform/extract
   - python _build_readdbc.py
   - python --version
-  - cd .....tests
+  - cd tests
