@@ -22,11 +22,10 @@ install:
   - pip install -r requirements.txt --upgrade
   - python setup.py build
 
-
 script:
   - cd pegasus/dados/transform/extract
   - python _build_readdbc.py
   - python --version
   - cd -
-  - cd tests
-  - python test_CNES.py
+  - cd pegasus/tests
+  - python unittest
