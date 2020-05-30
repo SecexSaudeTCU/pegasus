@@ -12,7 +12,7 @@ import unittest
 
 import pandas as pd
 
-from pegasus.pegasus.dados.transform.extract.download_CNES import (download_CNESXXaamm,
+from pegasus.dados.transform.extract.download_CNES import (download_CNESXXaamm,
                                                            download_table_dbf,
                                                            download_table_cnv)
 
