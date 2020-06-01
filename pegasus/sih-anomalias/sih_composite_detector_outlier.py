@@ -253,8 +253,6 @@ def __gerar_dataframes1():
 
     ano = 2018
     df_analise, df_populacao = __get_df_analise1(ano)
-
-    # TODO: Aparentemente, este código está diferente do notebook original.
     df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_analise, df_populacao)
 
     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
