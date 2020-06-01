@@ -1,45 +1,45 @@
 import setuptools
 
 lg = """
-O projeto PegaSUS está dividido em n módulos. Um dos módulos já implementados,
-denominado dados, permite criar um *schema* de um banco de dados PostgreSQL local,
-já criado previamente, e insere nele dados das bases de dados dos seguintes sistemas
-de informação do Sistema Único de Saúde (SUS): CNES, SIH, SIA, SIM, SINASC ou SINAN
-(por enquanto). Esse módulo também permite que se faça a leitura de arquivos
-principais de dados (em formato *.dbc*) e de arquivos auxiliares de dados dessas
-bases do SUS (em formato *.dbf* ou *.cnv*) diretamente como objetos pandas
-DataFrame. Essa segunda opção é recomendada no caso de consulta mais pontual.
+The PegaSUS project is divided into n modules. One of the implemented modules,
+called dados, allows to create a schema of a PostgreSQL database, previously
+created in the user computer, and to insert data that belongs to the following
+information health systems of the Brazilian Public Health System (SUS): CNES,
+SIH, SIA, SIM, SINASC or SINAN (more to come). The dados module also also allows
+to directly read main data files (in DBC format) and auxiliary data files (in
+DBF or CNV format) as pandas DataFrame objects. This second option is recommended
+in the case of more punctual consultation.
 
-Para o uso do módulo dados por estrutura de banco de dados é necessário instalar
-o SGBD PostgreSQL (https://www.postgresql.org/download/) e é recomendável ter
-um software para gerenciamento de banco de dados, tal como pgAdmin
-(https://www.pgadmin.org/download/) ou DBeaver Community (https://dbeaver.io/),
-para visualizar os dados no banco de dados.
+To use the dados module by means of a PostgreSQL database it is necessary to
+install the PostgreSQL DBMS (https://www.postgresql.org/download/) and it is
+recommended to have a database management software such as pgAdmin (https://www.pgadmin.org/download/)
+or DBeaver Community (https://dbeaver.io/), to proper visualize the structured
+data.
 
-Para uso do módulo dados em plataformas Linux ou MacOS é necessária a instalação
-da dependência libffi:
+To use the dados module on Linux or MacOS platforms it is necessary to install
+the libffi dependency:
 1) Linux: `$ sudo apt install libffi-dev`
 2) MacOS: `$ brew install libffi`
 
-Para uso em plataformas Windows, é necessária a instalação do programa executável
-(*.exe*) dbf2dbc que faz parte do programa TabWin do Datasus. Para isso, faça o
-download da pasta *.zip* Tab415 selecionando o link "Tab415.zip" contido na primeira
-linha da coluna "Nome" da tabela que aparece em http://www2.datasus.gov.br/DATASUS/index.php?area=060805&item=3.
-Descompacte a pasta "Tab415.zip", copie o executável "dbf2dbc.exe" e o arquivo
-"IMPBORL.DLL" (a pasta descompactada "Tab415" e seu *.zip* podem então ser deletados)
-para uma pasta nova denominada "dbf2dbc" no seu *root directory*, o qual toma
-normalmente a seguinte forma em plataformas Windows:
+For use on Windows platforms it is necessary to install the executable program
+(*.exe*) dbf2dbc, which is part of the Datasus Tabwin program. To accomplish this,
+download the "Tab415.zip" folder by selecting the eponymous link contained in the
+first line of the "Name" column of the table that appears in http://www2.datasus.gov.br/DATASUS/index.php?area=060805&item=3.
+Unpack the "Tab415.zip" folder, copy the executable "dbf2dbc.exe" and the file
+"IMPBORL.DLL" (the unpacked folder "Tab415" and its *.zip* can be deleted) to a
+newly created folder named "dbf2dbc" in the root directory of the user's computer,
+which generally has the following form on Windows platforms:
 
 ```C:\\```
 
-Por fim, instala-se o módulo dados através do comando (em plataformas Linux):
+Finally, the data module is installed using the command(on Linux platforms):
 
 ```$ sudo pip install pegasus-dados```
 """
 
 setuptools.setup(
     name="pegasus-dados",
-    version="0.1.6",
+    version="0.1.8",
     packages=setuptools.find_packages(),
     package_data={
         '': ['*.xlsx', '*.c', '*.h', '*.o', '*.so', '*.md']
