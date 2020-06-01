@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from pegasus.dados.transform.prepare_CNES import DataCnesMain, DataCnesAuxiliary
+from transform.prepare_CNES import DataCnesMain, DataCnesAuxiliary
 
 ###########################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

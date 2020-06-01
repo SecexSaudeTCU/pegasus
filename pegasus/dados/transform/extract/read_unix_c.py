@@ -15,7 +15,7 @@ from tempfile import NamedTemporaryFile
 from dbfread import DBF
 import pandas as pd
 
-from pegasus.dados.transform.extract._readdbc import ffi, lib
+from transform.extract._readdbc import ffi, lib
 
 
 def dbc2dbf(infile, outfile):

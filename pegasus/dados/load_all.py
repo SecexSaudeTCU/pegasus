@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 import numpy as np
 import pandas as pd
 
-from pegasus.dados.utilities.essential_postgreSQL import files_in_ftp_base, get_tables_counts_db, files_loaded, files_to_load
+from utilities.essential_postgreSQL import files_in_ftp_base, get_tables_counts_db, files_loaded, files_to_load
 
 
 def load_all(db_name, db_user, db_password):
@@ -69,7 +69,7 @@ def load_all(db_name, db_user, db_password):
         str_main = 'insert_into_main_table_and_arquivos'
 
         # Importação das duas funções de inserção de dados do "datasus_db" usando a função nativa "__import__"
-        module1 = __import__('pegasus.dados.insertion.insert_into_all_' + datasus_db.upper(),
+        module1 = __import__('insertion.insert_into_all_' + datasus_db.upper(),
                              fromlist=[str_most, str_main],
                              level=0)
 
@@ -111,7 +111,7 @@ def load_all(db_name, db_user, db_password):
 
         # Importação da função "create_tables" de criação do schema do banco de dados "datasus_db" existente no respectivo
         # módulo do package "schemas" usando a função python "__import__"
-        module2 = __import__('pegasus.dados.schemas.sql_' + datasus_db.upper() + '_postgreSQL',
+        module2 = __import__('schemas.sql_' + datasus_db.upper() + '_postgreSQL',
                              fromlist=['create_tables'],
                              level=0)
         # Referenciação da função "create_tables" à variável deste módulo denominada "create_schema"
@@ -199,4 +199,4 @@ def load_all(db_name, db_user, db_password):
 
 if __name__ == '__main__':
 
-    load_all('dbsus4', 'Eric', 'teste')
+    load_all('dbsus4', 'ericc', 'teste')

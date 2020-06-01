@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from pegasus.dados.transform.prepare_SINAN import DataSinanMain, DataSinanAuxiliary
+from transform.prepare_SINAN import DataSinanMain, DataSinanAuxiliary
 
 
 ###########################################################################################################################

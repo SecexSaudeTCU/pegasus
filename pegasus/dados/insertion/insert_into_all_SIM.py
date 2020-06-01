@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from pegasus.dados.transform.prepare_SIM import DataSimMain, DataSimAuxiliary
+from transform.prepare_SIM import DataSimMain, DataSimAuxiliary
 
 ###########################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

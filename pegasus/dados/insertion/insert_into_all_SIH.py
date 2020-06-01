@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
-from pegasus.dados.transform.prepare_SIH import DataSihMain, DataSihAuxiliary
+from transform.prepare_SIH import DataSihMain, DataSihAuxiliary
 
 ###########################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
