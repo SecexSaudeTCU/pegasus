@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/SecexSaudeTCU/pegasus.svg?branch=master)](https://travis-ci.org/SecexSaudeTCU/pegasus)
-
 # Pegasus
 **Plataforma Eletrônica de Governança e Accountability do SUS**
+
+[![Build Status](https://travis-ci.org/SecexSaudeTCU/pegasus.svg?branch=master)](https://travis-ci.org/SecexSaudeTCU/pegasus)
 
 <p align="justify">Este projeto está dividido em n módulos. Um dos módulos
 implementados, denominado dados, permite criar um <i>schema</i> de um banco
