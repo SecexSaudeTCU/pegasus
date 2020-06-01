@@ -12,7 +12,6 @@ class SIHFacade:
         self.__ibge_facade = IBGEFacade(arquivo_configuracao)
         self.__habitantes_tx = ConfiguracoesAnalise(arquivo_configuracao).get_propriedade('habitantes_tx')
 
-    # TODO: ANÁLISE 2
     def get_df_lista_procedimento_ano(self, ano):
         df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
         df_lista_procedimento_ano = df_rd[['ano_cmpt', 'proc_rea']].drop_duplicates()
@@ -118,7 +117,6 @@ class SIHFacade:
 
         return df_nivel_proc
 
-    # TODO: Otimizar.  Esta consulta está levando horas...
     def get_df_descricao_procedimentos(self, df_analise, df_populacao):
         start_time = time.time()
         df_proc_ano_analise = self.__get_df_procedimentos_ano_para_analise(df_analise, df_populacao)
@@ -145,15 +143,15 @@ class SIHFacade:
         df_procedimentos_analise = df_procedimentos_analise.set_index('PROCEDIMENTO')
         print("df_procedimentos_analise.set_index('PROCEDIMENTO'): --- %s seconds ---" % (time.time() - start_time))
 
-        #TODO: Retomar as otimizações de dataframes deste ponto em diante.
         return df_procedimentos_analise
 
     def get_df_procedimentos_por_ano_com_descricao(self, df_analise, df_populacao, df_descricao_procedimentos):
         df_proc_ano_analise = self.__get_df_procedimentos_ano_para_analise(df_analise, df_populacao)
         df_proc_ano_analise = df_proc_ano_analise.join(df_descricao_procedimentos, on=['PROCEDIMENTO'])
 
-        print(df_proc_ano_analise.shape)
-        print(df_proc_ano_analise.head())
+        print(mem_usage(df_proc_ano_analise))
+        df_proc_ano_analise = df_proc_ano_analise.astype({'PROCEDIMENTO':'category'})
+        print(mem_usage(df_proc_ano_analise))
 
         return df_proc_ano_analise
 
