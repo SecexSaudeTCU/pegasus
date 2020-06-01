@@ -41,7 +41,6 @@ class DaoSIH(DaoPostgresSQL):
         conexao.close()
         return df
 
-    #TODO: ANÁLISE 2
     def get_df_procedimentos_realizados_por_municipio(self, ano):
         """
         Retorna os procedimentos realizados agrpados por município.
