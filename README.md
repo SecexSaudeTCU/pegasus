@@ -2,19 +2,18 @@
   <img src="docs/pegasus_logo.png" width="200px">
  </p>
 
-**Plataforma Eletrônica de Governança e Accountability do SUS**
-
 [![Build Status](https://travis-ci.org/SecexSaudeTCU/pegasus.svg?branch=master)](https://travis-ci.org/SecexSaudeTCU/pegasus)
 
-<p align="justify">Este projeto está dividido em n módulos. Um dos módulos
-implementados, denominado dados, permite criar um <i>schema</i> de um banco
-de dados PostgreSQL, anteriormente criado no computador do usuário, e inserir nele
-dados das bases dos seguintes sistemas de informações em saúde do Sistema Único
-de Saúde (SUS): CNES, SIH, SIA, SIM, SINASC ou SINAN (por enquanto). O módulo
-dados também permite que se faça a leitura de arquivos principais de dados (em
-formato <i>.dbc</i>) e de arquivos auxiliares de dados dessas bases do SUS (em
-formato <i>.dbf</i> ou <i>.cnv</i>) diretamente como objetos pandas DataFrame.
-Essa segunda opção é recomendada no caso de consulta mais pontual.</p>
+<p align="justify">O projeto Pegasus - Plataforma Eletrônica de Governança e
+Accountability do SUS está dividido em n módulos. Um dos módulos implementados,
+denominado dados, permite criar um <i>schema</i> de um banco de dados PostgreSQL,
+anteriormente criado no computador do usuário, e inserir nele dados das bases
+dos seguintes sistemas de informações em saúde do Sistema Único de Saúde (SUS):
+CNES, SIH, SIA, SIM, SINASC ou SINAN (por enquanto). O módulo dados também permite
+que se faça a leitura de arquivos principais de dados (em formato <i>.dbc</i>) e
+de arquivos auxiliares de dados dessas bases do SUS (em formato <i>.dbf</i> ou
+<i>.cnv</i>) diretamente como objetos pandas DataFrame. Essa segunda opção é
+recomendada no caso de consulta mais pontual.</p>
 
 <p align="justify">O outro módulo deste projeto já implementado se denomina analise
 e realiza análise de anomalias estatísticas das bases de dados do SIH e SIA...</p>
