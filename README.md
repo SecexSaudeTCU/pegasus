@@ -1,4 +1,5 @@
 <p align="left"><img src="docs/pegasus_logo.png" width="200px"></p>
+
 [![Build Status](https://travis-ci.org/SecexSaudeTCU/pegasus.svg?branch=master)](https://travis-ci.org/SecexSaudeTCU/pegasus)
 
 <p align="justify">O projeto Pegasus - Plataforma Eletrônica de Governança e
