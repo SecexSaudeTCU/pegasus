@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="docs/pegasus_logo" width="40px" height="40px">
+  <img src="docs/pegasus_logo.png">
  </p>
 **Plataforma Eletrônica de Governança e Accountability do SUS**
 
