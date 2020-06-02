@@ -5,7 +5,7 @@
 <p align="justify">O projeto Pegasus - Plataforma Eletrônica de Governança e
 Accountability do SUS está dividido em n módulos. Um dos módulos implementados,
 denominado dados, permite criar um <i>schema</i> de um banco de dados PostgreSQL,
-anteriormente criado no computador do usuário, e inserir nele dados das bases
+este criado previamente no computador do usuário, e inserir nele dados das bases
 dos seguintes sistemas de informações em saúde do Sistema Único de Saúde (SUS):
 CNES, SIH, SIA, SIM, SINASC ou SINAN (por enquanto). O módulo dados também permite
 que se faça a leitura de arquivos principais de dados (em formato <i>.dbc</i>) e
