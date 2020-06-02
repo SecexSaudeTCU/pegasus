@@ -1,4 +1,6 @@
-![alt text](docs/pegasus_logo.png)
+<p align="left">
+  <img src="docs/pegasus_logo" width="40px" height="40px">
+ </p>
 **Plataforma Eletrônica de Governança e Accountability do SUS**
 
 [![Build Status](https://travis-ci.org/SecexSaudeTCU/pegasus.svg?branch=master)](https://travis-ci.org/SecexSaudeTCU/pegasus)
