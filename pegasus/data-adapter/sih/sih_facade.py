@@ -12,12 +12,6 @@ class SIHFacade:
         self.__ibge_facade = IBGEFacade(arquivo_configuracao)
         self.__habitantes_tx = ConfiguracoesAnalise(arquivo_configuracao).get_propriedade('habitantes_tx')
 
-    def get_df_lista_procedimento_ano(self, ano):
-        df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
-        df_lista_procedimento_ano = df_rd[['ano_cmpt', 'proc_rea']].drop_duplicates()
-
-        return df_lista_procedimento_ano
-
     def get_df_lista_municipio_ano(self, ano):
         df_rd = self.__dao.get_df_procedimentos_realizados_por_municipio(ano)
 
@@ -42,9 +36,8 @@ class SIHFacade:
         df_analise['vl_total'] = df_analise['vl_total'].fillna(0)
 
         df_analise = downcast(df_analise)
-        print(mem_usage(df_analise))
         df_analise = df_analise.astype({'POPULACAO': 'uint32', 'POPULACAO_UF': 'uint32', 'POPULACAO_BRASIL': 'uint32'})
-        print(mem_usage(df_analise))
+
         return df_analise
 
     def __get_df_procedimento_painel(self, df_analise):
@@ -80,14 +73,12 @@ class SIHFacade:
         df_proc_ano_analise = df_proc_ano_analise.append(df_subgrupo_painel, sort=False)
         df_proc_ano_analise = df_proc_ano_analise.append(df_grupo_painel, sort=False)
 
-        print(mem_usage(df_proc_ano_analise))
         df_proc_ano_analise = df_proc_ano_analise.astype(
             {'ANO': 'category', 'cod_municipio': 'category', 'PROCEDIMENTO': 'category', 'POPULACAO': 'uint32',
              'POPULACAO_UF': 'uint32', 'POPULACAO_BRASIL': 'uint32', 'qtd_procedimento': 'uint32',
              'qtd_procedimento_UF': 'uint32', 'qtd_procedimento_BRASIL': 'uint32', 'NIVEL': 'category'})
-        print(mem_usage(df_proc_ano_analise))
 
-        #TODO: Retomar a comparação de código a partir deste ponto em diante.
+        #TODO: Investigar por que, quando a base ainda está pequena, todos os dataframes neste ponto estão vazios.
         return df_proc_ano_analise
 
     def get_df_nivel(self, df_analise, df_populacao):
@@ -128,6 +119,7 @@ class SIHFacade:
         start_time = time.time()
         df_descricao_procedimento = self.__dao.get_df_descricao_procedimentos()
         print("self.dao.get_df_descricao_procedimentos(): --- %s seconds ---" % (time.time() - start_time))
+        print(df_descricao_procedimento.dtypes)
 
         start_time = time.time()
         df_procedimentos_analise['DESCRICAO_COMPLETA'] = df_procedimentos_analise['PROCEDIMENTO'].apply(

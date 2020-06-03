@@ -12,14 +12,9 @@ def mem_usage(pandas_obj):
     return "{:03.2f} MB".format(usage_mb)
 
 def downcast(df):
-    print(mem_usage(df))
-    #df = df.astype({'ano_cmpt':'unsigned', 'qtd_procedimento':'unsigned'})
     df_int = df.select_dtypes(include=['int'])
-    #converted = df_int.apply(pd.to_numeric,downcast='unsigned')
     converted = df.copy()
     converted[df_int.columns] = df[df_int.columns].apply(pd.to_numeric, downcast='unsigned')
-    #converted = df.apply(pd.to_numeric, downcast='unsigned')
-    print(mem_usage(converted))
 
     compare = pd.concat([df_int.dtypes, converted.dtypes], axis=1)
     compare.columns = ['before', 'after']

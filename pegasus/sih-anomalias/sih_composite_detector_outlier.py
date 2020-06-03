@@ -11,6 +11,7 @@ from scipy import stats
 import pandas as pd
 from config.configuracoes import ConfiguracoesAnalise
 from sih.dao_sih import DaoSIH
+from util.metricas import mem_usage
 
 NOME_COLUNA = 'TX_QTD'
 
@@ -230,19 +231,29 @@ def __get_df_analise2(ano):
     df_populacao = sih_facade.get_df_populacao()
     df_populacao['key'] = 0
 
-    df_lista_procedimento_ano = sih_facade.get_df_lista_procedimento_ano(ano)
+    dao = DaoSIH(arquivo_configuracao)
+    df_rd = dao.get_df_procedimentos_realizados_por_municipio(ano)
+    df_lista_procedimento_ano = df_rd[['ano_cmpt', 'proc_rea']].drop_duplicates()
     df_lista_procedimento_ano['key'] = 0
 
     df_proc_ano_munic = pd.merge(df_lista_procedimento_ano, df_populacao, on='key', how='outer')
+    print(df_proc_ano_munic.columns)
+    print(df_proc_ano_munic.dtypes)
     print(df_proc_ano_munic.shape)
     print(df_proc_ano_munic.head())
 
-    dao = DaoSIH(arquivo_configuracao)
-    df_rd = dao.get_df_procedimentos_realizados_por_municipio(ano)
     df_analise2 = pd.merge(df_rd, df_proc_ano_munic, on=['cod_municipio', 'proc_rea', 'ano_cmpt'], how='right')
+
+    print(len(df_analise2[df_analise2['qtd_procedimento'].isnull()]))
+    if len(df_analise2[df_analise2['qtd_procedimento'].isnull()]) > 0:
+        df_analise2['qtd_procedimento'] = df_analise2['qtd_procedimento'].fillna(0)
+        df_analise2['vl_total'] = df_analise2['vl_total'].fillna(0)
+
+    df_analise2 = df_analise2.astype({'qtd_procedimento':'uint32'})
 
     print(df_analise2.shape)
     print(df_analise2.head())
+    print(df_analise2.dtypes)
 
     return df_analise2, df_populacao
 
@@ -272,8 +283,8 @@ def __gerar_dataframes2():
 
     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
         df_analise, df_populacao, df_descricao_procedimentos)
-    df_descricao_procedimentos.to_csv('df_descricao_procedimentos.csv')
-    df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao.csv')
+    df_descricao_procedimentos.to_csv('df_descricao_procedimentos_2.csv')
+    df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao_2.csv')
     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
 
 
@@ -309,5 +320,5 @@ def analise1():
 
 if __name__ == '__main__':
     # analise1()
-    __gerar_dataframes1()
-    # __gerar_dataframes2()
+    #__gerar_dataframes1()
+    __gerar_dataframes2()

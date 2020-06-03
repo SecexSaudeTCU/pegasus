@@ -1,7 +1,10 @@
+import time
+
 import pandas as pd
 
+from util.metricas import downcast
 from util.postgres.dao_util import DaoPostgresSQL
-from util.metricas import downcast, mem_usage
+
 
 class DaoSIH(DaoPostgresSQL):
 
@@ -22,12 +25,30 @@ class DaoSIH(DaoPostgresSQL):
               'join sih_rd.forma f on p."FORMA_ID" = f."ID" ' \
               'join sih_rd.procrea pr on p."PROCREA_ID" = pr."ID"'
         conexao = self.get_conexao()
-        df = pd.read_sql(sql, conexao)
-        print(mem_usage(df))
-        df = df.astype('category')
-        print(mem_usage(df))
+
+        start_time = time.time()
+        resultado = pd.read_sql(sql, conexao, chunksize=1000)
+        print("resultado = pd.read_sql(sql, conexao, chunksize=1000): --- %s seconds ---" % (time.time() - start_time))
+
+        # df = df.astype('category')
+
+        # retorno = pd.DataFrame(
+        #     columns=['PROCREA_ID', 'GRUPO_ID', 'dsc_grupo', 'SUBGRUPO_ID', 'dsc_subgrupo', 'cod_forma', 'dsc_forma',
+        #              'dsc_proc'])
+        # for c in df:
+        #     c = c.astype('category')
+        #     retorno = retorno.append(c, ignore_index=True)
+
+        start_time = time.time()
+        retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True)
+        print(
+            "retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True): --- %s seconds ---" % (
+                        time.time() - start_time))
+
         conexao.close()
-        return df
+
+        # return df
+        return retorno
 
     def get_df_coordenadas(self):
         """
