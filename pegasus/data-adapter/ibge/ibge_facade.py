@@ -16,9 +16,9 @@ class IBGEFacade:
         df_populacao.drop(['COD_UF'], axis=1, inplace=True)
         df_populacao['POPULACAO_BRASIL'] = df_populacao_municipios.sum()['POPULACAO']
         df_populacao = downcast(df_populacao)
-        print(mem_usage(df_populacao))
+
         df_populacao = df_populacao.astype({'POPULACAO':'uint32','POPULACAO_BRASIL':'uint32', 'POPULACAO_UF':'uint32'})
-        print(mem_usage(df_populacao))
+
         return df_populacao
 
     def get_df_populacao_ufs(self):

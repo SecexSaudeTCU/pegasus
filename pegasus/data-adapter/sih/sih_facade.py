@@ -53,7 +53,12 @@ class SIHFacade:
         return self.__get_df_painel('COD_GRUPO', 'GRUPO', df_analise)
 
     def __get_df_procedimentos_ano_para_analise(self, df_analise, df_populacao):
+        start_time = time.time()
         df_analise = self.__get_df_procedimentos_realizados_por_municipio_e_populacao(df_analise, df_populacao)
+        print(
+            "df_analise = self.__get_df_procedimentos_realizados_por_municipio_e_populacao(df_analise, df_populacao): "
+            "--- %s seconds ---" % (
+                    time.time() - start_time))
 
         df_procedimento_painel = self.__get_df_procedimento_painel(df_analise)
         df_forma_painel = self.__get_df_forma_painel(df_analise)
@@ -78,7 +83,7 @@ class SIHFacade:
              'POPULACAO_UF': 'uint32', 'POPULACAO_BRASIL': 'uint32', 'qtd_procedimento': 'uint32',
              'qtd_procedimento_UF': 'uint32', 'qtd_procedimento_BRASIL': 'uint32', 'NIVEL': 'category'})
 
-        #TODO: Investigar por que, quando a base ainda está pequena, todos os dataframes neste ponto estão vazios.
+        # TODO: Investigar por que, quando a base ainda está pequena, todos os dataframes neste ponto estão vazios.
         return df_proc_ano_analise
 
     def get_df_nivel(self, df_analise, df_populacao):
@@ -111,7 +116,10 @@ class SIHFacade:
     def get_df_descricao_procedimentos(self, df_analise, df_populacao):
         start_time = time.time()
         df_proc_ano_analise = self.__get_df_procedimentos_ano_para_analise(df_analise, df_populacao)
-        print("self.__get_df_procedimentos_por_ano(ano): --- %s seconds ---" % (time.time() - start_time))
+        print(
+            "df_proc_ano_analise = self.__get_df_procedimentos_ano_para_analise(df_analise, df_populacao): --- %s "
+            "seconds ---" % (
+                    time.time() - start_time))
 
         df_procedimentos_analise = pd.DataFrame(columns=['PROCEDIMENTO'],
                                                 data=df_proc_ano_analise['PROCEDIMENTO'].unique())
@@ -142,7 +150,7 @@ class SIHFacade:
         df_proc_ano_analise = df_proc_ano_analise.join(df_descricao_procedimentos, on=['PROCEDIMENTO'])
 
         print(mem_usage(df_proc_ano_analise))
-        df_proc_ano_analise = df_proc_ano_analise.astype({'PROCEDIMENTO':'category'})
+        df_proc_ano_analise = df_proc_ano_analise.astype({'PROCEDIMENTO': 'category'})
         print(mem_usage(df_proc_ano_analise))
 
         return df_proc_ano_analise
@@ -152,12 +160,8 @@ class SIHFacade:
         len_proc = len(procedimento)
 
         # Obtendo nome do procedimento
-        start_time = time.time()
         df_proc = df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]
-        print("self.__get_proc_descricao() -> df_proc = "
-              "df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]: --- "
-              "%s seconds ---" % (
-                      time.time() - start_time))
+
         if len(df_proc) > 0:
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)
@@ -186,12 +190,8 @@ class SIHFacade:
         len_proc = len(procedimento)
 
         # Obtendo nome do procedimento
-        start_time = time.time()
         df_proc = df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]
-        print("self.__get_proc_descricao() -> df_proc = "
-              "df_descricao_procedimento[df_descricao_procedimento['PROCREA_ID'].str.startswith(procedimento)]: --- "
-              "%s seconds ---" % (
-                      time.time() - start_time))
+
         if (len(df_proc) > 0):
             _procedimento = df_proc.iloc[0]
             # (nível de grupo)

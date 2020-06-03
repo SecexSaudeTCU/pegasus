@@ -35,15 +35,26 @@ class DaoSIH(DaoPostgresSQL):
         # retorno = pd.DataFrame(
         #     columns=['PROCREA_ID', 'GRUPO_ID', 'dsc_grupo', 'SUBGRUPO_ID', 'dsc_subgrupo', 'cod_forma', 'dsc_forma',
         #              'dsc_proc'])
-        # for c in df:
-        #     c = c.astype('category')
-        #     retorno = retorno.append(c, ignore_index=True)
+        retorno = pd.DataFrame(
+            dict(PROCREA_ID=pd.Series([], dtype='category'),
+                 GRUPO_ID=pd.Series([], dtype='category'),
+                 dsc_grupo=pd.Series([], dtype='category'),
+                 SUBGRUPO_ID=pd.Series([], dtype='category'),
+                 dsc_subgrupo= pd.Series([], dtype='category'),
+                 cod_forma=pd.Series([], dtype='category'),
+                 dsc_proc=pd.Series([], dtype='category')
+                 )
+        )
+        for df in resultado:
+            df = df.astype('category')
+            retorno = retorno.append(df, ignore_index=True)
+            retorno = retorno.astype('category')
 
-        start_time = time.time()
-        retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True)
-        print(
-            "retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True): --- %s seconds ---" % (
-                        time.time() - start_time))
+        # start_time = time.time()
+        # retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True)
+        # print(
+        #     "retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True): --- %s seconds ---" % (
+        #                 time.time() - start_time))
 
         conexao.close()
 
