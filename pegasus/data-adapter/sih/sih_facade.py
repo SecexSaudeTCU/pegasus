@@ -145,9 +145,8 @@ class SIHFacade:
 
         return df_procedimentos_analise
 
-    def get_df_procedimentos_por_ano_com_descricao(self, df_analise, df_populacao, df_descricao_procedimentos):
+    def get_df_procedimentos_por_ano_com_descricao(self, df_analise, df_populacao):
         df_proc_ano_analise = self.__get_df_procedimentos_ano_para_analise(df_analise, df_populacao)
-        df_proc_ano_analise = df_proc_ano_analise.join(df_descricao_procedimentos, on=['PROCEDIMENTO'])
 
         print(mem_usage(df_proc_ano_analise))
         df_proc_ano_analise = df_proc_ano_analise.astype({'PROCEDIMENTO': 'category'})

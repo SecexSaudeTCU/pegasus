@@ -16,7 +16,7 @@ class DaoSIH(DaoPostgresSQL):
         Retorna as descrições dos procedimentos, bem como dos seus grupos, subgrupos e formas.
         :return:
         """
-        sql = 'select p."PROCREA_ID", p."GRUPO_ID", g."GRUPO" as DSC_GRUPO, p."SUBGRUPO_ID", ' \
+        sql = 'select distinct p."PROCREA_ID", p."GRUPO_ID", g."GRUPO" as DSC_GRUPO, p."SUBGRUPO_ID", ' \
               's."SUBGRUPO" as DSC_SUBGRUPO, p."FORMA_ID" as COD_FORMA, f."FORMA" as DSC_FORMA, ' \
               'pr."PROCEDIMENTO" as DSC_PROC ' \
               'from sih_rd.rdbr p ' \
@@ -27,39 +27,14 @@ class DaoSIH(DaoPostgresSQL):
         conexao = self.get_conexao()
 
         start_time = time.time()
-        resultado = pd.read_sql(sql, conexao, chunksize=1000)
-        print("resultado = pd.read_sql(sql, conexao, chunksize=1000): --- %s seconds ---" % (time.time() - start_time))
+        df = pd.read_sql(sql, conexao)
+        print("resultado = pd.read_sql(sql, conexao): --- %s seconds ---" % (time.time() - start_time))
 
-        # df = df.astype('category')
-
-        # retorno = pd.DataFrame(
-        #     columns=['PROCREA_ID', 'GRUPO_ID', 'dsc_grupo', 'SUBGRUPO_ID', 'dsc_subgrupo', 'cod_forma', 'dsc_forma',
-        #              'dsc_proc'])
-        retorno = pd.DataFrame(
-            dict(PROCREA_ID=pd.Series([], dtype='category'),
-                 GRUPO_ID=pd.Series([], dtype='category'),
-                 dsc_grupo=pd.Series([], dtype='category'),
-                 SUBGRUPO_ID=pd.Series([], dtype='category'),
-                 dsc_subgrupo= pd.Series([], dtype='category'),
-                 cod_forma=pd.Series([], dtype='category'),
-                 dsc_proc=pd.Series([], dtype='category')
-                 )
-        )
-        for df in resultado:
-            df = df.astype('category')
-            retorno = retorno.append(df, ignore_index=True)
-            retorno = retorno.astype('category')
-
-        # start_time = time.time()
-        # retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True)
-        # print(
-        #     "retorno = pd.concat([df.astype('category') for df in resultado], ignore_index=True): --- %s seconds ---" % (
-        #                 time.time() - start_time))
+        df = df.astype('category')
 
         conexao.close()
 
-        # return df
-        return retorno
+        return df
 
     def get_df_coordenadas(self):
         """
