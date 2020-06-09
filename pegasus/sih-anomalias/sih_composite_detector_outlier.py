@@ -262,11 +262,12 @@ def __gerar_dataframes1():
 
     ano = 2018
     df_analise, df_populacao = __get_df_analise1(ano)
+    df_proc_ano_analise = sih_facade.get_df_procedimentos_ano_para_analise(df_analise, df_populacao)
 
-    df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_analise, df_populacao)
+    df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_proc_ano_analise)
 
     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
-        df_analise, df_populacao, df_descricao_procedimentos)
+        df_descricao_procedimentos, df_proc_ano_analise)
     df_descricao_procedimentos.to_csv('df_descricao_procedimentos_1.csv')
     df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao_1.csv')
     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
@@ -278,12 +279,17 @@ def __gerar_dataframes2():
 
     ano = 2018
     df_analise, df_populacao = __get_df_analise2(ano)
-    df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_analise, df_populacao)
+    df_proc_ano_analise = sih_facade.get_df_procedimentos_ano_para_analise(df_analise, df_populacao)
+
+    df_descricao_procedimentos = sih_facade.get_df_descricao_procedimentos(df_proc_ano_analise)
 
     df_procedimentos_por_ano_com_descricao = sih_facade.get_df_procedimentos_por_ano_com_descricao(
-        df_analise, df_populacao, df_descricao_procedimentos)
+        df_descricao_procedimentos, df_proc_ano_analise)
+
+    print(df_procedimentos_por_ano_com_descricao.head())
+
     df_descricao_procedimentos.to_csv('df_descricao_procedimentos_2.csv')
-    df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao_2.csv')
+    df_procedimentos_por_ano_com_descricao.to_csv('df_procedimentos_por_ano_com_descricao_2.csv', sep=';')
     return df_descricao_procedimentos, df_procedimentos_por_ano_com_descricao
 
 
@@ -320,4 +326,6 @@ def analise1():
 if __name__ == '__main__':
     # analise1()
     #__gerar_dataframes1()
-    __gerar_dataframes2()
+    #__gerar_dataframes2()
+    teste = pd.read_csv('df_procedimentos_por_ano_com_descricao_2.csv', sep=';')
+    print(teste.head())
