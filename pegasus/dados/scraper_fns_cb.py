@@ -105,7 +105,7 @@ qtd_munic_estado = {'ACRE': 22,
                     'MARANHAO': 217,
                     'MATO GROSSO': 141,
                     'MATO GROSSO DO SUL': 79,
-                    'MINAS GERAIS': 499,
+                    'MINAS GERAIS': 853,
                     'PARA': 144,
                     'PARAIBA': 223,
                     'PARANA': 399,
@@ -157,6 +157,8 @@ class FNS_CONTA_BANCARIA(SeleniumDownloader):
         workbook.save(path.join(diretorio_dados, 'fns', 'scraping_FNS_cb.xlsx'))
 
         for estado in list(estados_values_capitais.keys())[number_sheets - 1:]:
+
+            print(estado)
 
             df_estado = pd.DataFrame(columns=['UF', 'MUNICÍPIO', 'ESFERA', 'BANCO', 'AGÊNCIA', 'CONTA',
                                               'TIPO CONTA', 'CNPJ', 'ENTIDADE', 'VALOR SALDO'])
@@ -210,7 +212,9 @@ class FNS_CONTA_BANCARIA(SeleniumDownloader):
 
                             try:
 
-                                time.sleep(12)
+                                print('Tentando novamente!')
+
+                                time.sleep(20)
 
                                 df_one = pd.read_excel(path.join(diretorio_dados, 'fns', 'planilha-contas-bancarias.xlsx'))
 
@@ -252,7 +256,9 @@ class FNS_CONTA_BANCARIA(SeleniumDownloader):
 
                         try:
 
-                            time.sleep(12)
+                            print('Tentando novamente!')
+
+                            time.sleep(20)
 
                             df_one = pd.read_excel(path.join(diretorio_dados, 'fns', 'planilha-contas-bancarias.xlsx'))
 

@@ -61,7 +61,6 @@ class SeleniumDownloader(ABC):
 
 ################################################################################
 
-
 diretorio_raiz = pathlib.Path().absolute()
 diretorio_dados = diretorio_raiz.joinpath('dados')
 
@@ -105,7 +104,7 @@ qtd_munic_estado = {'ACRE': 22,
                     'MARANHAO': 217,
                     'MATO GROSSO': 141,
                     'MATO GROSSO DO SUL': 79,
-                    'MINAS GERAIS': 499,
+                    'MINAS GERAIS': 853,
                     'PARA': 144,
                     'PARAIBA': 223,
                     'PARANA': 399,
@@ -136,33 +135,41 @@ class FNS_REPASSE(SeleniumDownloader):
 
         time.sleep(5)
 
-        try:
+        for tipo in ['covid19', 'geral']:
 
-            workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+            try:
 
-            workbook.save(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+                workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'))
 
-        except:
+                workbook.save(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'))
 
-            workbook = xlsxwriter.Workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+            except:
 
-            workbook.close()
+                workbook = xlsxwriter.Workbook(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'))
 
-        workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+                workbook.close()
 
-        sheets_names = workbook.sheetnames
+            workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'))
 
-        number_sheets = len(sheets_names)
+            sheets_names = workbook.sheetnames
 
-        workbook.save(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+            number_sheets = len(sheets_names)
+
+            workbook.save(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'))
+
 
         select = Select(self.driver.find_element_by_id('ano'))
         select.select_by_visible_text('2020')
 
         for estado in list(estados_values_capitais.keys())[number_sheets - 1:]:
 
-            df_estado = pd.DataFrame(columns=['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO',
-                                              'GRUPO', 'VALOR TOTAL', 'VALOR LIQUIDO'])
+            print(estado)
+
+            df_estado_covid = pd.DataFrame(columns=['UF', 'MUNICIPIO', 'ENTIDADE',
+                                                    'BLOCO', 'GRUPO', 'VALOR LIQUIDO'])
+
+            df_estado_geral = pd.DataFrame(columns=['UF', 'MUNICIPIO', 'ENTIDADE',
+                                                    'BLOCO', 'VALOR LIQUIDO'])
 
             time.sleep(5)
 
@@ -205,43 +212,59 @@ class FNS_REPASSE(SeleniumDownloader):
 
                             os.unlink(path.join(diretorio_dados, 'fns', 'consulta-consolidada-planilha.xlsx'))
 
-                            df_one.rename(columns={'Valor Total': 'VALOR TOTAL', 'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
-
-                            df_one = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
+                            df_one.rename(columns={'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
 
                             df_one['BLOCO'].replace(
                                 'Manutencao das Acoes e Servicos Publicos de Saude (CUSTEIO)', 'CUSTEIO', inplace=True)
                             df_one['BLOCO'].replace(
                                 'Estruturacao da Rede de Servicos Publicos de Saude (INVESTIMENTO)', 'INVESTIMENTO', inplace=True)
 
-                            result_groupby_one = \
-                                df_one.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR TOTAL', 'VALOR LIQUIDO'].sum()
+                            df_covid = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
 
-                            df_estado = pd.concat([df_estado, result_groupby_one])
+                            result_groupby_covid = \
+                                df_covid.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                            df_estado_covid = pd.concat([df_estado_covid, result_groupby_covid])
+
+                            df_geral = df_one.drop(columns=['GRUPO'])
+
+                            result_groupby_geral = \
+                                df_geral.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                            df_estado_geral = pd.concat([df_estado_geral, result_groupby_geral])
 
                         except:
 
                             try:
 
-                                time.sleep(12)
+                                print('Tentando novamente...')
+
+                                time.sleep(20)
 
                                 df_one = pd.read_excel(path.join(diretorio_dados, 'fns', 'consulta-consolidada-planilha.xlsx'))
 
                                 os.unlink(path.join(diretorio_dados, 'fns', 'consulta-consolidada-planilha.xlsx'))
 
-                                df_one.rename(columns={'Valor Total': 'VALOR TOTAL', 'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
-
-                                df_one = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
+                                df_one.rename(columns={'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
 
                                 df_one['BLOCO'].replace(
                                     'Manutencao das Acoes e Servicos Publicos de Saude (CUSTEIO)', 'CUSTEIO', inplace=True)
                                 df_one['BLOCO'].replace(
                                     'Estruturacao da Rede de Servicos Publicos de Saude (INVESTIMENTO)', 'INVESTIMENTO', inplace=True)
 
-                                result_groupby_one = \
-                                    df_one.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR TOTAL', 'VALOR LIQUIDO'].sum()
+                                df_covid = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
 
-                                df_estado = pd.concat([df_estado, result_groupby_one])
+                                result_groupby_covid = \
+                                    df_covid.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                                df_estado_covid = pd.concat([df_estado_covid, result_groupby_covid])
+
+                                df_geral = df_one.drop(columns=['GRUPO'])
+
+                                result_groupby_geral = \
+                                    df_geral.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                                df_estado_geral = pd.concat([df_estado_geral, result_groupby_geral])
 
                             except:
 
@@ -265,94 +288,151 @@ class FNS_REPASSE(SeleniumDownloader):
 
                         os.unlink(path.join(diretorio_dados, 'fns', 'consulta-consolidada-planilha.xlsx'))
 
-                        df_one.rename(columns={'Valor Total': 'VALOR TOTAL', 'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
-
-                        df_one = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
+                        df_one.rename(columns={'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
 
                         df_one['BLOCO'].replace(
                             'Manutencao das Acoes e Servicos Publicos de Saude (CUSTEIO)', 'CUSTEIO', inplace=True)
                         df_one['BLOCO'].replace(
                             'Estruturacao da Rede de Servicos Publicos de Saude (INVESTIMENTO)', 'INVESTIMENTO', inplace=True)
 
-                        result_groupby_one = \
-                            df_one.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR TOTAL', 'VALOR LIQUIDO'].sum()
+                        df_covid = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
 
-                        df_estado = pd.concat([df_estado, result_groupby_one])
+                        result_groupby_covid = \
+                            df_covid.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                        df_estado_covid = pd.concat([df_estado_covid, result_groupby_covid])
+
+                        df_geral = df_one.drop(columns=['GRUPO'])
+
+                        result_groupby_geral = \
+                            df_geral.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                        df_estado_geral = pd.concat([df_estado_geral, result_groupby_geral])
 
                     except:
 
                         try:
 
-                            time.sleep(12)
+                            print('Tentando novamente...')
+
+                            time.sleep(20)
 
                             df_one = pd.read_excel(path.join(diretorio_dados, 'fns', 'consulta-consolidada-planilha.xlsx'))
 
                             os.unlink(path.join(diretorio_dados, 'fns', 'consulta-consolidada-planilha.xlsx'))
 
-                            df_one.rename(columns={'Valor Total': 'VALOR TOTAL', 'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
-
-                            df_one = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
+                            df_one.rename(columns={'Valor Líquido': 'VALOR LIQUIDO'}, inplace=True)
 
                             df_one['BLOCO'].replace(
                                 'Manutencao das Acoes e Servicos Publicos de Saude (CUSTEIO)', 'CUSTEIO', inplace=True)
                             df_one['BLOCO'].replace(
                                 'Estruturacao da Rede de Servicos Publicos de Saude (INVESTIMENTO)', 'INVESTIMENTO', inplace=True)
 
-                            result_groupby_one = \
-                                df_one.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR TOTAL', 'VALOR LIQUIDO'].sum()
+                            df_covid = df_one[df_one['GRUPO'].str.contains('^CORONAVIRUS', regex=True)]
 
-                            df_estado = pd.concat([df_estado, result_groupby_one])
+                            result_groupby_covid = \
+                                df_covid.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO', 'GRUPO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                            df_estado_covid = pd.concat([df_estado_covid, result_groupby_covid])
+
+                            df_geral = df_one.drop(columns=['GRUPO'])
+
+                            result_groupby_geral = \
+                                df_geral.groupby(['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO'], as_index=False)['VALOR LIQUIDO'].sum()
+
+                            df_estado_geral = pd.concat([df_estado_geral, result_groupby_geral])
 
                         except:
 
                             print('Problema na leitura do arquivo!')
 
-            workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+            for tipo in ['covid19', 'geral']:
 
-            writer = pd.ExcelWriter(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'), engine='openpyxl')
+                workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'))
 
-            writer.book = workbook
+                writer = pd.ExcelWriter(path.join(diretorio_dados, 'fns', f'scraping_FNS_repasse_{tipo}.xlsx'), engine='openpyxl')
 
-            df_estado.to_excel(writer, sheet_name=estado, index=False)
+                writer.book = workbook
 
-            writer.save()
+                if tipo == 'covid19':
 
-            writer.close()
+                    df_estado_covid.to_excel(writer, sheet_name=estado, index=False)
 
-        df_brasil = pd.DataFrame(columns=['UF', 'MUNICIPIO', 'ENTIDADE', 'BLOCO',
-                                          'GRUPO', 'VALOR TOTAL', 'VALOR LIQUIDO'])
+                else:
+
+                    df_estado_geral.to_excel(writer, sheet_name=estado, index=False)
+
+                writer.save()
+
+                writer.close()
+
+        df_brasil_covid = pd.DataFrame(columns=['UF', 'MUNICIPIO', 'ENTIDADE',
+                                                'BLOCO', 'GRUPO', 'VALOR LIQUIDO'])
+
+        df_brasil_geral = pd.DataFrame(columns=['UF', 'MUNICIPIO', 'ENTIDADE',
+                                                'BLOCO', 'VALOR LIQUIDO'])
 
         for estado in list(estados_values_capitais.keys()):
 
-            df_estado = pd.read_excel(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'), sheet_name=estado)
+            df_estado_covid = pd.read_excel(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_covid19.xlsx'), sheet_name=estado)
 
-            df_brasil = pd.concat([df_brasil, df_estado])
+            df_estado_geral = pd.read_excel(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_geral.xlsx'), sheet_name=estado)
 
-        workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+            df_brasil_covid = pd.concat([df_brasil_covid, df_estado_covid])
 
-        writer = pd.ExcelWriter(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'), engine='openpyxl')
+            df_brasil_geral = pd.concat([df_brasil_geral, df_estado_geral])
 
-        writer.book = workbook
+        workbook1 = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_covid19.xlsx'))
 
-        df_brasil.to_excel(writer, sheet_name='BRASIL', index=False)
+        writer1 = pd.ExcelWriter(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_covid19.xlsx'), engine='openpyxl')
 
-        writer.save()
+        writer1.book = workbook1
 
-        writer.close()
+        df_brasil_covid.to_excel(writer1, sheet_name='BRASIL-COVID19', index=False)
 
-        workbook = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+        workbook2 = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_geral.xlsx'))
 
-        sheets_names = workbook.sheetnames
+        writer1.save()
 
-        sheets_not_wanted = list(set(sheets_names) - set(['BRASIL']))
+        writer1.close()
 
-        if sheets_not_wanted:
+        writer2 = pd.ExcelWriter(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_geral.xlsx'), engine='openpyxl')
 
-            for sheet in sheets_not_wanted:
+        writer2.book = workbook2
 
-                workbook.remove(workbook.get_sheet_by_name(sheet))
+        df_brasil_geral.to_excel(writer2, sheet_name='BRASIL-GERAL', index=False)
 
-        workbook.save(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse.xlsx'))
+        writer2.save()
+
+        writer2.close()
+
+        workbook1 = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_covid19.xlsx'))
+
+        sheets_names1 = workbook1.sheetnames
+
+        sheets_not_wanted1 = list(set(sheets_names1) - set(['BRASIL-COVID19']))
+
+        if sheets_not_wanted1:
+
+            for sheet in sheets_not_wanted1:
+
+                workbook1.remove(workbook1.get_sheet_by_name(sheet))
+
+        workbook1.save(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_covid19.xlsx'))
+
+        workbook2 = openpyxl.load_workbook(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_geral.xlsx'))
+
+        sheets_names2 = workbook2.sheetnames
+
+        sheets_not_wanted2 = list(set(sheets_names2) - set(['BRASIL-GERAL']))
+
+        if sheets_not_wanted2:
+
+            for sheet in sheets_not_wanted2:
+
+                workbook2.remove(workbook2.get_sheet_by_name(sheet))
+
+        workbook2.save(path.join(diretorio_dados, 'fns', 'scraping_FNS_repasse_geral.xlsx'))
 
 
 
