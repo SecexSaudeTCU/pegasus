@@ -12,7 +12,7 @@ import pandas as pd
 from utilities.essential_postgreSQL import files_in_ftp_base, get_tables_counts_db, files_loaded, files_to_load
 
 
-def load_all(db_name, db_user, db_password):
+def load_all(db_name, db_user, db_password, first_year, last_year):
     """
     Cria um schema do banco de dados "db_name" no SGBD PostgreSQL sem integridade referencial (de "primary and foreign
     keys") e insere nele dados das bases de dados (do Datasus) CNES, SIH, SIM, SINASC ou XXX no SGBD PostgreSQL pelo
@@ -132,7 +132,7 @@ def load_all(db_name, db_user, db_password):
         print(df_arquivos_pg)
 
         # Chama a função "files_to_load" contida no módulo "essential_postgreSQL" do package "utilities"
-        df_arqs_nao_carregados = files_to_load(df_arquivos_ftp, df_arquivos_pg)
+        df_arqs_nao_carregados = files_to_load(df_arquivos_ftp, df_arquivos_pg, datasus_db, first_year, last_year)
 
         # Quantidade de arquivos principais de dados que falta carregar em "datasus_db"
         qtd_arqs_datasus = df_arqs_nao_carregados.shape[0]
@@ -199,4 +199,4 @@ def load_all(db_name, db_user, db_password):
 
 if __name__ == '__main__':
 
-    load_all('dbsus4', 'ericc', 'teste')
+    load_all('dbsus', 'Eric', 'teste', 2017, 2019)

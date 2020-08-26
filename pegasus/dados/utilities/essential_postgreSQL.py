@@ -140,6 +140,8 @@ def files_in_ftp_base(name_base):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05', regex=True)]
         # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
+        #
+
 
     # SIH
     elif name_base == 'sih':
@@ -519,7 +521,7 @@ def files_loaded(structure_pg, name_db, e):
         return df_files_pg
 
 
-def files_to_load(df_files_ftp, df_files_pg):
+def files_to_load(df_files_ftp, df_files_pg, name_base, first_year, last_year):
     """
     Obtém lista de nomes (e outros metadados) dos arquivos principais de dados que faltam carregar num
     banco ou sub-banco de dados PostgreSQL.
@@ -555,6 +557,32 @@ def files_to_load(df_files_ftp, df_files_pg):
         df_difference = df_difference.append(row, ignore_index=True)
     # Ordena as linhas de "df_difference" por ordem crescente dos valores das colunas NOME e DIRETORIO
     df_difference.sort_values(['NOME', 'DIRETORIO'], inplace=True)
+
+    # Cria a coluna de ano dos dados para o CNES, SIH ou SIA
+    if name_base.startswith('cnes') or name_base.startswith('sih') or name_base.startswith('sia'):
+
+        df_difference['ANO_ARQUIVO'] = df_difference['NOME'].str[4:6]
+        df_difference['ANO_ARQUIVO'] = '20' + df_difference['ANO_ARQUIVO']
+
+    # Cria a coluna de ano dos dados para o SIM ou SINASC
+    elif name_base.startswith('sim') or name_base.startswith('sinasc'):
+
+        df_difference['ANO_ARQUIVO'] = df_difference['NOME'].str[4:8]
+
+    # Cria a coluna de ano dos dados para o SINAN
+    elif name_base.startswith('sinan'):
+
+        df_difference['ANO_ARQUIVO'] = df_difference['NOME'].str[6:8]
+        df_difference['ANO_ARQUIVO'] = '20' + df_difference['ANO_ARQUIVO']
+
+    # Efetivamente seleciona os dados entre os anos "first_year" e "last_year"
+    df_difference['ANO_ARQUIVO'] = df_difference['ANO_ARQUIVO'].astype('int')
+    df_difference = \
+        df_difference[(df_difference['ANO_ARQUIVO'] >=  first_year) & (df_difference['ANO_ARQUIVO'] <=  last_year)]
+
+    # Elimina a coluna ANO_ARQUIVO
+    df_difference.drop(columns='ANO_ARQUIVO', inplace=True)
+
     # Reset o index devido ao sorting prévio
     df_difference.reset_index(drop=True, inplace=True)
     return df_difference
