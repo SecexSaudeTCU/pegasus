@@ -171,74 +171,74 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
         print(df_arqs_nao_carregados.head())
         print(df_arqs_nao_carregados.dtypes)
 
-        # # Quantidade de arquivos de dados principal que falta carregar em "datasus_db"
-        # qtd_arqs_datasus = df_arqs_nao_carregados.shape[0]
-        # print(f'\nA quantidade de arquivos principais de dados do {datasus_db} que falta carregar no {DB_NAME}/PostgreSQL é {qtd_arqs_datasus}.\n')
-        #
-        # # Cria o objeto string "path_xlsx" do diretório onde estão os eventuais arquivos "xlsx" relativos a "datasus_db"
-        # CURR_DIR = os.path.dirname(os.path.abspath(__file__)).replace('\\', '/')
-        # if datasus_db.startswith('cnes'):
-        #     path_xlsx = CURR_DIR + '/files/CNES/'
-        # elif datasus_db.startswith('sih'):
-        #     path_xlsx = CURR_DIR + '/files/SIH/'
-        # elif datasus_db.startswith('sia'):
-        #     path_xlsx = CURR_DIR + '/files/SIA/'
-        # elif datasus_db == 'sim':
-        #     path_xlsx = CURR_DIR + '/files/SIM/'
-        # elif datasus_db == 'sinasc':
-        #     path_xlsx = CURR_DIR + '/files/SINASC/'
-        # elif datasus_db.startswith('sinan'):
-        #     path_xlsx = CURR_DIR + '/files/SINAN/'
-        #
-        # # Remove a única key do objeto dict "dict_tabelas_e_counts_pg" que não se refere às parent tables do "datasus_db"...
-        # # utilizando o método "pop" da class "dict"
-        # dict_tabelas_e_counts_pg.pop('arquivos', None)
-        # # Inicialização de contador do número de parent tables do "datasus_db" sem dados
-        # count = 0
-        # # Faz a contagem de quantas parent tables do "datasus_db" estão sem dados, se é que estão
-        # for table in dict_tabelas_e_counts_pg:
-        #     if dict_tabelas_e_counts_pg[table] == 0:
-        #         count += 1
-        #
-        # # Carrega dados de tabela(s) auxiliar(es) (parent table(s)) do "datasus_db" se não constar dados dela(s) no...
-        # # "DBNAME" do PostgreSQL
-        # if ((dict_tabelas_e_counts_pg == dict()) or (count > 0)):
-        #     print(f'\nIniciando a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas...')
-        #     # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
-        #     # método pandas.to_sql
-        #     most_tables(path_xlsx, engine, datasus_db)
-        #     print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
-        #
-        #     # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
-        #     if datasus_db in np.array(['cnes_st', 'cnes_lt', 'cnes_eq', 'cnes_sr', 'cnes_ep', 'cnes_ee', 'cnes_ef', 'cnes_in']):
-        #         os.remove('TAB_CNES.zip')
-        #         os.rmdir('TAB_DBF')
-        #         os.rmdir('cnv')
-        #     elif datasus_db in np.array(['sih_rd', 'sih_sp']):
-        #         os.remove('TAB_SIH.zip')
-        #         os.rmdir('CNV')
-        #         os.rmdir('DBF')
-        #     elif datasus_db in np.array(['sia_pa']):
-        #         os.remove('TAB_SIA.zip')
-        #         os.remove('TAB_SIH.zip')
-        #         os.rmdir('CNV')
-        #         os.rmdir('TAB_DBF')
-        #     elif datasus_db == 'sim':
-        #         os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDO18.dbf
-        #     elif datasus_db == 'sinasc':
-        #         os.remove('NASC_NOV_TAB.zip')
-        #         os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDN18.dbf
-        #     elif datasus_db == 'sinan_deng':
-        #         os.remove('TAB_SINAN.zip')
-        #     os.remove('base_territorial.zip')
-        #
-        # print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
-        # # Carrega dados da tabela principal do "datasus_db" no PostgreSQL
-        # for i in range(qtd_arqs_datasus):
-        #     # Chama a função "main_table" para a inserção de dados na tabela principal (child table) + respectivas informações...
-        #     # na tabela arquivos usando os métodos copy_expert + pandas.to_sql
-        #     main_table(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
-        #                df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
+        # Quantidade de arquivos de dados principal que falta carregar em "datasus_db"
+        qtd_arqs_datasus = df_arqs_nao_carregados.shape[0]
+        print(f'\nA quantidade de arquivos principais de dados do {datasus_db} que falta carregar no {DB_NAME}/PostgreSQL é {qtd_arqs_datasus}.\n')
+
+        # Cria o objeto string "path_xlsx" do diretório onde estão os eventuais arquivos "xlsx" relativos a "datasus_db"
+        CURR_DIR = os.path.dirname(os.path.abspath(__file__)).replace('\\', '/')
+        if datasus_db.startswith('cnes'):
+            path_xlsx = CURR_DIR + '/files/CNES/'
+        elif datasus_db.startswith('sih'):
+            path_xlsx = CURR_DIR + '/files/SIH/'
+        elif datasus_db.startswith('sia'):
+            path_xlsx = CURR_DIR + '/files/SIA/'
+        elif datasus_db == 'sim':
+            path_xlsx = CURR_DIR + '/files/SIM/'
+        elif datasus_db == 'sinasc':
+            path_xlsx = CURR_DIR + '/files/SINASC/'
+        elif datasus_db.startswith('sinan'):
+            path_xlsx = CURR_DIR + '/files/SINAN/'
+
+        # Remove a única key do objeto dict "dict_tabelas_e_counts_pg" que não se refere às parent tables do "datasus_db"...
+        # utilizando o método "pop" da class "dict"
+        dict_tabelas_e_counts_pg.pop('arquivos', None)
+        # Inicialização de contador do número de parent tables do "datasus_db" sem dados
+        count = 0
+        # Faz a contagem de quantas parent tables do "datasus_db" estão sem dados, se é que estão
+        for table in dict_tabelas_e_counts_pg:
+            if dict_tabelas_e_counts_pg[table] == 0:
+                count += 1
+
+        # Carrega dados de tabela(s) auxiliar(es) (parent table(s)) do "datasus_db" se não constar dados dela(s) no...
+        # "DBNAME" do PostgreSQL
+        if ((dict_tabelas_e_counts_pg == dict()) or (count > 0)):
+            print(f'\nIniciando a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas...')
+            # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
+            # método pandas.to_sql
+            most_tables(path_xlsx, engine, datasus_db)
+            print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
+
+            # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
+            if datasus_db in np.array(['cnes_st', 'cnes_lt', 'cnes_eq', 'cnes_sr', 'cnes_ep', 'cnes_ee', 'cnes_ef', 'cnes_in']):
+                os.remove('TAB_CNES.zip')
+                os.rmdir('TAB_DBF')
+                os.rmdir('cnv')
+            elif datasus_db in np.array(['sih_rd', 'sih_sp']):
+                os.remove('TAB_SIH.zip')
+                os.rmdir('CNV')
+                os.rmdir('DBF')
+            elif datasus_db in np.array(['sia_pa']):
+                os.remove('TAB_SIA.zip')
+                os.remove('TAB_SIH.zip')
+                os.rmdir('CNV')
+                os.rmdir('TAB_DBF')
+            elif datasus_db == 'sim':
+                os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDO18.dbf
+            elif datasus_db == 'sinasc':
+                os.remove('NASC_NOV_TAB.zip')
+                os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDN18.dbf
+            elif datasus_db == 'sinan_deng':
+                os.remove('TAB_SINAN.zip')
+            os.remove('base_territorial.zip')
+
+        print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
+        # Carrega dados da tabela principal do "datasus_db" no PostgreSQL
+        for i in range(qtd_arqs_datasus):
+            # Chama a função "main_table" para a inserção de dados na tabela principal (child table) + respectivas informações...
+            # na tabela arquivos usando os métodos copy_expert + pandas.to_sql
+            main_table(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
+                       df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
 
 
 ###########################################################################################################################
