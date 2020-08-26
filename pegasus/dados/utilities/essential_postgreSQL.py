@@ -138,10 +138,6 @@ def files_in_ftp_base(name_base):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^GM.{2}1[0-4].{2}', regex=True)]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" se refira aos anos de 2005
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05', regex=True)]
-        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
-        #
-
 
     # SIH
     elif name_base == 'sih':
@@ -154,8 +150,6 @@ def files_in_ftp_base(name_base):
         df_ftp = df_ftp[df_ftp['NOME'].str.match(pat='(^RD)|(^SP)')]
         # Desconsidera a linha de "df_ftp" cuja coluna "NOME" contenha "RDAC0909" por estar sem dado esse arquivo
         df_ftp = df_ftp[~df_ftp['NOME'].str.startswith('RDAC0909')]
-        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIM
     elif name_base == 'sim':
@@ -186,8 +180,6 @@ def files_in_ftp_base(name_base):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('1996')]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" a string "BR"
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
-        # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DN.{2}201[8-9]', regex=True)]
 
     # Reset o index devido à eventual eliminação de linhas
     df_ftp.reset_index(drop=True, inplace=True)
@@ -247,9 +239,6 @@ def files_in_ftp_subbase(name_subbase):
             # dados do CNES do ano de 2005, exceto do cnes_ep, cnes_hb, cnes_rc, cnes_gm, cnes_ee, cnes_ef, cnes_in
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05.{2}', regex=True)]
 
-        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
-
     # SIH
     elif name_subbase.startswith('sih'):
         # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do SIH) do Datasus
@@ -269,9 +258,6 @@ def files_in_ftp_subbase(name_subbase):
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "SP" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('SP')]
-
-        # Desconsidera arquivos a partir de 2020: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
 
     # SIA
     elif name_subbase.startswith('sia'):
@@ -295,8 +281,6 @@ def files_in_ftp_subbase(name_subbase):
             df_ftp['NOME'].replace({r'^(PASP1[3-9]0[1-9])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
             df_ftp['NOME'].replace({r'^(PASP1[3-9]1[0-2])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
 
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}20', regex=True)]
-
     # SINAN
     elif name_subbase.startswith('sinan'):
         # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do SINAN) do Datasus
@@ -309,9 +293,6 @@ def files_in_ftp_subbase(name_subbase):
         # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
         # "DENG" relativa ao banco de dados dos agravos dengue e chikungunya
         df_ftp = df_ftp[df_ftp['NOME'].str.startswith('DENG')]
-
-        # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DENG.{2}1[8-9]', regex=True)]
 
     ftp.quit()
 
