@@ -636,7 +636,7 @@ class DataSihAuxiliary:
         file_name = 'HUF_MEC'
         df2 = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df2.rename(index=str, columns={'PA_CODUNI_': 'ID', 'FANTASIA': 'DESCESTAB'}, inplace=True)
+        df2.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'DESCESTAB'}, inplace=True)
         # Conversão da TCC HOSFEDRJ para um objeto pandas DataFrame
         file_name = 'HOSFEDRJ'
         df3 = download_table_cnv(file_name)
