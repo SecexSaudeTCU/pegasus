@@ -450,7 +450,7 @@ class DataSiaAuxiliary:
         file_name = 'TB_SIGTAP'
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'IP_COD': 'ID', 'IP_DSCR': 'PROCEDIMENTO'}, inplace=True)
+        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'PROCEDIMENTO'}, inplace=True)
         # Upload do arquivo "xlsx" que contém os PROC_SOLIC/PROC_REA presentes nos arquivos RDXXaamm (dos anos...
         # de 2008 a 2019) e não presentes no arquivo TB_SIGTAP.dbf. Ou seja,...
         # isso parece ser uma falha dos dados do Datasus
