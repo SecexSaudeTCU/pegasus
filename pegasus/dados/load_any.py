@@ -168,9 +168,6 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
         # Chama a função "files_to_load" contida no módulo "essential_postgreSQL" do package "utilities"
         df_arqs_nao_carregados = files_to_load(df_arquivos_ftp, df_arquivos_pg, datasus_db, first_year, last_year)
 
-        print(df_arqs_nao_carregados.head())
-        print(df_arqs_nao_carregados.dtypes)
-
         # Quantidade de arquivos de dados principal que falta carregar em "datasus_db"
         qtd_arqs_datasus = df_arqs_nao_carregados.shape[0]
         print(f'\nA quantidade de arquivos principais de dados do {datasus_db} que falta carregar no {DB_NAME}/PostgreSQL é {qtd_arqs_datasus}.\n')
