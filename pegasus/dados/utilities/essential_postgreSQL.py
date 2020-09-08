@@ -272,14 +272,28 @@ def files_in_ftp_subbase(name_subbase):
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "PA" relativa ao banco de dados dos Procedimentos Ambulatoriais
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('PA')]
-            # Adequa no nome de alguns arquivos "dbc" que terminam excepcionalmente em "A" ou "B" transformando...
-            # respectivamente para "a" ou "b"
+            # Adequa no nome de alguns arquivos "dbc" que terminam excepcionalmente em "A", "B" ou "C" transformando...
+            # respectivamente para "a", "b" ou "c"
             df_ftp['NOME'].replace(regex='PASP1112A', value='PASP1112a', inplace=True)
             df_ftp['NOME'].replace(regex='PASP1112B', value='PASP1112b', inplace=True)
+
             df_ftp['NOME'].replace({r'^(PASP1[3-9]0[1-9])A(\.dbc)' : r'\1a\2'}, regex=True, inplace=True)
             df_ftp['NOME'].replace({r'^(PASP1[3-9]1[0-2])A(\.dbc)' : r'\1a\2'}, regex=True, inplace=True)
+
+            df_ftp['NOME'].replace({r'^(PASP2[0-9]0[1-9])A(\.dbc)' : r'\1a\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP2[0-9]1[0-2])A(\.dbc)' : r'\1a\2'}, regex=True, inplace=True)
+
             df_ftp['NOME'].replace({r'^(PASP1[3-9]0[1-9])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
             df_ftp['NOME'].replace({r'^(PASP1[3-9]1[0-2])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
+
+            df_ftp['NOME'].replace({r'^(PASP2[0-9]0[1-9])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP2[0-9]1[0-2])B(\.dbc)' : r'\1b\2'}, regex=True, inplace=True)
+
+            df_ftp['NOME'].replace({r'^(PASP190[3-9])C(\.dbc)' : r'\1c\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP191[0-2])C(\.dbc)' : r'\1c\2'}, regex=True, inplace=True)
+
+            df_ftp['NOME'].replace({r'^(PASP2[0-9]0[1-9])C(\.dbc)' : r'\1c\2'}, regex=True, inplace=True)
+            df_ftp['NOME'].replace({r'^(PASP2[0-9]1[0-2])C(\.dbc)' : r'\1c\2'}, regex=True, inplace=True)
 
     # SINAN
     elif name_subbase.startswith('sinan'):
