@@ -117,7 +117,7 @@ def create_tables(connection_data, child_db):
 
                        /*Tabela das ocupações*/
                        CREATE TABLE IF NOT EXISTS {child_db}.pacbocod("ID"                 VARCHAR(6),
-                                                                      "OCUPACAO"           VARCHAR(66));
+                                                                      "OCUPACAO"           VARCHAR(100));
 
                        /*Tabela dos motivos de saída*/
                        CREATE TABLE IF NOT EXISTS {child_db}.pamotsai("ID"                 VARCHAR(2),
@@ -187,15 +187,15 @@ def create_tables(connection_data, child_db):
 
                        /*Tabela das ocupações*/
                        CREATE TABLE IF NOT EXISTS {child_db}.pasrcc("ID"                   VARCHAR(6),
-                                                                     "OCUPACAO"            VARCHAR(66));
+                                                                     "OCUPACAO"            VARCHAR(100));
 
                        /*Tabela dos tipos de equipes*/
                        CREATE TABLE IF NOT EXISTS {child_db}.paine("ID"                    VARCHAR(10),
-                                                                   "EQUIPE"                VARCHAR(66));
+                                                                   "EQUIPE"                VARCHAR(100));
 
                        /*Tabela dos tipos de equipes*/
                        CREATE TABLE IF NOT EXISTS {child_db}.panatjur("ID"                 VARCHAR(4),
-                                                                      "NATUREZA"           VARCHAR(66));
+                                                                      "NATUREZA"           VARCHAR(100));
 
                       /*Tabela dos Estados da RFB*/
                       CREATE TABLE IF NOT EXISTS {child_db}.ufcod("ID"                     VARCHAR(2),
@@ -208,7 +208,7 @@ def create_tables(connection_data, child_db):
 
                       /*Tabela dos grupos de procedimentos*/
                       CREATE TABLE IF NOT EXISTS {child_db}.grupo("ID"                     VARCHAR(2),
-                                                                  "GRUPO"                  VARCHAR(50));
+                                                                  "GRUPO"                  VARCHAR(100));
 
                       /*Tabela dos subgrupos de procedimentos*/
                       CREATE TABLE IF NOT EXISTS {child_db}.subgrupo("ID"                  VARCHAR(4),

@@ -261,6 +261,7 @@ def files_in_ftp_subbase(name_subbase):
             # "SP" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('SP')]
 
+
     # SIA
     elif name_subbase.startswith('sia'):
         # Diretório do host onde estão os dados da sub-base de dados "name_subbase" (integrante do SIA) do Datasus

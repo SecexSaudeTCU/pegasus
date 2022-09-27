@@ -26,7 +26,7 @@ def dbc2dbf(infile):
         String do nome do arquivo "dbf"
     """
 
-    subprocess.run(['C:/dbf2dbc/dbf2dbc.exe', infile])
+    subprocess.run(['C:/TabWin/dbf2dbc.exe', infile])
     os.unlink(infile)
     outfile = infile[:-4] + '.dbf'
 
