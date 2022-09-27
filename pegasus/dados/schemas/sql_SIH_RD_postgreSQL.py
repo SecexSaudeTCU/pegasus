@@ -224,7 +224,7 @@ def create_tables(connection_data, child_db):
 
                        /*Tabela das ocupações dos pacientes*/
                        CREATE TABLE IF NOT EXISTS {child_db}.cbor("ID"                      VARCHAR(6),
-                                                                  "OCUPACAO"                VARCHAR(66));
+                                                                  "OCUPACAO"                VARCHAR(100));
 
                        /*Tabela das atividades econômicas*/
                        CREATE TABLE IF NOT EXISTS {child_db}.cnaer("ID"                     VARCHAR(3),
@@ -246,9 +246,9 @@ def create_tables(connection_data, child_db):
                        CREATE TABLE IF NOT EXISTS {child_db}.financ("ID"                    VARCHAR(2),
                                                                     "FONTE"                 VARCHAR(66));
 
-                       /*Tabela dos tipos de recursos FAEC*/
+                       /*Tabela dos tipos de recursos FAEC
                        CREATE TABLE IF NOT EXISTS {child_db}.faectp("ID"                    VARCHAR(6),
-                                                                    "SUBFONTE"              VARCHAR(66));
+                                                                    "SUBFONTE"              VARCHAR(100));*/
 
                        /*Tabela dos tipos de regras contratuais*/
                        CREATE TABLE IF NOT EXISTS {child_db}.regct("ID"                     VARCHAR(4),

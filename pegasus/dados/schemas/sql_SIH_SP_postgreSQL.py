@@ -55,7 +55,7 @@ def create_tables(connection_data, child_db):
                                                                   "GRUPO_ID"                VARCHAR(2),
                                                                   "SUBGRUPO_ID"             VARCHAR(4),
                                                                   "FORMA_ID"                VARCHAR(6));
-
+                                                                  
                        /*Tabela dos tipos de procedimento realizado*/
                        CREATE TABLE IF NOT EXISTS {child_db}.spprocrea("ID"                 VARCHAR(10),
                                                                        "PROCEDIMENTO"       VARCHAR(100));

@@ -154,7 +154,7 @@ def files_in_ftp_base(name_base):
     # SIM
     elif name_base == 'sim':
         # Diretório do host onde estão os dados da base de dados "name_base" (SIM) do Datasus
-        datasus_path = '/dissemin/publicos/SIM/CID10/DORES/'
+        datasus_path = '/dissemin/publicos/SIM/PRELIM/DORES/'
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
@@ -165,7 +165,7 @@ def files_in_ftp_base(name_base):
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" a string "BR"
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
         # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
-        df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DO.{2}201[8-9]', regex=True)]
+        #df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DO.{2}201[8-9]', regex=True)]
 
     # SINASC
     elif name_base == 'sinasc':
@@ -235,9 +235,11 @@ def files_in_ftp_subbase(name_subbase):
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}0[7-9].{2}', regex=True)]
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}1[0-4].{2}', regex=True)]
         else:
-            # Desconsideração das linhas de "ddf_ftp" representativa de quaisquer tipos de arquivos principais de...
+            # Desconsideração das linhas de "df_ftp" representativa de quaisquer tipos de arquivos principais de...
             # dados do CNES do ano de 2005, exceto do cnes_ep, cnes_hb, cnes_rc, cnes_gm, cnes_ee, cnes_ef, cnes_in
             df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^.{4}05.{2}', regex=True)]
+
+        #df_ftp = df_ftp[df_ftp['NOME'].str.contains('^STAC2208', regex=True)]
 
     # SIH
     elif name_subbase.startswith('sih'):
@@ -272,8 +274,8 @@ def files_in_ftp_subbase(name_subbase):
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "PA" relativa ao banco de dados dos Procedimentos Ambulatoriais
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('PA')]
-            # Adequa no nome de alguns arquivos "dbc" que terminam excepcionalmente em "A", "B" ou "C" transformando...
-            # respectivamente para "a", "b" ou "c"
+            # Adequa no nome de alguns arquivos "dbc" que terminam excepcionalmente em "A" ou "B" transformando...
+            # respectivamente para "a" ou "b"
             df_ftp['NOME'].replace(regex='PASP1112A', value='PASP1112a', inplace=True)
             df_ftp['NOME'].replace(regex='PASP1112B', value='PASP1112b', inplace=True)
 
@@ -294,6 +296,7 @@ def files_in_ftp_subbase(name_subbase):
 
             df_ftp['NOME'].replace({r'^(PASP2[0-9]0[1-9])C(\.dbc)' : r'\1c\2'}, regex=True, inplace=True)
             df_ftp['NOME'].replace({r'^(PASP2[0-9]1[0-2])C(\.dbc)' : r'\1c\2'}, regex=True, inplace=True)
+
 
     # SINAN
     elif name_subbase.startswith('sinan'):
@@ -556,6 +559,11 @@ def files_to_load(df_files_ftp, df_files_pg, name_base, first_year, last_year):
     # Cria a coluna de ano dos dados para o CNES, SIH ou SIA
     if name_base.startswith('cnes') or name_base.startswith('sih') or name_base.startswith('sia'):
 
+        print(df_difference['NOME'])
+
+        # Inseriram um arquivo com nome bizarro no diretório FTP do CNES_EF
+        df_difference = df_difference[df_difference['NOME'] != 'EFUFAAMM.dbc']
+
         df_difference['ANO_ARQUIVO'] = df_difference['NOME'].str[4:6]
         df_difference['ANO_ARQUIVO'] = '20' + df_difference['ANO_ARQUIVO']
 
@@ -570,7 +578,9 @@ def files_to_load(df_files_ftp, df_files_pg, name_base, first_year, last_year):
         df_difference['ANO_ARQUIVO'] = df_difference['NOME'].str[6:8]
         df_difference['ANO_ARQUIVO'] = '20' + df_difference['ANO_ARQUIVO']
 
-    # Efetivamente seleciona os dados entre os anos "first_year" e "last_year"
+
+
+    # Efetivamente seleciona os dados compreendidos entre os anos "first_year" e "last_year"
     df_difference['ANO_ARQUIVO'] = df_difference['ANO_ARQUIVO'].astype('int')
     df_difference = \
         df_difference[(df_difference['ANO_ARQUIVO'] >=  first_year) & (df_difference['ANO_ARQUIVO'] <=  last_year)]

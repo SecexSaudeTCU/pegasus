@@ -162,9 +162,7 @@ def create_tables(connection_data, child_db):
 
                        /*Tabela dos estabelecimentos*/
                        CREATE TABLE IF NOT EXISTS {child_db}.codestab("ID"                   VARCHAR(7),
-                                                                      "DESCESTAB"            VARCHAR(66),
-                                                                      "ESFERA"               VARCHAR(66),
-                                                                      "REGIME"               VARCHAR(66));
+                                                                      "DESCESTAB"            VARCHAR(66));
 
                        /*Tabela dos municípios de ocorrência*/
                        CREATE TABLE IF NOT EXISTS {child_db}.codmunocor("ID"                 VARCHAR(6),

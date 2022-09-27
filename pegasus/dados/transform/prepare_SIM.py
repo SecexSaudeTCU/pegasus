@@ -324,7 +324,7 @@ class DataSimAuxiliary:
     # Função para adequar e formatar as colunas e valores da TCC NAT1212 (arquivo NAT1212.cnv)
     def get_NAT1212_treated(self):
         # Conversão da TCC NAT1212 para um objeto pandas DataFrame
-        file_name = 'NAT1212'
+        file_name = 'NAT1213'
         df = download_table_cnv(file_name)
         # Renomeia a coluna SIGNIFICACAO
         df.rename(index=str, columns={'SIGNIFICACAO': 'LOCAL'}, inplace=True)
@@ -441,7 +441,7 @@ class DataSimAuxiliary:
     # Função para adequar e formatar as colunas e valores da TCC RACA (arquivo RACA.cnv)
     def get_RACA_treated(self):
         # Conversão da TCC RACA para um objeto pandas DataFrame
-        file_name = 'RACA'
+        file_name = 'RACACOR'
         df = download_table_cnv(file_name)
         # Renomeia a coluna SIGNIFICACAO
         df.rename(index=str, columns={'SIGNIFICACAO': 'TIPO'}, inplace=True)
@@ -576,94 +576,22 @@ class DataSimAuxiliary:
     # Além disso faz o "merge" a elas das TCC ESFERA e NAT_ORG (arquivos ESFERA.cnv e NAT_ORG.cnv, respectivamente)
     def get_CNESDO18_3TCC_treated(self):
         # Conversão da Tabela CNESDO18 para um objeto pandas DataFrame
-        file_name = 'CNESDO18'
-        df1 = download_table_dbf(file_name)
+        file_name = 'CNESDO22'
+        df = download_table_dbf(file_name)
+        # Renomeia as colunas especificadas
+        df.rename(index=str, columns={'CODESTAB': 'ID'}, inplace=True)
         # Ordena as linhas de "df1" por ordem crescente dos valores da coluna CODESTAB
-        df1.sort_values(by=['CODESTAB'], inplace=True)
+        df.sort_values(by=['ID'], inplace=True)
         # Elimina eventuais linhas duplicadas tendo por base a coluna CODESTAB e mantém a primeira ocorrência
-        df1.drop_duplicates(subset='CODESTAB', keep='first', inplace=True)
+        df.drop_duplicates(subset='ID', keep='first', inplace=True)
         # Reset o index devido ao sorting prévio
-        df1.reset_index(drop=True, inplace=True)
+        df.reset_index(drop=True, inplace=True)
         # Adiciona zeros à esquerda nos valores (tipo string) da coluna "CODESTAB" do objeto "df1" até formar...
         # uma "string" de tamanho = 7
-        df1['CODESTAB'] = df1['CODESTAB'].apply(lambda x: x.zfill(7))
-        # Conversão da TCC ESTAB06 para um objeto pandas DataFrame
-        file_name = 'ESTAB06'
-        df2 = download_table_cnv(file_name)
-        df2.rename(index=str, columns={'ID': 'CODESTAB', 'SIGNIFICACAO': 'DESCESTAB'}, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "CODESTAB" do objeto "df2" até formar...
-        # uma "string" de tamanho = 7
-        df2['CODESTAB'] = df2['CODESTAB'].apply(lambda x: x.zfill(7))
-        # Concatena os dois objetos pandas DataFrame
-        frames = []
-        frames.append(df1)
-        frames.append(df2)
-        df = pd.concat(frames, ignore_index=True)
-        # Elimina linhas duplicadas
-        df.drop_duplicates(subset='CODESTAB', keep='first', inplace=True)
-        # Ordena as linhas por ordem crescente dos valores da coluna "CODESTAB"
-        df.sort_values(by=['CODESTAB'], inplace=True)
-        # Reseta os índices
-        df.reset_index(drop=True, inplace=True)
-        # Conversão da TCC ESFERA18 para um objeto pandas DataFrame
-        file_name = 'ESFERA18'
-        df3 = download_table_cnv(file_name)
-        # Adequa e formata a TCC ESFERA18
-        df3.rename(index=str, columns={'ID': 'CODESTAB', 'SIGNIFICACAO': 'ESFERA'}, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "CODESTAB" do objeto "df3" até formar...
-        # uma "string" de tamanho = 7
-        df3['CODESTAB'] = df3['CODESTAB'].apply(lambda x: x.zfill(7))
-        # Conversão da TCC NAT_ORG (já em formato "xlsx" e não "cnv") para um objeto pandas DataFrame
-        file_name = 'NAT_ORG'
-        df4 = download_table_cnv(file_name)
-        # Adequa e formata a TCC NAT_ORG
-        df4.rename(index=str, columns={'ID': 'CODESTAB', 'SIGNIFICACAO': 'REGIME'}, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "CODESTAB" do objeto "df4" até formar...
-        # uma "string" de tamanho = 7
-        df4['CODESTAB'] = df4['CODESTAB'].apply(lambda x: x.zfill(7))
-        # Realiza o "merge" da TCC ESFERA18 à TCC NAT_ORG
-        df5 = df3.append(df4, sort=False)
-        df6 = df5.replace(np.nan,'').groupby('CODESTAB',as_index=False).agg(''.join)
-        df6.sort_values(by=['CODESTAB'], inplace=True)
-        df6.reset_index(drop=True, inplace=True)
-        # Realiza o "merge" da TCC ESFERA18 (+ TCC NAT_ORG) à (Tabela CNESDO18 + TCC ESTAB06)
-        df7 = df.append(df6, sort=False)
-        df8 = df7.replace(np.nan,'').groupby('CODESTAB',as_index=False).agg(''.join)
-        df8.sort_values(by=['CODESTAB'], inplace=True)
-        df8.reset_index(drop=True, inplace=True)
-        # Substitui os valores de string vazia das colunas especificadas pela string "?"
-        df8['DESCESTAB'].replace('','?', inplace=True)
-        df8['ESFERA'].replace('','?', inplace=True)
-        df8['REGIME'].replace('','?', inplace=True)
-        # Upload do arquivo "xlsx" que contém os CODESTAB presentes nos arquivos DOXXaaaa (dos anos de...
-        # 1997 a 2017) e não presentes na tabela CNESDO18 e nas TCC ESTAB06, ESFERA18 e NAT_ORG. Ou seja,...
-        # isso parece ser uma falha dos dados do Datasus
-        dataframe = pd.read_excel(self.path + 'CODESTAB_OUT_CNESDO18_E_3TCC_ANOS_1997_2017' + '.xlsx')
-        # Converte a coluna "CODESTAB" do objeto "dataframe" de "int" para "string"
-        dataframe['CODESTAB'] = dataframe['CODESTAB'].astype('str')
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "CODESTAB" do objeto "dataframe" até formar...
-        # uma "string" de tamanho = 7
-        dataframe['CODESTAB'] = dataframe['CODESTAB'].apply(lambda x: x.zfill(7))
-        # Adiciona as colunas "DESCESTAB", "ESFERA" e "REGIME" e respectivos valores ao objeto "dataframe"
-        dataframe['DESCESTAB'] = ['NAO PROVIDO EM CNESDO18.DBF E NAS TCC ESTAB06/ESFERA18/NAT_ORG'] * (dataframe.shape[0])
-        dataframe['ESFERA'] = ['?'] * (dataframe.shape[0])
-        dataframe['REGIME'] = ['?'] * (dataframe.shape[0])
-        # Concatenação do objeto "dataframe" ao objeto "df8"
-        frames = []
-        frames.append(df8)
-        frames.append(dataframe)
-        dfinal = pd.concat(frames, ignore_index=True)
-        # Renomeia a coluna "CODESTAB"
-        dfinal.rename(index=str, columns={'CODESTAB': 'ID'}, inplace=True)
-        # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
-        dfinal.drop_duplicates(subset='ID', keep='first', inplace=True)
-        # Ordena eventualmente as linhas por ordem crescente dos valores da coluna ID
-        dfinal.sort_values(by=['ID'], inplace=True)
-        # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
-        dfinal.reset_index(drop=True, inplace=True)
+        df['ID'] = df['ID'].apply(lambda x: x.zfill(7))
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE', '?', '?']
-        return dfinal
+        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+        return df
 
 
     # Função para adequar e formatar as colunas e valores da Tabela TPMORTEOCO ("constando" apenas...

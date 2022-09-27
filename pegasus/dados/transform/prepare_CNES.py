@@ -37,8 +37,37 @@ class DataCnesMain:
     # Método para ler como um objeto pandas DataFrame um arquivo principal de dados do CNES e adequar e formatar suas colunas...
     # e valores
     def get_CNESXXaamm_treated(self):
-        # Lê o arquivo "dbc" ou "parquet", se já tiver sido baixado, como um objeto pandas DataFrame
-        dataframe = download_CNESXXaamm(self.base, self.state, self.year, self.month)
+
+        # Inserido pela impossibilidade de leitura de arquivos STufaamm de março de 2020 em diante
+
+        if ((self.base == 'ST') and (int(self.year) >= 20) and (int(self.month) >= 3)):
+
+            dataframe = pd.read_csv('./files/CNES/' + self.base + self.state + self.year + self.month + '.csv',
+                                    keep_default_na=False, encoding='iso-8859–1')
+            for col in ['CNES', 'CODUFMUN', 'COD_CEP', 'CPF_CNPJ', 'PF_PJ', 'NIV_DEP', 'CNPJ_MAN', 'COD_IR', 'VINC_SUS',
+                        'TPGESTAO', 'ESFERA_A', 'RETENCAO', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT',
+                        'NIV_HIER', 'TP_PREST', 'CO_BANCO', 'CO_AGENC', 'C_CORREN', 'ALVARA', 'DT_EXPED', 'ORGEXPED',
+                        'AV_ACRED', 'CLASAVAL', 'DT_ACRED', 'AV_PNASS', 'DT_PNASS', 'GESPRG1E', 'GESPRG1M', 'GESPRG2E',
+                        'GESPRG2M', 'GESPRG4E', 'GESPRG4M', 'NIVATE_A', 'GESPRG3E', 'GESPRG3M', 'GESPRG5E', 'GESPRG5M',
+                        'GESPRG6E', 'GESPRG6M', 'NIVATE_H', 'LEITHOSP', 'URGEMERG', 'ATENDAMB', 'CENTRCIR', 'CENTROBS',
+                        'CENTRNEO', 'ATENDHOS', 'SERAP01P', 'SERAP02P', 'SERAP02T', 'SERAP03P', 'SERAP03T', 'SERAP04P',
+                        'SERAP04T', 'SERAP05P', 'SERAP05T', 'SERAP06P', 'SERAP06T', 'SERAP07P', 'SERAP07T', 'SERAP08P',
+                        'SERAP08T', 'SERAP09P', 'SERAP09T', 'SERAP10P', 'SERAP10T', 'SERAP11P', 'SERAP11T', 'SERAPOIO',
+                        'RES_BIOL', 'RES_QUIM', 'RES_RADI', 'RES_COMU', 'COLETRES', 'COMISS01', 'COMISS02', 'COMISS03',
+                        'COMISS04', 'COMISS05', 'COMISS06', 'COMISS07', 'COMISS08', 'COMISS09', 'COMISS10', 'COMISS11',
+                        'COMISS12', 'COMISSAO', 'AP01CV01', 'AP01CV02', 'AP01CV05', 'AP01CV06', 'AP01CV03', 'AP01CV04',
+                        'AP02CV01', 'AP02CV02', 'AP02CV05', 'AP02CV06', 'AP02CV03', 'AP02CV04', 'AP03CV01', 'AP03CV02',
+                        'AP03CV05', 'AP03CV06', 'AP03CV03', 'AP03CV04', 'AP04CV01', 'AP04CV02', 'AP04CV05', 'AP04CV06',
+                        'AP04CV03', 'AP04CV04', 'AP05CV01', 'AP05CV02', 'AP05CV05', 'AP05CV06', 'AP05CV03', 'AP05CV04',
+                        'AP06CV01', 'AP06CV02', 'AP06CV05', 'AP06CV06', 'AP06CV03', 'AP06CV04', 'AP07CV01', 'AP07CV02',
+                        'AP07CV05', 'AP07CV06', 'AP07CV03', 'AP07CV04', 'ATEND_PR', 'NAT_JUR']:
+                dataframe[col] = dataframe[col].astype(str)
+
+            dataframe['CNES'] = dataframe['CNES'].apply(lambda x: x.zfill(7))
+
+        else:
+            # Lê o arquivo "dbc" ou "parquet", se já tiver sido baixado, como um objeto pandas DataFrame
+            dataframe = download_CNESXXaamm(self.base, self.state, self.year, self.month)
         print(f'O número de linhas do arquivo {self.base}{self.state}{self.year}{self.month} é {dataframe.shape[0]}.')
 
         ###################################################################################################################
@@ -95,6 +124,7 @@ class DataCnesMain:
 
             # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
             # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
+
             if len(df.loc[0, 'CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
 

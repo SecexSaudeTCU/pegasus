@@ -199,4 +199,4 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
 
 if __name__ == '__main__':
 
-    load_all('dbsus', 'Eric', 'teste', 2017, 2019)
+    load_all('dbsus3', 'Eric', 'teste', 2021, 2021)

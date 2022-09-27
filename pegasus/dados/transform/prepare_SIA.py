@@ -528,7 +528,7 @@ class DataSiaAuxiliary:
         file_name = 'CBO'
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CBO': 'ID', 'DS_CBO': 'OCUPACAO'}, inplace=True)
+        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'OCUPACAO'}, inplace=True)
         # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" até...
         # formar uma "string" de tamanho = 6
         df['ID'] = df['ID'].apply(lambda x: x.zfill(6))
@@ -714,9 +714,9 @@ class DataSiaAuxiliary:
         file_name = 'INE_EQUIPE_BR'
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CO_INE': 'ID', 'NO_REF': 'EQUIPE'}, inplace=True)
+        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'EQUIPE'}, inplace=True)
         # Considera da coluna EQUIPE apenas a substring depois de dez dígitos e um espaço
-        df['EQUIPE'].replace(to_replace='^\d{10} ', value= '', regex=True, inplace=True)
+        #df['EQUIPE'].replace(to_replace='^\d{10} ', value= '', regex=True, inplace=True)
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
         return df

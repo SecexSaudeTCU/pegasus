@@ -629,9 +629,9 @@ class DataSihAuxiliary:
         file_name = 'TCNESBR'
         df1 = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df1.rename(index=str, columns={'CNES': 'ID', 'NOMEFANT': 'DESCESTAB'}, inplace=True)
+        df1.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'DESCESTAB'}, inplace=True)
         # Remove colunas indesejáveis do objeto pandas DataFrame
-        df1 = df1.drop(['UF_ZI', 'CMPT'], axis=1)
+        #df1 = df1.drop(['UF_ZI', 'CMPT'], axis=1)
         # Conversão da Tabela HUF_MEC para um objeto pandas DataFrame
         file_name = 'HUF_MEC'
         df2 = download_table_dbf(file_name)
@@ -707,18 +707,18 @@ class DataSihAuxiliary:
         return df
 
 
-    # Função para adequar e formatar as colunas e valores da TCC FAECTP (arquivo FAECTP.cnv)
-    def get_FAECTP_treated(self):
-        # Conversão da TCC FAECTP para um objeto pandas DataFrame
-        file_name = 'FAECTP'
-        df = download_table_cnv(file_name)
-        # Renomeia a coluna SIGNIFICACAO
-        df.rename(index=str, columns={'SIGNIFICACAO': 'SUBFONTE'}, inplace=True)
-        # Preenche os valores da coluna ID com zeros a esquerda até formar seis digitos
-        df['ID'] = df['ID'].apply(lambda x: x.zfill(6))
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
-        return df
+    # # Função para adequar e formatar as colunas e valores da TCC FAECTP (arquivo FAECTP.cnv)
+    # def get_FAECTP_treated(self):
+    #     # Conversão da TCC FAECTP para um objeto pandas DataFrame
+    #     file_name = 'FAECTP'
+    #     df = download_table_cnv(file_name)
+    #     # Renomeia a coluna SIGNIFICACAO
+    #     df.rename(index=str, columns={'SIGNIFICACAO': 'SUBFONTE'}, inplace=True)
+    #     # Preenche os valores da coluna ID com zeros a esquerda até formar seis digitos
+    #     df['ID'] = df['ID'].apply(lambda x: x.zfill(6))
+    #     # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
+    #     df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+    #     return df
 
 
     # Função para adequar e formatar as colunas e valores da Tabela TB_GRUPO (arquivo TB_GRUPO.dbf)
