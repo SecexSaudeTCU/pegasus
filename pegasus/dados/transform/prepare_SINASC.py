@@ -673,7 +673,7 @@ class DataSinascAuxiliary:
     # no Dicionário de Dados do SINASC
     def get_NAT1212_treated(self):
         # Conversão da TCC NAT1212 para um objeto pandas DataFrame
-        file_name = 'NAT1212'
+        file_name = 'NATURAL'
         df = download_table_cnv(file_name)
         # Renomeia a coluna SIGNIFICACAO
         df.rename(index=str, columns={'SIGNIFICACAO': 'LOCAL'}, inplace=True)

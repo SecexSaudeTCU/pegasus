@@ -93,7 +93,7 @@ def download_table_dbf(file_name):
     fname = file_name + '.DBF'
 
     try:
-        if file_name == 'CNESDO18': # Esse arquivo "dbf" deveria estar no diretório
+        if file_name == 'CNESDO22': # Esse arquivo "dbf" deveria estar no diretório
                                     # ".../dissemin/publicos/SIM/CID10/TABELAS" do endereço "ftp"
             folder = 'OBITOS_CID10_TAB.ZIP'
             ftp.cwd('/dissemin/publicos/SIM/CID10/TAB/')
@@ -115,7 +115,7 @@ def download_table_dbf(file_name):
     except:
         raise Exception(f'Could not access {fname}.')
 
-    if ((file_name == 'TABOCUP') or (file_name == 'CNESDO18') or (file_name == 'CID10')):
+    if ((file_name == 'TABOCUP') or (file_name == 'CNESDO22') or (file_name == 'CID10')):
         dbf = DBF(fname, encoding='iso-8859-1')
     else:
         dbf = DBF(fname)

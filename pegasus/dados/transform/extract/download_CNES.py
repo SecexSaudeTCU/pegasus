@@ -123,11 +123,11 @@ def download_table_dbf(file_name):
         zip = ZipFile(folder, 'r')
         try:
             fname = file_name + '.DBF'
-            zip.extract('TAB_DBF/' + fname)
+            zip.extract('DBF/' + fname)
         except:
             try:
                 fname = file_name + '.dbf'
-                zip.extract('TAB_DBF/' + fname)
+                zip.extract('DBF/' + fname)
             except:
                 raise Exception(f'Could not access {file_name}.')
 
@@ -137,7 +137,7 @@ def download_table_dbf(file_name):
         dbf = DBF(fname)
 
     else:
-        dbf = DBF('TAB_DBF/' + fname, encoding='iso-8859-1')
+        dbf = DBF('DBF/' + fname, encoding='iso-8859-1')
 
     df = pd.DataFrame(iter(dbf))
 
@@ -147,7 +147,7 @@ def download_table_dbf(file_name):
         os.unlink(fname)
 
     else:
-        os.unlink('TAB_DBF/' + fname)
+        os.unlink('DBF/' + fname)
 
     return df
 
@@ -179,16 +179,16 @@ def download_table_cnv(file_name):
     zip = ZipFile(folder, 'r')
     try:
         fname = file_name + '.CNV'
-        zip.extract('cnv/' + fname)
+        zip.extract('CNV/' + fname)
     except:
         try:
             fname = file_name + '.cnv'
-            zip.extract('cnv/' + fname)
+            zip.extract('CNV/' + fname)
         except:
             raise Exception(f'Could not access {file_name}.')
 
-    os.rename('cnv/' + fname, 'cnv/CNES_' + fname)
+    os.rename('CNV/' + fname, 'CNV/CNES_' + fname)
 
-    df = read_cnv('cnv/CNES_' + fname)
+    df = read_cnv('CNV/CNES_' + fname)
 
     return df

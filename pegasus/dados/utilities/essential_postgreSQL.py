@@ -154,7 +154,7 @@ def files_in_ftp_base(name_base):
     # SIM
     elif name_base == 'sim':
         # Diretório do host onde estão os dados da base de dados "name_base" (SIM) do Datasus
-        datasus_path = '/dissemin/publicos/SIM/PRELIM/DORES/'
+        datasus_path = '/dissemin/publicos/SIM/CID10/DORES/'
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
@@ -164,13 +164,11 @@ def files_in_ftp_base(name_base):
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('1996')]
         # Desconsidera as linhas de "df_ftp" cuja coluna "NOME" a string "BR"
         df_ftp = df_ftp[~df_ftp['NOME'].str.contains('BR')]
-        # Desconsidera arquivos a partir de 2018: data wrangling ainda não realizado
-        #df_ftp = df_ftp[~df_ftp['NOME'].str.contains('^DO.{2}201[8-9]', regex=True)]
 
     # SINASC
     elif name_base == 'sinasc':
         # Diretório do host onde estão os dados da base de dados "name_base" (SINASC) do Datasus
-        datasus_path = '/dissemin/publicos/SINASC/NOV/DNRES/'
+        datasus_path = '/dissemin/publicos/SINASC/1996_/Dados/DNRES/'
         # Chama a função "get_dbc_info" para colocar o nome, o diretório e a data da inserção do arquivo no...
         # endereço ftp como colunas de um objeto pandas DataFrame e os preenche com os dados de "stuff_ftp_files.txt"
         df_ftp = get_dbc_info(datasus_path)
@@ -260,7 +258,6 @@ def files_in_ftp_subbase(name_subbase):
             # Consideração apenas das linhas do objeto pandas DataFrame "df_ftp" cuja coluna NOME inicie pela string...
             # "SP" relativa ao banco de dados das AIH Reduzidas
             df_ftp = df_ftp[df_ftp['NOME'].str.startswith('SP')]
-
 
     # SIA
     elif name_subbase.startswith('sia'):

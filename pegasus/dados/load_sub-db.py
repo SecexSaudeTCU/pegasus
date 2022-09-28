@@ -172,10 +172,6 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
         path_xlsx = CURR_DIR + '/files/SIH/'
     elif datasus_db.startswith('sia'):
         path_xlsx = CURR_DIR + '/files/SIA/'
-    elif datasus_db == 'sim':
-        path_xlsx = CURR_DIR + '/files/SIM/'
-    elif datasus_db == 'sinasc':
-        path_xlsx = CURR_DIR + '/files/SINASC/'
     elif datasus_db.startswith('sinan'):
         path_xlsx = CURR_DIR + '/files/SINAN/'
 
@@ -212,11 +208,6 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
             os.remove('TAB_SIH.zip')
             os.rmdir('CNV')
             os.rmdir('TAB_DBF')
-        elif datasus_db == 'sim':
-            os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDO18.dbf
-        elif datasus_db == 'sinasc':
-            os.remove('NASC_NOV_TAB.zip')
-            os.remove('OBITOS_CID10_TAB.ZIP') # e do arquivo CNESDN18.dbf
         elif datasus_db == 'sinan_deng':
             os.remove('TAB_SINAN.zip')
         os.remove('base_territorial.zip')

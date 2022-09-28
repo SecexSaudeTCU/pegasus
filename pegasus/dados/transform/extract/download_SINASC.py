@@ -57,7 +57,7 @@ def download_DNXXaaaa(state: str, year: str, cache: bool=True):
     else:
         ftp = FTP('ftp.datasus.gov.br')
         ftp.login()
-        ftp.cwd('/dissemin/publicos/SINASC/NOV/DNRES/')
+        ftp.cwd('/dissemin/publicos/SINASC/1996_/Dados/DNRES/')
         try:
             ftp.retrbinary(f'RETR {fname}', open(fname, 'wb').write)
         except:
