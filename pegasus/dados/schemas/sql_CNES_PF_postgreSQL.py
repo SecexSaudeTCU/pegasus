@@ -76,19 +76,15 @@ def create_tables(connection_data, child_db):
 
                        /*Tabela das especialidades dos profissionais*/
                        CREATE TABLE IF NOT EXISTS {child_db}.cbo("ID"                       VARCHAR(6),
-                                                                 "OCUPACAO"                 VARCHAR(66));
+                                                                 "OCUPACAO"                 VARCHAR(150));
 
                        /*Em verdade é a mesma coisa da tabela anterior*/
                        CREATE TABLE IF NOT EXISTS {child_db}.cbounico("ID"                  VARCHAR(6),
-                                                                      "OCUPACAO"            VARCHAR(66));
+                                                                      "OCUPACAO"            VARCHAR(150));
 
                        /*Tabeça dos conselhos de profissão*/
                        CREATE TABLE IF NOT EXISTS {child_db}.conselho("ID"                  VARCHAR(2),
-                                                                      "DENOMINACAO"         VARCHAR(66));
-
-                       /*Tabeça dos tipos de vínculos do profissional*/
-                       CREATE TABLE IF NOT EXISTS {child_db}.vinculac("ID"                  VARCHAR(6),
-                                                                      "DESCRICAO"           VARCHAR(100));
+                                                                      "DENOMINACAO"         VARCHAR(150));
 
                        /*Tabela dos Estados da RFB*/
                        CREATE TABLE IF NOT EXISTS {child_db}.ufcod("ID"                     VARCHAR(2),

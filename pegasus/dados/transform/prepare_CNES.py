@@ -1687,26 +1687,6 @@ class DataCnesAuxiliary:
         return df
 
 
-    # Método para adequar e formatar as colunas e valores da TCC NATUREZA (arquivo NATUREZA.cnv)
-    def get_NATUREZA_treated(self):
-        # Conversão da TCC NATUREZA para um objeto pandas DataFrame
-        file_name = 'NATUREZA'
-        df = download_table_cnv(file_name)
-        # Renomeia a coluna SIGNIFICACAO
-        df.rename(index=str, columns={'SIGNIFICACAO': 'NATUREZA'}, inplace=True)
-        # Drop a linha inteira em que a coluna "ID" tem o valor especificado
-        df = df.drop(df[df['ID']=='0'].index)
-        # Reset o index devido à exclusão efetuada no passo anterior
-        df.reset_index(drop=True, inplace=True)
-        # Coleta da coluna NATUREZA apenas a substring depois de dois dígitos e um traço
-        df1 = df['NATUREZA'].str.extract('^\d{2}-(.*)', expand=True).rename(columns={0:'NATUREZA'})
-        # Concatena ao longo do eixo das colunas os objetos pandas DataFrame "df[['ID']]" e "df1"
-        dfinal = pd.concat([df[['ID']], df1], axis=1)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
-        return dfinal
-
-
     # Método para adequar e formatar as colunas e valores da TCC Flux_Cli (arquivo Flux_Cli.cnv)
     def get_Flux_Cli_treated(self):
         # Conversão da TCC Flux_Cli para um objeto pandas DataFrame
@@ -1728,6 +1708,7 @@ class DataCnesAuxiliary:
         df.rename(index=str, columns={'SIGNIFICACAO': 'TIPO'}, inplace=True)
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
+
         return df
 
 
@@ -1882,7 +1863,7 @@ class DataCnesAuxiliary:
         file_name = 'CBO_02'
         df4 = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df4.rename(index=str, columns={'CBO': 'ID', 'DS_CBO': 'OCUPACAO'}, inplace=True)
+        df4.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'OCUPACAO'}, inplace=True)
         # Coloca todas as string da coluna especificada como UPPER CASE
         df4['OCUPACAO'] = df4['OCUPACAO'].apply(lambda x: x.upper())
         # Ordena as linhas de "df4" por ordem crescente dos valores da coluna ID
@@ -1940,7 +1921,7 @@ class DataCnesAuxiliary:
         file_name = 'CR_CONSEL'
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CO_CONSE': 'ID', 'DS_CONSE': 'DENOMINACAO'}, inplace=True)
+        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'DENOMINACAO'}, inplace=True)
         # Drop as linhas inteiras em que a coluna "ID" tem o valor especificado por não representar conselho algum
         df = df.drop(df[df['ID']=='99'].index)
         df = df.drop(df[df['ID']==''].index)
@@ -1952,37 +1933,6 @@ class DataCnesAuxiliary:
         df.sort_values(by=['ID'], inplace=True)
         # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
         df.reset_index(drop=True, inplace=True)
-        # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
-        return df
-
-
-    # Função para adequar e formatar as colunas e valores da Tabela VINCULO (arquivo VINCULO.dbf)
-    def get_VINCULO_treated(self):
-        # Conversão da Tabela VINCULO para um objeto pandas DataFrame
-        file_name = 'VINCULO'
-        df = download_table_dbf(file_name)
-        # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CO_VINC': 'ID', 'DS_VINC': 'DESCRICAO'}, inplace=True)
-        # Drop a linha inteira em que a coluna "ID" tem o valor especificado por não representar nenhum...
-        # tipo de vínculo
-        df = df.drop(df[df['ID']=='000000'].index)
-
-        # Elimina eventuais linhas duplicadas tendo por base a coluna ID e mantém a primeira ocorrência
-        df.drop_duplicates(subset='ID', keep='first', inplace=True)
-
-        # Insere três linhas devido oa formato antigo da coluna VINCULAC de um único dígito variando de "1" a "3"
-        df.loc[df.shape[0]] = ['000001', 'PROFISSIONAL CONTRATADO']
-        df.loc[df.shape[0]] = ['000002', 'PROFISSIONAL AUTÔNOMO']
-        df.loc[df.shape[0]] = ['000003', 'PROFISSIONAL VÍNCULO NÃO IDENTIFICADO']
-
-        # Ordena as linhas de "df" por ordem crescente dos valores da coluna ID
-        df.sort_values(by=['ID'], inplace=True)
-        # Reset o index devido ao sorting prévio e à exclusão e inclusão das linhas referidas acima
-        df.reset_index(drop=True, inplace=True)
-        # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" até formar uma...
-        # "string" de tamanho = 6
-        df['ID'] = df['ID'].apply(lambda x: x.zfill(6))
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
         df.loc[df.shape[0]] = ['NA', 'NOT AVAILABLE']
         return df
@@ -2056,7 +2006,7 @@ class DataCnesAuxiliary:
         file_name = 'S_CLASSEN'
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_SERV': 'DESCRICAO'}, inplace=True)
+        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'DESCRICAO'}, inplace=True)
         # Coleta apenas os três primeiros dígitos da coluna ID do objeto pandas DataFrame "df"
         df1 = df['ID'].str.extract('(^\d{3})', expand=True).rename(columns={0:'ID'})
         # Coleta da coluna DESCRICAO apenas a substring antes da barra
@@ -2098,7 +2048,7 @@ class DataCnesAuxiliary:
         file_name = 'S_CLASSEN'
         df = download_table_dbf(file_name)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_SERV': 'DESCRICAO'}, inplace=True)
+        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'DESCRICAO'}, inplace=True)
         # Coleta da coluna DESCRICAO apenas a substring depois de três dígitos
         df1 = df['DESCRICAO'].str.extract('^\d{3} (.*)', expand=True).rename(columns={0:'DESCRICAO'})
         # Concatena lado a lado os objetos pandas DataFrame "df[['ID']]" e "df1"
@@ -2469,7 +2419,3 @@ if __name__ == '__main__':
 
     # Ajustar "the_path" para a localização dos arquivos "xlsx"
     the_path = os.getcwd()[:-len('insertion\\data_wrangling')] + 'files\\CNES\\'
-
-
-
-    print(df)

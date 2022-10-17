@@ -59,9 +59,6 @@ def insert_into_most_CNES_tables(path, device, child_db):
     df_Ativ_Ens = data_cnes_auxiliary.get_Ativ_Ens_treated()
     df_Ativ_Ens.to_sql('atividad', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
-    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
-    df_NATUREZA.to_sql('natureza', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
     df_Flux_Cli = data_cnes_auxiliary.get_Flux_Cli_treated()
     df_Flux_Cli.to_sql('clientel', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
@@ -98,9 +95,6 @@ def insert_into_most_CNES_tables(path, device, child_db):
 
     df_CR_CONSEL = data_cnes_auxiliary.get_CR_CONSEL_treated()
     df_CR_CONSEL.to_sql('conselho', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
-
-    df_VINCULO = data_cnes_auxiliary.get_VINCULO_treated()
-    df_VINCULO.to_sql('vinculac', con=device, schema=child_db, if_exists=label1, index=False, index_label=label2)
 
     # Chama métodos da classe "DataCnesAuxiliary" do módulo "prepare_CNES" referentes ao sub-banco de dados cnes_lt
     df_tip1leit = data_cnes_auxiliary.get_tip1leit_treated()

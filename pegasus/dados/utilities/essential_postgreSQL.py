@@ -560,7 +560,16 @@ def files_to_load(df_files_ftp, df_files_pg, name_base, first_year, last_year):
         print(df_difference['NOME'])
 
         # Inseriram um arquivo com nome bizarro no diretório FTP do CNES_EF
+        df_difference = df_difference[df_difference['NOME'] != 'EFufAAmm.dbc']
         df_difference = df_difference[df_difference['NOME'] != 'EFUFAAMM.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'GMufAAmm.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'GMUFAAMM.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'HBufAAmm.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'HBUFAAMM.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'INufAAmm.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'INUFAAMM.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'RCufAAmm.dbc']
+        df_difference = df_difference[df_difference['NOME'] != 'RCUFAAMM.dbc']
 
         df_difference['ANO_ARQUIVO'] = df_difference['NOME'].str[4:6]
         df_difference['ANO_ARQUIVO'] = '20' + df_difference['ANO_ARQUIVO']

@@ -129,7 +129,7 @@ def read_cnv(name_of_file):
     lista_significacao = []  # "Inicialização" da lista de decodificações
     lista_id = []  # "Inicialização" da lista de códigos
     # Leitura do arquivo texto
-    if filename[:-4] in ['SINAN_Classdeng', 'cnv/CNES_NATUREZA']:   # Estes são arquivos "cnv" cujos números de algarismos dos códigos estão na segunda linha do arquivo
+    if filename[:-4] in ['SINAN_Classdeng', 'CNV/CNES_NATUREZA']:   # Estes são arquivos "cnv" cujos números de algarismos dos códigos estão na segunda linha do arquivo
         for linha in fhandler:
             k += 1
             linha = linha.rstrip()
@@ -144,7 +144,7 @@ def read_cnv(name_of_file):
                 lista_significacao.append(linha[9:60].strip())
                 lista_id.append(linha[60:60+size_id].strip())
 
-    elif filename[:-4] in ['cnv/CNES_TP_ESTAB', 'cnv/CNES_NATJUR', 'SIH_LEITOS']:  # Estes são arquivos "cnv" cujas significações não começam na posição (python) 9...
+    elif filename[:-4] in ['CNV/CNES_TP_ESTAB', 'CNV/CNES_NATJUR', 'SIH_LEITOS']:  # Estes são arquivos "cnv" cujas significações não começam na posição (python) 9...
                                                                                    # (mas na 11), cujos códigos não começam na posição (python) 60 (mas na 112) de...
                                                                                    # cada linha do arquivo, e cujos números de algarismos dos códigos não são o segundo...
                                                                                    # elemento listado na primeira linha (mas o terceiro)
@@ -159,7 +159,7 @@ def read_cnv(name_of_file):
                 lista_significacao.append(linha[11:112].strip())
                 lista_id.append(linha[112:112+size_id].strip())
 
-    elif filename[:-4] == 'cnv/CNES_Equip_Tp':  # Os dois últimos dígitos da coluna de códigos desse arquivo permite construir a parent table CODEQUIP e assim...
+    elif filename[:-4] == 'CNV/CNES_Equip_Tp':  # Os dois últimos dígitos da coluna de códigos desse arquivo permite construir a parent table CODEQUIP e assim...
                                                 # decodificar a coluna CODEQUIP_ID da tabela eqbr do banco de dados CNES_EQ
         size_id = 2
         for linha in fhandler:

@@ -53,7 +53,7 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
         quit()
     else:
         # Nome do banco de dados do Datasus almejado
-        datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/SIM/SINASC/SINAN/XXX/YYY): ').lower()
+        datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/SIM/SINASC/XXX): ').lower()
         if datasus_db == 'sia':
             print('\nUse o módulo "load_sub-db.py" (e apenas foi implementado o ETL da sub-base de dados SIA_PA)!')
             quit()
@@ -164,7 +164,7 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
             # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
             if datasus_db == 'cnes':
                 os.remove('TAB_CNES.zip')
-                os.rmdir('TAB_DBF')
+                os.rmdir('DBF')
                 os.rmdir('cnv')
             elif datasus_db == 'sih':
                 os.remove('TAB_SIH.zip')
@@ -192,4 +192,4 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
 
 if __name__ == '__main__':
 
-    load_all('dbsus2', 'Eric', 'teste', 2020, 2020)
+    load_all('dbsus4', 'Eric', 'teste', 2019, 2019)

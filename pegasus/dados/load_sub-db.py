@@ -47,7 +47,7 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
     pd.set_option('display.max_rows', None)
 
     # Nome do banco de dados do Datasus almejado
-    datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/SINAN/XXX): ').lower()
+    datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/XXX): ').lower()
 
     # Construção do objeto string do nome do sub-banco de dados do CNES, SIH, SIA, SINAN ou XXX
     # CNES
@@ -235,4 +235,4 @@ if __name__ == '__main__':
     if decision == 'q':
         quit()
     else:
-        load_any('dbsus2', 'Eric', 'teste', 2022, 2022)
+        load_any('dbsus4', 'Eric', 'teste', 2019, 2019)

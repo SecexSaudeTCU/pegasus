@@ -275,10 +275,6 @@ def create_tables(connection_data, child_db):
                        CREATE TABLE IF NOT EXISTS {child_db}.atividad("ID"                  VARCHAR(2),
                                                                       "ATIVIDADE"           VARCHAR(66));
 
-                       /*Tabela da natureza do estabelecimento*/
-                       CREATE TABLE IF NOT EXISTS {child_db}.natureza("ID"                  VARCHAR(2),
-                                                                      "NATUREZA"            VARCHAR(66));
-
                        /*Tabela dos tipos de fluxo de clientela*/
                        CREATE TABLE IF NOT EXISTS {child_db}.clientel("ID"                  VARCHAR(2),
                                                                       "CLIENTELA"           VARCHAR(66));
