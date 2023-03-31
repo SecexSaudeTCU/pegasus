@@ -6,6 +6,7 @@ import os
 import time
 from datetime import datetime
 
+from sqlalchemy import text
 import numpy as np
 import pandas as pd
 import psycopg2
@@ -136,7 +137,7 @@ def insert_into_most_SIH_tables(path, device, child_db):
 # dos respectivos metadados no banco de dados "child_db"
 def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, child_db, connection_data):
     start = time.time()
-    counting_rows = pd.read_sql(f'''SELECT COUNT('NOME') FROM {child_db}.arquivos''', con=device)
+    counting_rows = pd.read_sql(text(f'''SELECT COUNT('NOME') FROM {child_db}.arquivos'''), con=device.connect())
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
@@ -146,7 +147,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     year = file_name[4:6]
     month = file_name[6:8]
     main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql(f'''SELECT COUNT(*) from {child_db}.{main_table}''', con=device)
+    counting_rows = pd.read_sql(text(f'''SELECT COUNT(*) from {child_db}.{main_table}'''), con=device.connect())
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}...')
 
@@ -209,7 +210,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
 # Função que utiliza "pandas.to_sql" para a inserção de dados principais e dos respectivos metadados no banco de dados "child_db"
 def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, device, child_db, connection_data):
     start = time.time()
-    counting_rows = pd.read_sql('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db), con=device)
+    counting_rows = pd.read_sql(text('''SELECT COUNT('NOME') FROM %s.arquivos''' % (child_db)), con=device.connect())
     qtd_files_pg = counting_rows.iloc[0]['count']
     print(f'A quantidade de arquivos principais de dados do {child_db} já carregada no {connection_data[0]}/PostgreSQL é {qtd_files_pg}.')
 
@@ -219,7 +220,7 @@ def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, d
     year = file_name[4:6]
     month = file_name[6:8]
     main_table = base.lower() + 'br'
-    counting_rows = pd.read_sql('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table), con=device)
+    counting_rows = pd.read_sql(text('''SELECT COUNT(*) from %s.%s''' % (child_db, main_table)), con=device.connect())
     n_rows = counting_rows.iloc[0]['count']
     print(f'\nIniciando a lida com o arquivo {base}{state}{year}{month}.')
 

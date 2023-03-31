@@ -235,4 +235,4 @@ if __name__ == '__main__':
     if decision == 'q':
         quit()
     else:
-        load_any('dbsus4', 'Eric', 'teste', 2019, 2019)
+        load_any('dbsus4', 'postgres', '123456', 2019, 2019)

@@ -3,6 +3,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from ftplib import FTP
+from sqlalchemy import text
 
 """
 Módulo com funções para obtenção de:
@@ -496,6 +497,7 @@ def files_loaded(structure_pg, name_db, e):
         # Coloca a coluna NOME como index do objeto pandas DataFrame
         df_files_pg.set_index('NOME')
         return df_files_pg
+
     # Tabela "arquivos" não constante ainda do "name_db" do PostgreSQL
     elif 'arquivos' not in structure_pg:
         print('\nThe schema of the PostgreSQL database does not contain the table arquivos.')
@@ -504,12 +506,13 @@ def files_loaded(structure_pg, name_db, e):
         # Coloca a coluna NOME como index do objeto pandas DataFrame
         df_files_pg.set_index('NOME')
         return df_files_pg
+
     # Tabela "arquivos" já constante do "name_db" do PostgreSQL
     elif 'arquivos' in structure_pg:
         print('\nThe schema of the PostgreSQL database contains the table arquivos.')
         # Coleta os nomes dos arquivos de dados da "name_db" constantes do PostgreSQL e suas informações...
         # como um objeto pandas DataFrame
-        df_files_pg = pd.read_sql(f'''SELECT * FROM {name_db}.arquivos''', con=e, index_col='NOME')
+        df_files_pg = pd.read_sql(sql = text(f'''SELECT * FROM {name_db}.arquivos'''), con=e.connect(), index_col='NOME')
         if df_files_pg.shape[0] == 0:
             print('\nThe PostgreSQL database doest not contain main data file loaded.')
         else:
@@ -560,6 +563,8 @@ def files_to_load(df_files_ftp, df_files_pg, name_base, first_year, last_year):
         print(df_difference['NOME'])
 
         # Inseriram um arquivo com nome bizarro no diretório FTP do CNES_EF
+        # Estes arquivos, a julgar pelo nome, estao sem a presenca do Ano e mes em seu nome, o que dificuldade
+        # classificar seu periodo de referencia
         df_difference = df_difference[df_difference['NOME'] != 'EFufAAmm.dbc']
         df_difference = df_difference[df_difference['NOME'] != 'EFUFAAMM.dbc']
         df_difference = df_difference[df_difference['NOME'] != 'GMufAAmm.dbc']

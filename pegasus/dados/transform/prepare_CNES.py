@@ -125,11 +125,10 @@ class DataCnesMain:
             # Exclui o último dígito numérico das colunas identificadas, o qual corresponde ao dígito de controle do código...
             # do município. Foi detectado que para alguns municípios o cálculo do dígito de controle não é válido
 
-            if len(df.loc[0, 'CODUFMUN']) == 7:
+            if len(df.iloc[0]['CODUFMUN']) == 7:
                 df['CODUFMUN'].replace(regex='.$',value='', inplace=True)
-
+            
             # Simplifica/corrige a apresentação dos dados das colunas especificadas
-
             for col in np.array(['ESFERA_A', 'ATIVIDAD', 'NATUREZA', 'CLIENTEL', 'TP_UNID', 'TURNO_AT', 'NIV_HIER']):
                 for i in np.array(['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']):
                     df[col].replace(i, str(int(i)), inplace=True)

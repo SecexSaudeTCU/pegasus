@@ -6,10 +6,14 @@ e arquivo texto em formato "cnv".
 import os
 import subprocess
 from pathlib import Path
+from dbf_reader import DbfReader
 
-from dbfread import DBF
+#from dbfread import DBF
 import pandas as pd
 
+"""
+Pacote dbfread foi substituido pelo dbf_reader, repositorio oficial do pacote: https://github.com/lais-huol/dbf_reader
+"""
 
 def dbc2dbf(infile):
     """
@@ -52,11 +56,17 @@ def read_dbc(filename, signature='utf-8'):
     """
 
     file_name = dbc2dbf(filename)
-    dbf = DBF(file_name, encoding=signature)
-    df = pd.DataFrame(iter(dbf))
-    os.unlink(file_name)
+        #dbf = DBF(file_name, encoding=signature)
+        #df = pd.DataFrame(iter(dbf))
 
-    return df
+    with open(file_name, 'rb') as dbf_file:
+        content = DbfReader(dbf_file)
+        df = pd.DataFrame(content)
+    os.unlink(file_name)
+    
+    return df    
+    
+    
 
 
 def attempt_int(value):

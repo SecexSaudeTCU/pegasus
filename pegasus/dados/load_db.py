@@ -101,6 +101,7 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
             cursor.execute(f'CREATE SCHEMA IF NOT EXISTS {datasus_db};')
             conn.commit()
             # Chama a função "get_tables_counts_db" contida no módulo "essential_postgreSQL" do package "utilities"
+            # dicitionario com table_name : size dentro do postgresql registrado
             dict_tabelas_e_counts_pg = get_tables_counts_db(cursor, datasus_db)
             # Encerra o cursor
             cursor.close()
@@ -117,6 +118,7 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
         # Referenciação da função "create_tables" à variável deste módulo denominada "create_schema"
         create_schema = getattr(module2, 'create_tables')
         # Uso da função "create_schema" para a criação do schema do banco de dados "datasus_db"
+        # Na realizadade aqui sao criadas as tabelas do schema.
         create_schema(DB_DADOS, datasus_db)
 
         # Dados de conexão 2 (para uso da função "create_engine" do SQLAlchemy)
@@ -126,12 +128,13 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
         DATABASE_URI = '%s+%s://%s:%s@%s:%s/%s' % (DB_TYPE, DB_DRIVER, DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME)
         # Cria um "engine" para o banco de dados mãe "DB_NAME" usando a função "create_engine" do SQLAlchemy
         engine = create_engine(DATABASE_URI)
-
         # Chama a função "files_loaded" contida no módulo "essential_postgreSQL" do package "utilities"
+        # Verifica se a tabela arquivos esta presente no meu db... 
         df_arquivos_pg = files_loaded(dict_tabelas_e_counts_pg, datasus_db, engine)
         print(df_arquivos_pg)
 
         # Chama a função "files_to_load" contida no módulo "essential_postgreSQL" do package "utilities"
+        # Arquivos a serem carregados... filtrado por ano além de também filtrar arquivos cujo ano não é possivel identificar
         df_arqs_nao_carregados = files_to_load(df_arquivos_ftp, df_arquivos_pg, datasus_db, first_year, last_year)
 
         # Quantidade de arquivos principais de dados que falta carregar em "datasus_db"
@@ -182,6 +185,7 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
         for i in range(qtd_arqs_datasus):
             # Chama a função "main_tables" para a inserção de dados na tabela principal (child table) + respectivas informações...
             # na tabela arquivos usando os métodos copy_expert + pandas.to_sql
+            
             main_tables(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
                         df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
 
@@ -192,4 +196,4 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
 
 if __name__ == '__main__':
 
-    load_all('dbsus4', 'Eric', 'teste', 2019, 2019)
+    load_all('dbsus4', 'postgres', '123456', 2019, 2019)
