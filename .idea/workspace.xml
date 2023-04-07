@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7817ff0f-a87d-4292-91cb-7172605c5291" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/pegasus/dados/DCAC1901.dbc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pegasus/dados/DCRR1911.dbc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pegasus/dados/insertion/insert_into_any_CNES.py" beforeDir="false" afterPath="$PROJECT_DIR$/pegasus/dados/insertion/insert_into_any_CNES.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pegasus/dados/load_sub-db.py" beforeDir="false" afterPath="$PROJECT_DIR$/pegasus/dados/load_sub-db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pegasus/dados/transform/extract/read_unix_c.py" beforeDir="false" afterPath="$PROJECT_DIR$/pegasus/dados/transform/extract/read_unix_c.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2NyobIqoFxC0XUfdtACHRT4SUKD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7817ff0f-a87d-4292-91cb-7172605c5291" name="Changes" comment="" />
+      <created>1680645759665</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1680645759665</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -11,11 +11,12 @@ import os
 import subprocess
 import codecs
 from tempfile import NamedTemporaryFile
+from dbf_reader import DbfReader
 
 from dbfread import DBF
 import pandas as pd
 
-from transform.extract._readdbc import ffi, lib
+from pysus.utilities.readdbc import ffi, lib
 
 
 def dbc2dbf(infile, outfile):
@@ -66,10 +67,12 @@ def read_dbc(filename, signature='utf-8'):
 
     if isinstance(filename, str):
         filename = filename.encode()
+        
     with NamedTemporaryFile(delete=False) as tf:
         dbc2dbf(filename, tf.name.encode())
-        dbf = DBF(tf.name, encoding=signature)
-        df = pd.DataFrame(list(dbf))
+        with open(tf.name, 'rb') as dbf_file:
+            content = DbfReader(dbf_file)
+            df = pd.DataFrame(content)
     os.unlink(tf.name)
     os.unlink(filename)
 

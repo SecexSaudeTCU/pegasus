@@ -196,20 +196,25 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
 
         # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
         if datasus_db in np.array(['cnes_st', 'cnes_lt', 'cnes_eq', 'cnes_sr', 'cnes_ep', 'cnes_ee', 'cnes_ef', 'cnes_in']):
-            os.remove('TAB_CNES.zip')
-            os.rmdir('DBF')
-            os.rmdir('cnv')
+            
+           os.remove('TAB_CNES.zip') if os.path.isfile('TAB_CNES.zip') else 0 
+           os.rmdir('DBF') if os.path.isdir('DBF') else 0
+           os.rmdir('cnv') if os.path.isdir('cnv') else 0
+
         elif datasus_db in np.array(['sih_rd', 'sih_sp']):
-            os.remove('TAB_SIH.zip')
-            os.rmdir('CNV')
-            os.rmdir('DBF')
+            os.remove('TAB_SIH.zip') if os.path.isfile('TAB_SIH.zip') else 0 
+            os.rmdir('CNV') if os.path.isdir('CNV') else 0
+            os.rmdir('DBF') if os.path.isdir('DBF') else 0
+
         elif datasus_db in np.array(['sia_pa']):
-            os.remove('TAB_SIA.zip')
-            os.remove('TAB_SIH.zip')
-            os.rmdir('CNV')
-            os.rmdir('TAB_DBF')
+            os.remove('TAB_SIA.zip') if os.path.isfile('TAB_SIA.zip') else 0 
+            os.remove('TAB_SIH.zip') if os.path.isfile('TAB_SIH.zip') else 0 
+            os.rmdir('CNV') if os.path.isdir('CNV') else 0
+            os.rmdir('TAB_DBF') if os.path.isdir('CNV') else 0
+
         elif datasus_db == 'sinan_deng':
             os.remove('TAB_SINAN.zip')
+
         os.remove('base_territorial.zip')
 
     print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')

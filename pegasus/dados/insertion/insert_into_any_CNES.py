@@ -11,6 +11,7 @@ import pandas as pd
 import psycopg2
 
 from transform.prepare_CNES import DataCnesMain, DataCnesAuxiliary
+from .common_functions import Insertions
 
 ############################################################################################################################################################################
 #  pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
@@ -614,10 +615,16 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int('20' + year)]*df.shape[0])
     df.insert(3, 'MES_' + base, [month]*df.shape[0])
-
     # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do cnes_xx armazenado no objeto
     # pandas DataFrame "df"
-    df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1', escapechar=' ')
+    # encoding alterado de iso-8859-1 para utf-8 devido a erro ao executar cursor.copy_expert... necessario validação
+    
+    insertion_object = Insertions(df = df, base = base, state = state , year = year, month = month,
+                    child_db = child_db, main_table = main_table)
+
+    insertion_object.insert_from_csv(connection_data)
+
+    '''df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='utf-8', escapechar=' ')
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do cnes_xx
     f = open(base + state + year + month + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
@@ -630,7 +637,31 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     cursor = conn.cursor()
     # Faz a inserção dos dados armazenados em "f" na tabela "main_table" do banco de dados "child_db"
     # usando o método "copy_expert" do "psycopg2"
-    cursor.copy_expert(f'''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+    insertion_object = Insertions(df, base, state , year, month,
+                    child_db, main_table) 
+    try:
+        cursor.copy_expert(f''''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';'''', f)
+   
+    except psycopg2.errors.StringDataRightTruncation as e:
+        cursor.close()
+        conn.reset()       
+        cursor = conn.cursor()
+        
+        import re
+        column_error = re.search("column [A-Z]*[a-z]*:",str(e)).group()[7:-1]
+        conteudo = re.search('"[A-Z a-z_\*\+\-]*"',str(e)).group()
+        lengh_expected = len(conteudo) 
+
+        print(f"""ERRO DE TRUNCAGEM.. alterando tamanho da coluna {column_error} para {lengh_expected}""")
+        sql_update = f"""ALTER TABLE {child_db}.{main_table} ALTER COLUMN "{column_error}" TYPE VARCHAR({lengh_expected})"""
+        
+        print(sql_update)
+        cursor.execute(sql_update.upper())
+        conn.commit()
+        
+        cursor.copy_expert(f''''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';'''', f)
+        
+
     conn.commit()
     # Encerra o cursor
     cursor.close()
@@ -641,6 +672,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     # Remoção do arquivo "csv"
     os.remove(base + state + year + month + '.csv')
     print(f'Terminou de inserir os dados do arquivo {base}{state}{year}{month} na tabela {main_table} do banco de dados {child_db}.')
+    '''
 
     # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
     file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
