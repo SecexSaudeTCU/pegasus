@@ -9,6 +9,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import psycopg2
+from .common_functions import Insertions
 
 from transform.prepare_SIH import DataSihMain, DataSihAuxiliary
 
@@ -241,7 +242,16 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
 
     # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sih_xx armazenado no objeto
     # pandas DataFrame "df"
-    df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1', escapechar=' ')
+    
+    insertion_object = Insertions(df = df, connection_data = connection_data, base = base, state = state , year = year, month = month,
+                    child_db = child_db, device = device)
+
+    insertion_object.insert_from_csv(main_table = main_table)
+
+    insertion_object.atualiza_tabela_arquivos(file_name = file_name, directory = directory,
+                                                 date_ftp = date_ftp, start = start)
+
+    '''df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1', escapechar=' ')
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sih_xx
     f = open(base + state + year + month + '.csv', 'r')
     # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
@@ -255,7 +265,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     try:
         # Faz a inserção dos dados armazenados em "f" na tabela "main_table" do banco de dados "child_db"...
         # usando o método "copy_expert" do "psycopg2"
-        cursor.copy_expert(f'''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+        cursor.copy_expert(f''''COPY {child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';'''', f)
     except:
         print(f'Tentando a inserção do arquivo {base}{state}{year}{month} por método alternativo (pandas)...')
         df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
@@ -282,7 +292,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year}{month} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
     print(f'Demorou {round((end - start), 1)} segundos para essas duas inserções no {connection_data[0]}/PostgreSQL!')
-
+'''
 
 ###########################################################################################################################################################################
 # pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #

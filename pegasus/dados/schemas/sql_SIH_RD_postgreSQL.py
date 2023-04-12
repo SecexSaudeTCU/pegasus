@@ -22,7 +22,7 @@ def create_tables(connection_data, child_db):
     cursor = conn.cursor()
 
     cursor.execute(f'''/*Tabela das AIH Reduzidas (RD) (tabela principal do sub banco de dados sih_rd)*/
-                       CREATE TABLE IF NOT EXISTS {child_db}.rdbr("N_AIH"                   VARCHAR(13),
+                       CREATE TABLE IF NOT EXISTS {child_db}.rdbr("N_AIH"                   VARCHAR(1),
                                                                   "UF_RD"                   VARCHAR(2),
                                                                   "ANO_RD"                  INTEGER,
                                                                   "MES_RD"                  VARCHAR(2),
@@ -31,7 +31,7 @@ def create_tables(connection_data, child_db):
                                                                   "ANO_CMPT"                INTEGER,
                                                                   "MES_CMPT"                VARCHAR(2),
                                                                   "ESPEC_ID"                VARCHAR(2),
-                                                                  "CGC_HOSP"                VARCHAR(14),
+                                                                  "CGC_HOSP"                VARCHAR(1),
                                                                   "CEP"                     VARCHAR(8),
                                                                   "MUNICRES_ID"             VARCHAR(6),
                                                                   "NASC"                    DATE,
@@ -41,7 +41,7 @@ def create_tables(connection_data, child_db):
                                                                   "UTI_INT_TO"              FLOAT,
                                                                   "DIAR_ACOM"               FLOAT,
                                                                   "QT_DIARIAS"              FLOAT,
-                                                                  "PROCSOLIC_ID"            VARCHAR(10),
+                                                                  "PROCSOLIC_ID"            VARCHAR(1),
                                                                   "PROCREA_ID"              VARCHAR(10),
                                                                   "VAL_SH"                  FLOAT,
                                                                   "VAL_SP"                  FLOAT,

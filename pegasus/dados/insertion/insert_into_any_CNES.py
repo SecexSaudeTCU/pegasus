@@ -619,10 +619,13 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     # pandas DataFrame "df"
     # encoding alterado de iso-8859-1 para utf-8 devido a erro ao executar cursor.copy_expert... necessario validação
     
-    insertion_object = Insertions(df = df, base = base, state = state , year = year, month = month,
-                    child_db = child_db, main_table = main_table)
+    insertion_object = Insertions(df = df, connection_data = connection_data, base = base, state = state , year = year, month = month,
+                    child_db = child_db, device = device)
 
-    insertion_object.insert_from_csv(connection_data)
+    insertion_object.insert_from_csv(main_table = main_table)
+
+    insertion_object.atualiza_tabela_arquivos(file_name = file_name, directory = directory,
+                                                 date_ftp = date_ftp, start = start)
 
     '''df.to_csv(base + state + year + month + '.csv', sep=',', header=False, index=False, encoding='utf-8', escapechar=' ')
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do cnes_xx
@@ -675,7 +678,8 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     '''
 
     # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
-    file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
+    ''' 
+   file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
                              columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
                              index=None
                              )
@@ -685,7 +689,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     end = time.time()
     print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL!')
 
-
+'''
 ###########################################################################################################################################################################
 # pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas pandas #
 ###########################################################################################################################################################################

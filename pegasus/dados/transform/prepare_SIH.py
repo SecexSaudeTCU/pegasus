@@ -677,7 +677,8 @@ class DataSihAuxiliary:
         # Reset eventualmente o index devido ao sorting prévio e à eventual eliminação de duplicates
         dfinal.reset_index(drop=True, inplace=True)
         # Inserção da primary key "NA" na tabela de que trata esta função para retratar "missing value"
-        dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE']
+        dfinal = dfinal.iloc[:,[-2,-1]]
+        dfinal.loc[dfinal.shape[0]] = ['NA', 'NOT AVAILABLE'] 
         return dfinal
 
 

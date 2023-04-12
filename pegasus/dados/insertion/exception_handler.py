@@ -1,12 +1,13 @@
 import re
 class Exception_handler():
-    def StringDataRightTruncationHandler(conn, child_db : str, main_table : str):
-        cursor.close()
+    def StringDataRightTruncationHandler(exception : Exception, cursor, conn, child_db : str, main_table : str, df):
         conn.reset()       
         cursor = conn.cursor()
-        
-        column_error = re.search("column [A-Z]*[a-z]*:",str(e)).group()[7:-1]
-        conteudo = re.search('"[A-Z a-z_\*\+\-]*"',str(e)).group()
+        print(exception.params)
+        column_error = exception.params['column_name']
+        conteudo = exception.params['value']
+        #column_error = re.search("column [A-Z]*[a-z]*:",str(exception)).group()[7:-1]
+        #conteudo = re.search('"[^"]*"',str(exception)).group()
         lengh_expected = len(conteudo) 
 
         print(f"""ERRO DE TRUNCAGEM.. alterando tamanho da coluna {column_error} para {lengh_expected}""")

@@ -9,6 +9,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import psycopg2
+from .common_functions import Insertions
 
 from transform.prepare_SINAN import DataSinanMain, DataSinanAuxiliary
 
@@ -151,7 +152,13 @@ def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, d
     df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
     print(f'Terminou de inserir os dados do arquivo {base}{state}{year} na tabela {main_table} do banco de dados {child_db}.')
 
-    # Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
+    insertion_object = Insertions(df = df, connection_data = connection_data, base = base, state = state , year = year, month = month,
+                    child_db = child_db)
+
+    insertion_object.atualiza_tabela_arquivos(file_name = file_name, directory = directory,
+                                                 date_ftp = date_ftp, start = start)
+    
+    '''# Cria um objeto pandas DataFrame com apenas uma linha de dados, a qual contém informações sobre o arquivo de dados principal carregado
     file_data = pd.DataFrame(data=[[file_name, directory, date_ftp, datetime.today(), int(df.shape[0])]],
                              columns= ['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP', 'DATA_HORA_CARGA', 'QTD_REGISTROS'],
                              index=None
@@ -160,4 +167,4 @@ def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, d
     file_data.to_sql('arquivos', con=device, schema=child_db, if_exists='append', index=False)
     print(f'Terminou de inserir os metadados do arquivo {base}{state}{year} na tabela arquivos do banco de dados {child_db}.')
     end = time.time()
-    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL pelo pandas!')
+    print(f'Demorou {round((end - start)/60, 1)} minutos para essas duas inserções no {connection_data[0]}/PostgreSQL pelo pandas!')'''
