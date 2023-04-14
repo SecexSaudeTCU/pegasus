@@ -23,12 +23,12 @@ class Insertions():
     def insert_from_csv(self, main_table : str) -> None:
 
         
-        #self.df.to_csv(self.base + self.state + self.year + self.month + '.csv', sep=',', 
-        #                                header=False, index=False, encoding='latin1',escapechar=' ')
+        self.df.to_csv(self.base + self.state + self.year + self.month + '.csv', sep=',', 
+                                        header=False, index=False, encoding='latin1',escapechar=' ')
         
         # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do cnes_xx
         
-        #f = open(self.base + self.state + self.year + self.month + '.csv', 'r')
+        f = open(self.base + self.state + self.year + self.month + '.csv', 'r')
         
         # Conecta ao banco de dados mãe "connection_data[0]" do SGBD PostgreSQL usando o módulo python "psycopg2"
         conn = psycopg2.connect(dbname=self.connection_data[0],
@@ -43,22 +43,16 @@ class Insertions():
         # usando o método "copy_expert" do "psycopg2"
         
         try:
-            #cursor.copy_expert(f'''COPY {self.child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+            cursor.copy_expert(f'''COPY {self.child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
             conn.commit()
-            self.df.to_sql(main_table, con=self.device, schema=self.child_db, 
-                        if_exists='append', index=False)
+            #self.df.to_sql(main_table, con=self.device, schema=self.child_db, 
+            #            if_exists='append', index=False)
         
-        except sqlalchemy.exc.DataError as exception_text:
+        except  psycopg2.errors.StringDataRightTruncation as exception_text:
             print(str(exception_text))
-            print("**"*25)
-            print('UEBAAAAAAA')
-            print(exception_text.params)
-            print("**"*25)
             handler.StringDataRightTruncationHandler(exception_text, cursor, conn, self.child_db, main_table, self.df)
             
-            self.df.to_sql(main_table, con=self.device, schema=self.child_db, 
-                        if_exists='append', index=False)            
-            #cursor.copy_expert(f'''COPY {self.child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
+            cursor.copy_expert(f'''COPY {self.child_db}.{main_table} FROM STDIN WITH CSV DELIMITER AS ',';''', f)
             conn.commit()
         
         except Exception as other_exception:
@@ -68,10 +62,9 @@ class Insertions():
             print(type(other_exception))
             print("**"*25)
             #else:
-            '''  print(f'Tentando a inserção do arquivo {self.base}{self.state}{self.year}{self.month} por método alternativo (pandas)...')
+            print(f'Tentando a inserção do arquivo {self.base}{self.state}{self.year}{self.month} por método alternativo (pandas)...')
             self.df.to_sql(main_table, con=self.device, schema=self.child_db, 
                                     if_exists='append', index=False)
-             '''
 
         cursor.close()
         # Encerra a conexão

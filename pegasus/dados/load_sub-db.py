@@ -3,15 +3,17 @@
 ###########################################################################################################################
 
 import os
-
+import datetime
 import psycopg2
 from sqlalchemy import create_engine
 import numpy as np
 import pandas as pd
+import traceback
 
 from utilities.essential_postgreSQL import files_in_ftp_subbase, get_tables_counts_subdb, files_loaded, files_to_load
 
-
+EXCEPTIONS = []
+ARQUIVOS_NAO_CARREGADOS = []
 def load_any(db_name, db_user, db_password, first_year, last_year):
     """
     Cria um schema do banco de dados "db_name" no SGBD PostgreSQL sem integridade referencial (de "primary and foreign
@@ -191,7 +193,13 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
         print(f'\nIniciando a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas...')
         # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
         # método pandas.to_sql
-        most_tables(path_xlsx, engine, datasus_db)
+        try:   
+            most_tables(path_xlsx, engine, datasus_db)
+        except Exception as e:
+            print("ERRO IDENTIFICADO E IGNORADO")
+            pilha_erros = traceback.format_exc()
+            EXCEPTIONS.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
+                        
         print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
 
         # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
@@ -219,11 +227,23 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
 
     print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
     # Carrega dados da tabela principal do "datasus_db" no PostgreSQL
+    
     for i in range(qtd_arqs_datasus):
         # Chama a função "main_table" para a inserção de dados na tabela principal (child table) + respectivas informações...
         # na tabela arquivos usando os métodos copy_expert + pandas.to_sql
-        main_table(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
+        try:
+            main_table(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
                    df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
+        except Exception as e:
+            ARQUIVOS_NAO_CARREGADOS.append(df_arqs_nao_carregados.NOME[i])
+            print("ERRO IDENTIFICADO E IGNORADO")
+            pilha_erros = traceback.format_exc()
+            EXCEPTIONS.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
+            print(str(e))
+            pass
+
+    with open('./logs/{}_log_errors_{}.txt'.format(datasus_db, str(datetime.datetime.now())[:19].replace(':','_')), "w") as log_error:
+        log_error.write(" ".join(EXCEPTIONS))
 
 
 ###########################################################################################################################
@@ -240,4 +260,5 @@ if __name__ == '__main__':
     if decision == 'q':
         quit()
     else:
+
         load_any('dbsus4', 'postgres', '123456', 2019, 2019)
