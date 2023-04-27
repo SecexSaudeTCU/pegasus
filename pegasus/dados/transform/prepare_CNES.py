@@ -39,7 +39,7 @@ class DataCnesMain:
     def get_CNESXXaamm_treated(self):
 
         # Inserido pela impossibilidade de leitura de arquivos STufaamm de março de 2020 em diante
-
+        '''
         if ((self.base == 'ST') and (int(self.year) >= 20) and (int(self.month) >= 3)):
 
             dataframe = pd.read_csv('./files/CNES/' + self.base + self.state + self.year + self.month + '.csv',
@@ -63,11 +63,11 @@ class DataCnesMain:
                         'AP07CV05', 'AP07CV06', 'AP07CV03', 'AP07CV04', 'ATEND_PR', 'NAT_JUR']:
                 dataframe[col] = dataframe[col].astype(str)
 
-            dataframe['CNES'] = dataframe['CNES'].apply(lambda x: x.zfill(7))
+            dataframe['CNES'] = dataframe['CNES'].apply(lambda x: x.zfill(7))'''
 
-        else:
-            # Lê o arquivo "dbc" ou "parquet", se já tiver sido baixado, como um objeto pandas DataFrame
-            dataframe = download_CNESXXaamm(self.base, self.state, self.year, self.month)
+        #else:
+        # Lê o arquivo "dbc" ou "parquet", se já tiver sido baixado, como um objeto pandas DataFrame
+        dataframe = download_CNESXXaamm(self.base, self.state, self.year, self.month)
         print(f'O número de linhas do arquivo {self.base}{self.state}{self.year}{self.month} é {dataframe.shape[0]}.')
 
         ###################################################################################################################

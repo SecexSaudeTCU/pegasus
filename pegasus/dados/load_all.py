@@ -12,76 +12,15 @@ import traceback
 
 from utilities.essential_postgreSQL import files_in_ftp_subbase, get_tables_counts_subdb, files_loaded, files_to_load
 
-EXCEPTIONS = []
 ARQUIVOS_NAO_CARREGADOS = []
-def load_any(db_name, db_user, db_password, first_year, last_year):
-    """
-    Cria um schema do banco de dados "db_name" no SGBD PostgreSQL sem integridade referencial (de "primary and foreign
-    keys") e insere nele dados das bases de dados (do Datasus) CNES, SIH, SIA, SINAN ou XXX no SGBD PostgreSQL pelo
-    método copy_expert da classe cursor do pacote psycopg. Os dados são inseridos por sub-base de dados: CNES_ST, CNES_DC,
-    CNES_PF, CNES_LT, CNES_EQ, CNES_SR, CNES_EP, CNES_HB, CNES_RC, CNES_GM, CNES_EE, CNES_EF, CNES_IN, SIH_RD, SIH_SP,
-    SIA_PA, SINAN_DENG ou XXX. Assim, para cada sub-base de dados do Datasus é criado um schema.
 
-    A inserção de dados consiste dos arquivos principais de dados em formato "dbc" e dos arquivos auxiliares de dados
-    em formato "dbf", "cnv" e "xlsx" das sub-bases de dados CNES_ST (STXXaamm), CNES_DC (DCXXaamm), CNES_PF (PFXXaamm),
-    CNES_LT (LTXXaamm), CNES_EQ (EQXXaamm), CNES_SR (SRXXaamm), CNES_EP (EPXXaamm), CNES_HB (HBXXaamm), CNES_RC (RCXXaamm),
-    CNES_GM (GMXXaamm), CNES_EE (EEXXaamm), CNES_EF (EFXXaamm), CNES_IN (INXXaamm), SIH_RD (RDXXaamm), SIH_SP (SPXXaamm),
-    SIA_PA (PAXXaamm), SINAN_DENG (DENGXXaa) ou XXX. Destaca-se que algumas bases de dados, como a do CNES, se subdividem
-    em várias tabelas principais de dados, que no caso são em número de 13, conforme se pode contabilizar acima.
-
-    Os arquivos principais de dados formam a tabela principal (child table) das respectiva sub-base de dados e estão em
-    pastas específicas do endereço ftp do Datasus (ftp://ftp.datasus.gov.br/dissemin/publicos/) em formato "dbc". Cada
-    arquivo "dbc" é baixado em tempo de execução, descompactado para "dbf", lido como um objeto pandas DataFrame e, para
-    evitar a repetição do download, é salvo numa pasta criada dinamicamente e denominada "datasus_content" no computador
-    de execução deste módulo no formato "parquet" no caso de nova necessidade desse arquivo principal de dados.
-
-    Os arquivos secundários de dados formam as tabelas relacionais (parent tables) à tabela principal e estão em formato
-    "dbf", "cnv" ou "xlsx". Os arquivos "dbf" e "cnv", presentes em diretórios do endereço ftp do Datasus, são baixados
-    e convertidos em tempo de execução para objetos pandas DataFrame enquanto os arquivos "xlsx", quando necessários,
-    foram  criados a partir de relações descritas no Dicionário de Dados da respectiva base de dado do Datasus e não
-    retratadas em arquivos  "dbf" ou "cnv" ou a partir da incompletude de arquivos "dbf" ou "cnv".
-
-    O referido diretório "datasus_content" onde são baixados os arquivos principais de dados em formato "parquet" pode
-    ser alterado editando o módulo "folder" contido no subpackage "pegasus.dados.transform.extract".
-    """
-
+def load_any(db_name, db_user, db_password, datasus_db, first_year, last_year, exceptions):
+   
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
 
     # Nome do banco de dados do Datasus almejado
-    datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/XXX): ').lower()
-
-    # Construção do objeto string do nome do sub-banco de dados do CNES, SIH, SIA, SINAN ou XXX
-    # CNES
-    if datasus_db == 'cnes':
-        print('\nST: Estabelecimentos')
-        print('DC: Dados Complementares')
-        print('PF: Profissionais')
-        print('LT: Leitos')
-        print('EQ: Equipamentos')
-        print('SR: Serviços Especializados')
-        print('EP: Equipes')
-        print('HB: Habilitações')
-        print('GM: Gestão e Metas')
-        print('EE: Estabelecimentos de Ensino')
-        print('EF: Estabelecimentos Filantrópicos')
-        print('IN: Incentivos')
-        print('RC: Regras Contratuais')
-        sub_db = input('\nDigite as iniciais da sub-base de dados do CNES (ST/DC/PF/LT/EQ/SR/EP/HB/RC/GM/EE/EF/IN): ').lower()
-    # SIH
-    elif datasus_db == 'sih':
-        print('\nRD: Autorização de Internação Hospitalar - Reduzidas')
-        print('SP: Autorização de Internação Hospitalar - Serviços Profissionais')
-        sub_db = input('\nDigite as iniciais da sub-base de dados do SIH (RD/SP): ').lower()
-    # SIA
-    elif datasus_db == 'sia':
-        print('\nPA: Procedimentos Ambulatoriais')
-        sub_db = input('Digite as iniciais da sub-base de dados do SIA (PA/XX/.../YY): ').lower()
-    # SINAN
-    elif datasus_db == 'sinan':
-        print('\nDENG: Dengue e Chikungunya\n')
-        sub_db = input('Digite as iniciais da sub-base de dados do SINAN (DENG/XXXX/.../YYYY): ').lower()
-    datasus_db += '_' + sub_db
+ 
     print('\nTo its goal...\n')
 
     # Criação de objetos string do nome das duas funções de inserção de dados do "datasus_db" contidas no respectivo...
@@ -193,13 +132,13 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
         print(f'\nIniciando a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas...')
         # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
         # método pandas.to_sql
-        #try:
-        most_tables(path_xlsx, engine, datasus_db)
-        '''except Exception as e:
+        try:   
+            most_tables(path_xlsx, engine, datasus_db)
+        except Exception as e:
             print("ERRO IDENTIFICADO E IGNORADO")
             pilha_erros = traceback.format_exc()
-            EXCEPTIONS.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
-        '''                
+            exceptions.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
+                        
         print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
 
         # Remoção de pastas vazias que contiveram arquivos "dbf" e/ou "cnv"
@@ -238,18 +177,25 @@ def load_any(db_name, db_user, db_password, first_year, last_year):
             ARQUIVOS_NAO_CARREGADOS.append(df_arqs_nao_carregados.NOME[i])
             print("ERRO IDENTIFICADO E IGNORADO")
             pilha_erros = traceback.format_exc()
-            EXCEPTIONS.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
+            exceptions.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
             print(str(e))
             pass
-
-    with open('./logs/{}_log_errors_{}.txt'.format(datasus_db, str(datetime.datetime.now())[:19].replace(':','_')), "w") as log_error:
-        log_error.write(" ".join(EXCEPTIONS))
+    if len(exceptions) > 0:
+        with open('./logs/erros_internos/{}_{}_{}.txt'.format(datasus_db, last_year,str(datetime.datetime.now())[:19].replace(':','_')), "w") as log_error:
+            log_error.write(" ".join(exceptions))
 
 
 ###########################################################################################################################
 # MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN #
 ###########################################################################################################################
-
+DATABASES = {
+    'CNES' : ['ST','PF','LT','EQ', 'SR','EP','HB','GM','EE','EE','EF','IN','RC'],
+    'SIH' :  ['RD', 'SP'],
+    'SIA' :  ['PA'],
+    'SINAN' : ['DENG']
+    }
+ANOS = [2021]
+   
 if __name__ == '__main__':
 
     print('\n*******************************************************************')
@@ -260,5 +206,24 @@ if __name__ == '__main__':
     if decision == 'q':
         quit()
     else:
+        for db in DATABASES:
+            
+            for sub_db in DATABASES[db]:
+                if sub_db == 'PA':
+                    continue
+                else:
+                    datasus_db = (db + '_' + sub_db).lower()
+                    for ano in ANOS:
+                        print('EXECUTANDO PARA O BANCO {} OS DADOS DO ANO {}'.format(datasus_db, ano))
+                        try:
+                            exceptions = []
+                            load_any('dbsus4', 'postgres', '123456', datasus_db,ano, ano, exceptions)
+                        except:
+                            pilha_erros = traceback.format_exc()
+                            exceptions.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
+                            
+                            with open('./logs/erros_gerais/{}_{}_{}.txt'.format(
+                                            datasus_db, ano,str(datetime.datetime.now())[:19].replace(
+                                                ':','_')), "w") as log_error:
 
-        load_any('dbsus4', 'postgres', '123456', 2019, 2019)
+                                log_error.write(" ".join(exceptions))

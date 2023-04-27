@@ -1,0 +1,16 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 220, in <module>
+    load_any('dbsus4', 'postgres', '123456', datasus_db,ano, ano, exceptions)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 49, in load_any
+    df_arquivos_ftp = files_in_ftp_subbase(datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\utilities\essential_postgreSQL.py", line 225, in files_in_ftp_subbase
+    df_ftp = get_dbc_info(datasus_path)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\utilities\essential_postgreSQL.py", line 79, in get_dbc_info
+    df_files.loc[i] = [list_file_names[i], ftp_path, list_file_dates[i]]
+  File "C:\Users\ricar\Documents\pegasusenv\lib\site-packages\pandas\core\indexing.py", line 278, in loc
+    @property
+KeyboardInterrupt
+============================================================

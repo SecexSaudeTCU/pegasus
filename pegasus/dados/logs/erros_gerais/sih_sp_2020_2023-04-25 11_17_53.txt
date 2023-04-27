@@ -1,0 +1,49 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\extract\download_SIH.py", line 123, in download_table_dbf
+    zip.extract('DBF/' + fname)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\zipfile.py", line 1625, in extract
+    return self._extract_member(member, path, pwd)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\zipfile.py", line 1664, in _extract_member
+    member = self.getinfo(member)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\zipfile.py", line 1438, in getinfo
+    raise KeyError(
+KeyError: "There is no item named 'DBF/TB_SIGTAP.DBF' in the archive"
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\extract\download_SIH.py", line 127, in download_table_dbf
+    zip.extract('DBF/' + fname)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\zipfile.py", line 1625, in extract
+    return self._extract_member(member, path, pwd)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\zipfile.py", line 1664, in _extract_member
+    member = self.getinfo(member)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\zipfile.py", line 1438, in getinfo
+    raise KeyError(
+KeyError: "There is no item named 'DBF/TB_SIGTAP.dbf' in the archive"
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 136, in load_any
+    most_tables(path_xlsx, engine, datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\insertion\insert_into_any_SIH.py", line 150, in insert_into_most_SIH_SP_tables
+    df_TB_SIGTAP = data_sih_auxiliary.get_TB_SIGTAP_treated()
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\prepare_SIH.py", line 531, in get_TB_SIGTAP_treated
+    df = download_table_dbf(file_name)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\extract\download_SIH.py", line 129, in download_table_dbf
+    raise Exception(f'Could not access {file_name}.')
+Exception: Could not access TB_SIGTAP.
+============================================================ 
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 220, in <module>
+    load_any('dbsus4', 'postgres', '123456', datasus_db,ano, ano, exceptions)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 165, in load_any
+    os.remove('base_territorial.zip')
+FileNotFoundError: [WinError 2] O sistema não pode encontrar o arquivo especificado: 'base_territorial.zip'
+============================================================

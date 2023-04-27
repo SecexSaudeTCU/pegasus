@@ -1,0 +1,22 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 220, in <module>
+    load_any('dbsus4', 'postgres', '123456', datasus_db,ano, ano, exceptions)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 49, in load_any
+    df_arquivos_ftp = files_in_ftp_subbase(datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\utilities\essential_postgreSQL.py", line 225, in files_in_ftp_subbase
+    df_ftp = get_dbc_info(datasus_path)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\utilities\essential_postgreSQL.py", line 49, in get_dbc_info
+    ftp.retrlines('LIST', open('stuff_ftp_files.txt', 'w').write)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 462, in retrlines
+    with self.transfercmd(cmd) as conn, \
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 393, in transfercmd
+    return self.ntransfercmd(cmd, rest)[0]
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 354, in ntransfercmd
+    conn = socket.create_connection((host, port), self.timeout,
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\socket.py", line 832, in create_connection
+    sock.connect(sa)
+KeyboardInterrupt
+============================================================

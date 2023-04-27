@@ -1,0 +1,28 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 220, in <module>
+    load_any('dbsus4', 'postgres', '123456', datasus_db,ano, ano, exceptions)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 49, in load_any
+    df_arquivos_ftp = files_in_ftp_subbase(datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\utilities\essential_postgreSQL.py", line 307, in files_in_ftp_subbase
+    df_ftp = get_dbc_info(datasus_path)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\utilities\essential_postgreSQL.py", line 46, in get_dbc_info
+    ftp.cwd(ftp_path)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 625, in cwd
+    return self.voidcmd(cmd)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 286, in voidcmd
+    return self.voidresp()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 259, in voidresp
+    resp = self.getresp()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 244, in getresp
+    resp = self.getmultiline()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 230, in getmultiline
+    line = self.getline()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 212, in getline
+    line = self.file.readline(self.maxline + 1)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+============================================================

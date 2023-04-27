@@ -527,8 +527,13 @@ class DataSiaAuxiliary:
         # Conversão da Tabela CBO para um objeto pandas DataFrame
         file_name = 'CBO'
         df = download_table_dbf(file_name)
+        print('colunas cbo')
+        print(df.columns.values)
         # Renomeia as colunas especificadas
-        df.rename(index=str, columns={'CHAVE': 'ID', 'DS_REGRA': 'OCUPACAO'}, inplace=True)
+        colunas_usadas = ['ID', 'OCUPACAO']
+        colunas_desnecessarias = [x for x in range (len(colunas_usadas),len(df.columns.values))] # se houver
+        df.columns = colunas_usadas + colunas_desnecessarias
+        print(df.columns)
         # Adiciona zeros à esquerda nos valores (tipo string) da coluna "ID" até...
         # formar uma "string" de tamanho = 6
         df['ID'] = df['ID'].apply(lambda x: x.zfill(6))

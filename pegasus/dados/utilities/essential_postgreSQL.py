@@ -548,12 +548,8 @@ def files_to_load(df_files_ftp, df_files_pg, name_base, first_year, last_year):
     # Criação de objeto pandas DataFrame para conter a listagem de nomes de arquivos de dados "dbc" que faltam ser...
     # carregados contendo ainda o diretório e a data de inserção de cada arquivo de dados "dbc"
     df_difference = pd.DataFrame(columns=['NOME', 'DIRETORIO', 'DATA_INSERCAO_FTP'])
-    # Iteração sobre cada nome de arquivo "dbc" que falta ser carregado
-    for file_name in list_files_exclusivos_ftp:
-        # Coleta a linha do objeto pandas DataFrame "df_files_ftp" que contém na coluna NOME o valor "file_name"
-        row = df_files_ftp.loc[df_files_ftp['NOME'] == file_name]
-        # Aloca a linha "row" no objeto pandas DataFrame "df_difference"
-        df_difference = df_difference.append(row, ignore_index=True)
+    df_difference = df_files_ftp.loc[df_files_ftp['NOME'].isin(list_files_exclusivos_ftp)]
+
     # Ordena as linhas de "df_difference" por ordem crescente dos valores das colunas NOME e DIRETORIO
     df_difference.sort_values(['NOME', 'DIRETORIO'], inplace=True)
 

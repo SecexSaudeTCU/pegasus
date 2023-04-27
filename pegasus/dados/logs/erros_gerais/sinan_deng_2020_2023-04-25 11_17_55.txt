@@ -1,0 +1,33 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 136, in load_any
+    most_tables(path_xlsx, engine, datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\insertion\insert_into_any_SINAN.py", line 34, in insert_into_most_SINAN_DENG_tables
+    df_Classdeng = data_sinan_auxiliary.get_Classdeng_treated()
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\prepare_SINAN.py", line 225, in get_Classdeng_treated
+    df = download_table_cnv(file_name)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\extract\download_SINAN.py", line 148, in download_table_cnv
+    ftp.retrbinary('RETR {}'.format(folder), open(folder, 'wb').write)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 436, in retrbinary
+    with self.transfercmd(cmd, rest) as conn:
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 393, in transfercmd
+    return self.ntransfercmd(cmd, rest)[0]
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 359, in ntransfercmd
+    resp = self.sendcmd(cmd)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 281, in sendcmd
+    return self.getresp()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\lib\ftplib.py", line 254, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 The system cannot find the file specified. 
+============================================================ 
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 220, in <module>
+    load_any('dbsus4', 'postgres', '123456', datasus_db,ano, ano, exceptions)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 165, in load_any
+    os.remove('base_territorial.zip')
+FileNotFoundError: [WinError 2] O sistema não pode encontrar o arquivo especificado: 'base_territorial.zip'
+============================================================
