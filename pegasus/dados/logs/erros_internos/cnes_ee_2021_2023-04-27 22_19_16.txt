@@ -1,0 +1,38 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 136, in load_any
+    most_tables(path_xlsx, engine, datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\insertion\insert_into_any_CNES.py", line 432, in insert_into_most_CNES_EE_tables
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
+AttributeError: 'DataCnesAuxiliary' object has no attribute 'get_NATUREZA_treated'
+============================================================ 
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasusenv\lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 0
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 174, in load_any
+    main_table(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\insertion\insert_into_any_CNES.py", line 612, in insert_into_main_table_and_arquivos
+    df = data_cnes_main.get_CNESXXaamm_treated()
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\transform\prepare_CNES.py", line 1121, in get_CNESXXaamm_treated
+    if len(df.loc[0, 'CODUFMUN']) == 7:
+  File "C:\Users\ricar\Documents\pegasusenv\lib\site-packages\pandas\core\indexing.py", line 1066, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+  File "C:\Users\ricar\Documents\pegasusenv\lib\site-packages\pandas\core\frame.py", line 3924, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\ricar\Documents\pegasusenv\lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+============================================================

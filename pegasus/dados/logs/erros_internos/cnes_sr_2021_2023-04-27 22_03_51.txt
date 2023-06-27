@@ -1,0 +1,10 @@
+
+============================================================
+============================================================
+Traceback (most recent call last):
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\load_all.py", line 136, in load_any
+    most_tables(path_xlsx, engine, datasus_db)
+  File "C:\Users\ricar\Documents\pegasus\pegasus\dados\insertion\insert_into_any_CNES.py", line 249, in insert_into_most_CNES_SR_tables
+    df_NATUREZA = data_cnes_auxiliary.get_NATUREZA_treated()
+AttributeError: 'DataCnesAuxiliary' object has no attribute 'get_NATUREZA_treated'
+============================================================

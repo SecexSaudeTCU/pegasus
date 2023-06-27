@@ -8,9 +8,13 @@ import psycopg2
 from sqlalchemy import create_engine
 import numpy as np
 import pandas as pd
+import traceback
+import datetime
 
 from utilities.essential_postgreSQL import files_in_ftp_base, get_tables_counts_db, files_loaded, files_to_load
 
+ARQUIVOS_NAO_CARREGADOS = []
+EXCEPTIONS = []
 
 def load_all(db_name, db_user, db_password, first_year, last_year):
     """
@@ -47,10 +51,12 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
     print('\n*******************************************************************')
     print('O banco de dados PostgreSQL a ser preenchido deve antes ser criado!'.upper())
     print('*******************************************************************\n')
-
+        
     decision = input("Digite 'q' se o banco de dados ainda não foi criado ou qualquer outra tecla em caso contrário: ")
+
     if decision == 'q':
         quit()
+
     else:
         # Nome do banco de dados do Datasus almejado
         datasus_db = input('\nDigite o nome da base de dados do Datasus (CNES/SIH/SIA/SIM/SINASC/XXX): ').lower()
@@ -109,8 +115,8 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
             conn.close()
         except (Exception, psycopg2.Error) as error:
             print('Erro ao conectar ao banco de dados PostgreSQL.', error)
-
-        # Importação da função "create_tables" de criação do schema do banco de dados "datasus_db" existente no respectivo
+       
+       # Importação da função "create_tables" de criação do schema do banco de dados "datasus_db" existente no respectivo
         # módulo do package "schemas" usando a função python "__import__"
         module2 = __import__('schemas.sql_' + datasus_db.upper() + '_postgreSQL',
                              fromlist=['create_tables'],
@@ -161,6 +167,7 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
             print(f'\nIniciando a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando pandas...')
             # Chama a função "most_tables" para inserção das tabelas auxiliares (parent tables) no "datasus_db" pelo...
             # método pandas.to_sql
+            
             most_tables(path_xlsx, engine, datasus_db)
             print(f'Finalizou a inserção de dados auxiliares no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL.')
 
@@ -183,11 +190,26 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
         print(f'\nIniciando a inserção de dados principais no banco de dados {datasus_db} do {DB_NAME}/PostgreSQL usando copy_expert...')
         # Carrega dados da tabela principal do "datasus_db" no PostgreSQL
         for i in range(qtd_arqs_datasus):
+        # Chama a função "main_table" para a inserção de dados na tabela principal (child table) + respectivas informações...
+        # na tabela arquivos usando os métodos copy_expert + pandas.to_sql
+            try:
+                main_tables(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
+                            df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
+            except Exception as e:
+                ARQUIVOS_NAO_CARREGADOS.append(df_arqs_nao_carregados.NOME[i])
+                print("ERRO IDENTIFICADO E IGNORADO")
+                pilha_erros = traceback.format_exc()
+                EXCEPTIONS.append('\n' + '='*60 + '\n' + '='*60 + '\n' + pilha_erros + '='*60)
+                print(str(e))
+                pass
+
+    with open('./logs/{}_log_errors_{}.txt'.format(datasus_db, str(datetime.datetime.now())[:19].replace(':','_')), "w") as log_error:
+        log_error.write(" ".join(EXCEPTIONS))
+            
             # Chama a função "main_tables" para a inserção de dados na tabela principal (child table) + respectivas informações...
             # na tabela arquivos usando os métodos copy_expert + pandas.to_sql
             
-            main_tables(df_arqs_nao_carregados.NOME[i], df_arqs_nao_carregados.DIRETORIO[i],
-                        df_arqs_nao_carregados.DATA_INSERCAO_FTP[i], engine, datasus_db, DB_DADOS)
+
 
 
 ###########################################################################################################################
@@ -196,4 +218,4 @@ def load_all(db_name, db_user, db_password, first_year, last_year):
 
 if __name__ == '__main__':
 
-    load_all('dbsus4', 'postgres', '123456', 2019, 2019)
+    load_all('dbsus4', 'postgres', '123456', 2005, 2005)

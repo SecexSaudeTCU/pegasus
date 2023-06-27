@@ -35,14 +35,15 @@ class DataSimMain:
 
     # Método para ler como um objeto pandas DataFrame o arquivo principal de dados do SIM e adequar e formatar suas...
     # colunas e valores
-    def get_DOXXaaaa_treated(self):
+    def get_DOXXaaaa_treated(self, data_ftp):
         # Lê o arquivo "dbc" ou "parquet", se já tiver sido baixado, como um objeto pandas DataFrame
         dataframe = download_DOXXaaaa(self.state, self.year)
         print(f'O número de linhas do arquivo DO{self.state}{self.year} é {dataframe.shape[0]}.')
 
         for coluna in dataframe.columns.values:
-            dataframe[coluna] = dataframe[coluna].apply(lambda x: x if '\x00' not in x else '')
-
+            # modificacao
+            dataframe[coluna] = dataframe[coluna].apply(lambda x: x if '\x00' not in x else str(x).replace('\\x00',''))
+        dt_obito = dataframe['DTOBITO'].unique()
         # Colunas definidas como necessárias no objeto pandas DataFrame que incrementará a tabela dobr
         lista_columns = np.array(['NUMERODO', 'CODINST', 'TIPOBITO', 'DTOBITO', 'HORAOBITO', 'NUMSUS',
                                   'NATURAL',  'CODMUNNATU', 'DTNASC', 'IDADE', 'SEXO', 'RACACOR', 'ESTCIV',
@@ -237,15 +238,15 @@ class DataSimMain:
             df[col] = df[col].apply(lambda x: datetime.strptime(x, '%d%m%Y').date() \
                                     if x != '' else datetime(2099, 1, 1).date())
 
-        # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela...
-        # data futura "2099-01-01"
-        for col in np.array(['DTOBITO', 'DTATESTADO', 'DTINVESTIG',
-                             'DTCADASTRO', 'DTRECEBIM', 'DTCADINV', 'DTCONINV']):
-            df[col] = df[col].apply(lambda x: x if datetime(2000, 12, 31).date() < x < \
-                                    datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+            # Verifica se as datas das colunas especificadas são absurdas e em caso afirmativo as substitui pela...
+            # data futura "2099-01-01"
+            
+            if col == 'DTNASC':
+                # Regra de limiar minimo pode ser estudada e melhorada
+                df['DTNASC'] = df['DTNASC'].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
+                                          data_ftp else datetime(2099, 1, 1).date())
 
-        df['DTNASC'] = df['DTNASC'].apply(lambda x: x if datetime(1850, 12, 31).date() < x < \
-                                          datetime(2020, 12, 31).date() else datetime(2099, 1, 1).date())
+
 
         # Computa a diferença entre as datas de óbito e de nascimento em dias e a aloca como a coluna "IDADE"...
         # do objeto pandas DataFrame

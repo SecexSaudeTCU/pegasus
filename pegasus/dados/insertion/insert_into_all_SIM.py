@@ -130,7 +130,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
     # Cria uma instância da classe "DataSimMain" do módulo "prepare_SIM" do package "data_wrangling"
     data_sim_main = DataSimMain(state, year)
     # Chama método da classe "DataSimMain" do módulo "prepare_SIM" referentes ao banco de dados sim
-    df = data_sim_main.get_DOXXaaaa_treated()
+    df = data_sim_main.get_DOXXaaaa_treated(data_ftp = date_ftp)
 
     # Inserção das colunas UF_DO e ANO_DO no objeto pandas DataFrame "df"
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
@@ -138,6 +138,7 @@ def insert_into_main_table_and_arquivos(file_name, directory, date_ftp, device, 
 
     # Criação de arquivo "csv" contendo os dados do arquivo principal de dados do sim armazenado no objeto
     # pandas DataFrame "df"
+    df['ULTIMA_ATUALIZACAO_DATASUS'] = date_ftp
     df.to_csv(base + state + year + '.csv', sep=',', header=False, index=False, encoding='iso-8859-1', escapechar=' ')
     # Leitura do arquivo "csv" contendo os dados do arquivo principal de dados do sim
     f = open(base + state + year + '.csv', 'r')
@@ -201,13 +202,14 @@ def insert_into_main_table_and_arquivos_pandas(file_name, directory, date_ftp, d
     # Cria uma instância da classe "DataSimMain" do módulo "prepare_SIM" do package "data_wrangling"
     data_sim_main = DataSimMain(state, year)
     # Chama método da classe "DataSimMain" do módulo "prepare_SIM" referentes ao banco de dados sim
-    df = data_sim_main.get_DOXXaaaa_treated()
+    df = data_sim_main.get_DOXXaaaa_treated(data_ftp = date_ftp)
 
     # Inserção das colunas UF_DO e ANO_DO no objeto pandas DataFrame "df"
     df.insert(1, 'UF_' + base, [state]*df.shape[0])
     df.insert(2, 'ANO_' + base, [int(year)]*df.shape[0])
     df['CONTAGEM'] = np.arange(n_rows + 1, n_rows + 1 + df.shape[0])
     # Inserção dos dados da tabela principal no banco de dados "child_db"
+    df["ULTIMA_ATUALIZACAO_DATASUS"] = date_ftp
     df.to_sql(main_table, con=device, schema=child_db, if_exists='append', index=False)
     print(f'Terminou de inserir os dados do arquivo {base}{state}{year} na tabela {main_table} do banco de dados {child_db}.')
 

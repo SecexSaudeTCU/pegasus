@@ -82,7 +82,8 @@ def create_tables(connection_data, child_db):
                                                                   "FONTEPRONT"               NUMERIC,
                                                                   "FONTESVO"                 NUMERIC,
                                                                   "FONTEIML"                 NUMERIC,
-                                                                  "FONTEPROF"                NUMERIC);
+                                                                  "FONTEPROF"                NUMERIC,
+                                                                  "ULTIMA_ATUALIZACAO_DATASUS"            DATE);
 
                        /*Tabela do tipo de óbito*/
                        CREATE TABLE IF NOT EXISTS {child_db}.tipobito("ID"                   VARCHAR(2),
